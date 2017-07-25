@@ -1,0 +1,22 @@
+﻿.navbar-default {
+    background-color: #292929;
+}
+
+.navbar-default .navbar-nav > li > a {
+        color: #FFF;
+}
+
+.navbar-default .navbar-nav > li > a:hover {
+        color: #CCC;
+}
+
+    .navbar-default .navbar-brand {
+        color: #FFF;
+    }
+
+.carousel-inner>.item>a>img, .carousel-inner>.item>img{
+    line-height: 1;
+    margin: 0 auto;
+    max-width: 80%;
+
+}
