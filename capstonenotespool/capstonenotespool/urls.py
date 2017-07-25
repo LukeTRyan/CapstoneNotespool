@@ -20,5 +20,12 @@ from notespool import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 	url(r'^$', views.index, name='index'),
+	url(r'^login', views.login, name='login'),
+	url(r'^account', views.login, name='account'),
+	url(r'^aboutus', views.login, name='aboutus'),
+	url(r'^contact', views.login, name='contact'),
+	url(r'^notespool', views.login, name='notespool'),
+	
+
     
 ]

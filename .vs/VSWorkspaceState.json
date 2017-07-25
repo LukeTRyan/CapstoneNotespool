@@ -3,11 +3,11 @@
     "",
     "\\capstonenotespool",
     "\\capstonenotespool\\capstonenotespool",
-    "\\capstonenotespool\\capstonenotespool\\static",
     "\\capstonenotespool\\capstonenotespool\\templates",
     "\\capstonenotespool\\capstonenotespool\\templates\\layout",
-    "\\capstonenotespool\\notespool"
+    "\\capstonenotespool\\notespool",
+    "\\capstonenotespool\\static"
   ],
-  "SelectedNode": "\\capstonenotespool\\capstonenotespool\\settings.py",
+  "SelectedNode": "\\capstonenotespool\\notespool\\views.py",
   "PreviewInSolutionExplorer": false
 }
