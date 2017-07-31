@@ -12,11 +12,10 @@
 
     .navbar-default .navbar-brand {
         color: #FFF;
-    }
+}
 
 .carousel-inner>.item>a>img, .carousel-inner>.item>img{
     line-height: 1;
     margin: 0 auto;
     max-width: 80%;
-
 }

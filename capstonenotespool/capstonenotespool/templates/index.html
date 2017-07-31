@@ -1,16 +1,16 @@
-﻿{% extends 'layout/layout.html' %}
+{% extends 'layout/layout.html' %}
 {% block title %}Home{% endblock %}
 {% block content %}
+{% load staticfiles %}
 
 <div class="container">
     <div style="text-align:center;">
         <h1>Welcome to Capstone Notespool</h1>
         <p>
-            <a class="btn btn-lg btn-primary" href="/notespool" role="button">Notespool »</a>
+            <a class="btn btn-lg btn-primary" href="/notespool" role="button">Notespool</a>
         </p>
     </div>
 </div>
-
 
 <div id="myCarousel" class="carousel slide" data-ride="carousel">
     <!-- Indicators -->
@@ -23,15 +23,15 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner">
         <div class="item active">
-            <img src="http://maxpixel.freegreatpicture.com/static/photo/1x/Studying-Study-Books-Student-University-Education-1012088.jpg" alt="Los Angeles">
+            <img src={% static "img1.jpg" %}>
         </div>
 
         <div class="item">
-            <img src="https://cdn.pixabay.com/photo/2014/09/11/18/32/books-441866_960_720.jpg" alt="Chicago">
+            <img src={% static "img2.jpg" %}>
         </div>
 
         <div class="item">
-            <img src="http://maxpixel.freegreatpicture.com/static/photo/1x/Read-Education-Literature-Learn-Book-Books-1564105.jpg" alt="New York">
+            <img src={% static "img3.jpg" %}>
         </div>
     </div>
 
@@ -46,3 +46,4 @@
     </a>
 </div>
 {% endblock %}
+

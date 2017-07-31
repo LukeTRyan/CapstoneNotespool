@@ -1,0 +1,40 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Create Account{% endblock %}
+{% load i18n %}
+{% block content %}
+
+<div class="container">
+    <form action="{% url 'createaccount' %}" method="post">
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        <br>
+        <div class="fieldWrapper">
+            {{form.username.errors}}
+            <label for="form.username.id_for_label">User Name: </label><br>
+            {{form.username}}
+        </div>
+        <div class="fieldWrapper">
+            {{form.password.errors}}
+            {{help_text|safe}}
+            <label for="form.password.id_for_label">Password: </label><br>
+            {{form.password}}
+        </div>
+        <div class="fieldWrapper">
+            {{form.verify_password.errors}}
+            <label for="form.verify_password.id_for_label">Verify your password: </label><br>
+            {{form.verify_password}}
+        </div>
+        <div class="fieldWrapper">
+            {{form.email.errors}}
+            <label for="form.email.id_for_label">Email: </label><br>
+            {{form.email}}
+        </div>
+        <br />
+
+        <p><a href="{% url 'privacypolicy' %}">{% trans "Privacy Policy" %}</a></p>
+        <p><a href="{% url 'useragreement' %}">{% trans "User Agreement" %}</a></p>
+        <input class="btn btn-primary" type="submit" value="Create Account" />
+
+    </form>
+</div>
+{% endblock %}
