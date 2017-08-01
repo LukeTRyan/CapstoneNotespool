@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from .forms import LoginForm, RegistrationForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
+from django import forms
 
 def index(request):
     return render(request, 'index.html', {})
@@ -21,26 +22,25 @@ def login(request):
 					message = "Error"
 					return render(request, "registration_form.html", {'form': form, 'message': message})
 		else:
-			return render(request,'registration_form.html',{'errormessage':'Invalid login'})
+			return render(request,'registration_form.html', {'errormessage':'Invalid login'})
 
 	return render(request, 'login.html', {'form': form})
 
 
 def createaccount(request):
-	form = RegistrationForm(request.POST)
+	form = RegistrationForm(data=request.POST)
 	if form.is_valid():
-		username=request.POST['username']
-		password=request.POST['password']
-		password2=request.POST['password2']
-		email=request.POST['email']
-		user=authenticate(username=username,password=password)
-		user.is_active=False
+		username = form.cleaned_data["username"]
+		password = form.cleaned_data["password"]
+		password2 = form.cleaned_data["password2"]
+		email = form.cleaned_data["email"]
+		User.objects.create_user(username=username, password=password, email=email)
 		user.save()
-		return HttpResponseRedirect('/login')
-		#id=user.id
-		#email=user.email
+		user = authenticate(username=username, password=password)
+		login(request, user)
+		return HttpResponseRedirect('/')
 	else:
-		return render(request, 'registration_form.html', {})
+		return render(request, 'registration_form.html', {'form' : form})
 
 def passwordreset(request):
 	return render(request, 'password_change_form.html', {})

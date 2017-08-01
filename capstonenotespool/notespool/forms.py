@@ -25,6 +25,6 @@ def clean(self, *args, **kwargs):
 #registration form for users
 class RegistrationForm(forms.Form):
 	username = forms.CharField(max_length=15);
-	email = forms.EmailField(widget=forms.EmailInput)
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
+	email = forms.EmailField(widget=forms.EmailInput)
