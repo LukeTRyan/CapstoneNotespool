@@ -1,0 +1,30 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Account{% endblock %}
+{% load i18n %}
+{% block content %}
+
+<div class="container">
+    {% if message is not none %}
+    <script>
+				alert('{{ message }}');
+    </script>
+    {% endif %}
+    <h1>Remove Account</h1>
+    <form action="{% url 'account' %}" method="post">
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        <br>
+        <div class="fieldWrapper">
+            {{help_text|safe}}
+            <label for="form.password.id_for_label">Password: </label><br>
+            {{form.password}}
+        </div>
+        <br />
+        <input class="btn btn-primary" type="submit" value="Remove Account" />
+
+    </form>
+</div>
+{% endblock %}
+
+
+

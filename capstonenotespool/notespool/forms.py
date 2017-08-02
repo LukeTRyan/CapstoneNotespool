@@ -29,3 +29,7 @@ class RegistrationForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	email = forms.EmailField(widget=forms.EmailInput)
+
+class DeleteAccountForm(forms.Form):
+	password = forms.CharField(widget=forms.PasswordInput)
+

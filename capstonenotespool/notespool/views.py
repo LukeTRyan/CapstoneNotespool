@@ -1,13 +1,22 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
-from .forms import LoginForm, RegistrationForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.http import HttpResponse, HttpResponseRedirect
 from .functions import password_verification
+from xml.dom import minidom
+from django.db.models import Count
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from django.shortcuts import get_object_or_404
 
+fromaddr='LukeTRyan95@gmail.com'
+username='LukeTRyan95@gmail.com'
+password=''
 
 #home
 def index(request):
@@ -21,8 +30,6 @@ def index(request):
 		return render_to_response('index.html', {'userp': username})
 	return render_to_response('index.html')
 	
-	
-
 
 #logs in user
 def loginuser(request):
@@ -30,12 +37,12 @@ def loginuser(request):
 	if 'redirect' in request.session and request.session['redirect'] == "LoginRequired":
 		message = "Please login to continue"
 		request.session['redirect'] = None
-		return render(request, "login_page.html", {'form': form, 'message': message})
+		return render(request, "login.html", {'form': form, 'message': message})
     
 	if 'redirect' in request.session and request.session['redirect'] == "NewAccount":
 		message = "Account Created"
 		request.session['redirect'] = None
-		return render(request, "login_page.html", {'form': form, 'message': message})
+		return render(request, "login.html", {'form': form, 'message': message})
     
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		return HttpResponseRedirect('/')
@@ -88,11 +95,10 @@ def createaccount(request):
 			if user.check_password(password):
 				user.save()
 				user = authenticate(username=username, password=password)
-				user.is_active=False
-				user.save()
-				id=user.id
-				email=user.email
-				send_email(email,id)
+				#user.is_active=False
+				#id=user.id
+				#email=user.email
+				#send_email(email,id)
 				login(request, user)
 				request.session['user_id'] = username
 				request.session['redirect'] = "NewAccount"  
@@ -111,15 +117,12 @@ def activate(request):
 
 
 def send_email(toaddr,id):
-	text = "Hi!\nHow are you?\nHere is the link to activate your account:\nhttp://127.0.0.1:8000/register_activate/activation/?id=%s" %(id)
-	# Record the MIME types of both parts - text/plain and text/html.
+	text = "Hi!\nHow are you?\nHere is the link to activate your account:\nhttp://127.0.0.1:8000/activation/?id=%s" %(id)
 	part1 = MIMEText(text, 'plain')
 	msg = MIMEMultipart('alternative')
 	msg.attach(part1)
-	subject="Activate your account at Family Host"
+	subject="Activate your account at Capstone Notespool"
 	msg="""\From: %s\nTo: %s\nSubject: %s\n\n%s""" %(fromaddr,toaddr,subject,msg.as_string())
-	#Use gmail's smtp server to send email. However, you need to turn on the setting "lesssecureapps" following this link:
-	#https://www.google.com/settings/security/lesssecureapps
 	server = smtplib.SMTP('smtp.gmail.com:587')
 	server.ehlo()
 	server.starttls()
@@ -129,15 +132,15 @@ def send_email(toaddr,id):
 
 
 
-
 def passwordreset(request):
 	return render(request, 'password_change_form.html', {})
 
 def logout(request):
 	if request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
-   
-	user = User.objects.get(username='admin')
+
+	username = request.session['user_id']
+	user = User.objects.get(username = username)
 
 	[s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == user.id]
 	request.session['user_id'] = None
@@ -163,7 +166,6 @@ def aboutus(request):
 		return render_to_response('aboutus.html', {'userp': username})
 	return render_to_response('aboutus.html')
     
-
 def contact(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
@@ -176,5 +178,25 @@ def notespool(request):
 		return render_to_response('notespool.html', {'userp': username})
 	return render_to_response('notespool.html')
 
+def account(request):
+	if request.session['user_id'] is None:
+		return HttpResponseRedirect('/login')
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
 
-
+	form = DeleteAccountForm(request.POST)
+	if form.is_valid():
+		username = request.session['user_id']
+		password = form.cleaned_data['password']
+		user = authenticate(username = username, password = password)
+		if user is not None:
+			deleteUser = User.objects.get(username = username)
+			deleteUser.delete()
+			user.delete()
+			user.is_active=False
+			request.session['user_id'] = None
+			return HttpResponseRedirect('/')
+		else:
+			message = "Incorrect credentials"
+			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})
+	return render(request, "account.html", {'form': form, 'userp': username})
