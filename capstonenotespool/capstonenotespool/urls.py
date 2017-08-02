@@ -20,7 +20,8 @@ from notespool import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 	url(r'^$', views.index, name='index'),
-	url(r'^login/', views.login, name='login'),
+	url(r'^login/', views.loginuser, name='login'),
+	url(r'^logout/', views.logout, name='logout'),
 	url(r'^createaccount/', views.createaccount, name='createaccount'),
 	url(r'^privacypolicy/', views.privacypolicy, name='privacypolicy'),
 	url(r'^useragreement/', views.useragreement, name='useragreement'),

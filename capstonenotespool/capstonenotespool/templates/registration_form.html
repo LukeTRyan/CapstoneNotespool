@@ -4,6 +4,12 @@
 {% block content %}
 
 <div class="container">
+
+    {% if message is not none %}
+    <script>
+				alert('{{ message }}');
+    </script>
+    {% endif %}
     <form action="{% url 'createaccount' %}" method="post">
         {% csrf_token %}
         {{form.non_field_errors}}
