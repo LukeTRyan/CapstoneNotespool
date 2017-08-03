@@ -6,7 +6,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.http import HttpResponse, HttpResponseRedirect
-from .functions import password_verification
+from .functions import password_verification, email_verification
 from xml.dom import minidom
 from django.db.models import Count
 import smtplib
@@ -16,7 +16,7 @@ from django.shortcuts import get_object_or_404
 
 fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
-password=''
+password='Uberhaxor123'
 
 #home
 def index(request):
@@ -90,19 +90,19 @@ def createaccount(request):
 		if email and User.objects.filter(email=email).exclude(username=username).count():   #email match verification
 			message = "Email already exists"
 			return render(request, "registration_form.html", {'form': form, 'message': message})
+		if (email_verification(email)) == False:
+			message = "Email is not valid QUT email"
+			return render(request, "registration_form.html", {'form': form, 'message': message})
 		else:
 			user = User.objects.create_user(username=username, password=password, email=email)
 			if user.check_password(password):
-				user.save()
 				user = authenticate(username=username, password=password)
-				#user.is_active=False
-				#id=user.id
-				#email=user.email
-				#send_email(email,id)
-				login(request, user)
-				request.session['user_id'] = username
-				request.session['redirect'] = "NewAccount"  
-				return HttpResponseRedirect('/')
+				user.is_active=False
+				id=user.id
+				email=user.email
+				send_email(email,id)
+				message = "Activation Email Sent"
+				return render(request, 'registration_form.html', {'form' : form, 'message': message})
 	else:
 		return render(request, 'registration_form.html', {'form' : form})
 
@@ -113,6 +113,10 @@ def activate(request):
 	user = User.objects.get(id=id)
 	user.is_active=True
 	user.save()
+	login(request, user)
+	request.session['user_id'] = username
+	request.session['redirect'] = "NewAccount"  
+	return HttpResponseRedirect('/')
 	return render(request,'activation.html')
 
 

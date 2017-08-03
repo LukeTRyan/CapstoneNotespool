@@ -16,3 +16,9 @@ def password_verification(password):
 		return True
 	else:
 		return False
+
+def email_verification(email):
+	if re.search(r'(@connect.qut.edu.au)', email):
+		return True
+	else:
+		return False
