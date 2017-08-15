@@ -18,6 +18,7 @@ fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
 password='Uberhaxor123'
 
+
 #home
 def index(request):
 	if 'redirect' in request.session and request.session['redirect'] == "Login":
@@ -52,7 +53,7 @@ def loginuser(request):
 		password = form.cleaned_data["password"]
 		user = authenticate(username=username, password=password)
 		if user is not None:
-				if user.is_active:											
+				if user.is_active == True:
 					login(request,user)
 					request.session['user_id'] = username
 					request.session['redirect'] = "Login"
@@ -90,14 +91,15 @@ def createaccount(request):
 		if email and User.objects.filter(email=email).exclude(username=username).count():   #email match verification
 			message = "Email already exists"
 			return render(request, "registration_form.html", {'form': form, 'message': message})
-		if (email_verification(email)) == False:
-			message = "Email is not valid QUT email"
-			return render(request, "registration_form.html", {'form': form, 'message': message})
+		#if (email_verification(email)) == False:
+		#	message = "Email is not valid QUT email"
+		#	return render(request, "registration_form.html", {'form': form, 'message': message})
 		else:
 			user = User.objects.create_user(username=username, password=password, email=email)
 			if user.check_password(password):
 				user = authenticate(username=username, password=password)
 				user.is_active=False
+				user.save()
 				id=user.id
 				email=user.email
 				send_email(email,id)
@@ -113,11 +115,9 @@ def activate(request):
 	user = User.objects.get(id=id)
 	user.is_active=True
 	user.save()
-	login(request, user)
-	request.session['user_id'] = username
 	request.session['redirect'] = "NewAccount"  
-	return HttpResponseRedirect('/')
-	return render(request,'activation.html')
+	return render_to_response('activation.html')
+	
 
 
 def send_email(toaddr,id):

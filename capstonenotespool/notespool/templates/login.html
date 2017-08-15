@@ -1,0 +1,31 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Login{% endblock %}
+{% load i18n %}
+{% block content %}
+
+<div class="container">
+
+    <form action="{% url 'login' %}" method="post">
+        {% csrf_token %}
+        {{form.non_field_errors}}
+        <br>
+        <div class="fieldWrapper">
+            {{form.username.errors}}
+            <label for="form.username.id_for_label">User Name: </label><br>
+            {{form.username}}
+        </div>
+        <div class="fieldWrapper">
+            {{form.password.errors}}
+            {{help_text|safe}}
+            <label for="form.password.id_for_label">Password: </label><br>
+            {{form.password}}
+        </div>
+        <br />
+
+        <p>{% trans "Forgot password" %}? <a href="{% url 'passwordreset' %}">{% trans "Reset it" %}</a>!</p>
+        <p>{% trans "Not member" %}? <a href="{% url 'createaccount' %}">{% trans "Register" %}</a>!</p>
+        <input class="btn btn-primary" type="submit" value="Login" />
+
+    </form>
+</div>
+{% endblock %}
