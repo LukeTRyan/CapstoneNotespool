@@ -25,7 +25,7 @@ class LoginForm(forms.Form):
 
 #registration form for users
 class RegistrationForm(forms.Form):
-	username = forms.CharField(max_length=15);
+	username = forms.CharField(max_length=15)
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	email = forms.EmailField(widget=forms.EmailInput)
@@ -34,14 +34,11 @@ class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 
 class EditAccountForm(forms.Form):
-    GENDER_CHOICES=[('M', 'M'), ('F', 'F')]
-    
-    username = forms.CharField()
-    first_name = forms.CharField(max_length=15)
-    last_name = forms.CharField(max_length=15)
-    gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect())
-    DOB = forms.DateField(widget=forms.DateInput)
-    email = forms.EmailField(widget=forms.EmailInput)
+	username = forms.CharField(max_length=15)
+	password = forms.CharField(max_length=15)
+	first_name = forms.CharField(max_length=15)
+	last_name = forms.CharField(max_length=15)
+	email = forms.EmailField(widget=forms.EmailInput)
    
 class PasswordResetForm(forms.Form):
 	email = forms.EmailField(widget=forms.EmailInput)

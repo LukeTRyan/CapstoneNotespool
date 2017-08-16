@@ -42,11 +42,6 @@ def loginuser(request):
 		request.session['redirect'] = None
 		return render(request, "login.html", {'form': form, 'message': message})
     
-	if 'redirect' in request.session and request.session['redirect'] == "NewAccount":
-		message = "Account Created"
-		request.session['redirect'] = None
-		return render(request, "login.html", {'form': form, 'message': message})
-    
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		return HttpResponseRedirect('/')
 
@@ -135,7 +130,7 @@ def activatereset(request):
 	request.session['redirect'] = "activatereset"  
 	return render_to_response('activatereset.html')
 	
-
+#sends verification email to the user 
 def send_email(toaddr,id):
 	text = "Hi!\nHow are you?\nHere is the link to activate your account:\nhttp://127.0.0.1:8000/activation/?id=%s" %(id)
 	part1 = MIMEText(text, 'plain')
@@ -150,6 +145,7 @@ def send_email(toaddr,id):
 	server.sendmail(fromaddr,[toaddr],msg)
 	server.quit()
 
+#sends verification email to the user to reset the account 
 def send_reset_email(toaddr,id):
 	text = "Hi!\nHow are you?\nHere is the link to reset your password:\nhttp://127.0.0.1:8000/activatereset/?id=%s" %(id)
 	part1 = MIMEText(text, 'plain')
@@ -164,7 +160,7 @@ def send_reset_email(toaddr,id):
 	server.sendmail(fromaddr,[toaddr],msg)
 	server.quit()
 
-
+#form to send the user a password reset email
 def passwordreset(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		return HttpResponseRedirect('/')
@@ -179,9 +175,13 @@ def passwordreset(request):
 			send_reset_email(email,id)
 			message = "Reset Email Sent"
 			return render(request, 'password_change_form.html', {'form' : form, 'message': message})
+		else:
+			message = "Account associated with that email does not exist"
+			return render(request, 'password_change_form.html', {'form' : form, 'message': message})
 	else:
-		return render(request, 'password_change_form.html', {'form' : form})
-		
+		return render(request, 'password_change_form.html', {'form' : form, 'message': message})
+
+#logs out the user
 def logout(request):
 	if request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
@@ -192,8 +192,6 @@ def logout(request):
 	request.session['user_id'] = None
 	request.session['redirect'] = "Logout"
 	return HttpResponseRedirect('/')
-
-
 
 
 
@@ -231,30 +229,53 @@ def notespool(request):
 
 
 
-
+#function index to view, edit, create and delete users 
 def administrator(request):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	username = request.session['user_id']
-	users = Student.objects.all()
+	users = User.objects.all()
 	return render_to_response('administrator.html', {'userp': username,'users': users})
 
+#admin function to edit user details 
 def editAccount(request, account):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	username = request.session['user_id']
 	userProfile = User.objects.get(username = account)
-
 	form = EditAccountForm(request.POST or None)
-
 	data = {'username': userProfile.username,
+			'password': userProfile.password,
             'first_name': userProfile.first_name,
             'last_name': userProfile.last_name,
             'email': userProfile.email}
 
-	return render_to_response('edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form})
+	if form.is_valid():
+		username = form.cleaned_data['username']
+		password = form.cleaned_data['password']
+		first_name = form.cleaned_data['first_name']
+		last_name = form.cleaned_data['last_name']
+		email = form.cleaned_data['email']
+
+		if username == account or User.objects.filter(username = username).exists() == False:
+			user = User.objects.get(username = account)
+			user.username = username
+			user.password = password
+			user.first_name = first_name
+			user.last_name = last_name
+			user.email = email
+			user.save()
+
+			request.session['redirect'] = "User_edited"
+			return HttpResponseRedirect('/administrator')
+		else:
+			message = "Username not valid"
+			form = EditAccountForm(initial=data)  
+			return render(request, 'edit_account.html', {'userp': username, 'message': message, 'sent_user': userProfile, 'form': form})
+	form = EditAccountForm(request.POST or None, initial=data) 
+	return render(request, 'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form})
 	
 
 def deleteAccount(request, account):

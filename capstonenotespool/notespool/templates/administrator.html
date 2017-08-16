@@ -28,10 +28,14 @@
         }
 </style>
     <tr></tr>
+    <h2>Students</h2>
     {% for i in users %}
     <tr></tr>
     <tr>
         <th style="background-color: #53A86C; color: white;"> {{ i.username }} </th>
+    </tr>
+    <tr>
+        <td> Password: <br> {{ i.password }} </td>
     </tr>
     <tr>
         <td> First Name: <br> {{ i.first_name }} </td>
