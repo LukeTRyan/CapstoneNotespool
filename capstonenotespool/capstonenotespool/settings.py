@@ -143,3 +143,11 @@ EMAIL_HOST_USER = 'LukeTRyan95@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 SERVER_EMAIL = 'LukeTRyan95@gmail.com'
 DEFAULT_FROM_EMAIL = "LukeTRyan95@gmail.com"
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+...
+INSTALLED_APPS = (
+    ...
+    'myapp',
+)

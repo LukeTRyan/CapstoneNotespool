@@ -31,6 +31,11 @@ urlpatterns = [
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
+    url(r'^', include('myapp.urls')),
+    urlpatterns = patterns('myapp.views',
+    url(r'^list/$', 'list', name='list'),
+)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 	
 
     
