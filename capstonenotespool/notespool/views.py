@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Student
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -201,8 +201,7 @@ def administrator(request):
 
 	username = request.session['user_id']
 	users = User.objects.all()
-	students = Student.objects.all()
-	return render_to_response('administrator.html', {'userp': username,'users': users, 'students': students})
+	return render_to_response('administrator.html', {'userp': username,'users': users})
 
 def editAccount(request, account):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
@@ -216,13 +215,11 @@ def editAccount(request, account):
 	data = {'username': userProfile.username,
             'first_name': userProfile.first_name,
             'last_name': userProfile.last_name,
-            'gender': userProfile.gender,
-            'DOB': userProfile.DOB,
             'email': userProfile.email}
 
 	
 
-	return render_to_response('edit_account.html', {'userp': username,'sent_user': userProfile})
+	return render_to_response('edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form})
 	
 
 def deleteAccount(request, account):
