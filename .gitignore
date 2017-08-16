@@ -1,0 +1,5 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/capstonenotespool/notespool/migrations/__pycache__/0012_auto_20170816_1930.cpython-36.pyc
