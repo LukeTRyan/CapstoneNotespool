@@ -4,9 +4,11 @@
     "\\capstonenotespool",
     "\\capstonenotespool\\capstonenotespool",
     "\\capstonenotespool\\notespool",
+    "\\capstonenotespool\\notespool\\templates",
+    "\\capstonenotespool\\notespool\\templates\\layout",
     "\\capstonenotespool\\static",
     "\\capstonenotespool\\static\\css"
   ],
-  "SelectedNode": "\\capstonenotespool\\notespool\\functions.py",
+  "SelectedNode": "\\capstonenotespool\\notespool\\templates\\login.html",
   "PreviewInSolutionExplorer": false
 }

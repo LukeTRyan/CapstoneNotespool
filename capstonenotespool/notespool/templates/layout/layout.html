@@ -34,14 +34,17 @@
                         <li><a href="/aboutus">About us</a></li>
                         <li><a href="/contact">Contact</a></li>
                     {% endif %}
+                    {% if userp == "admin" %}
+                        <li><a href="/administrator/">Admin</a></li>
+                    {% endif %}
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container -->
     </nav>
 
-    <p>Hello, {{userp}} {{is_active}}</p>
 
     <div class="container">
+    <p>Hello, {{userp}}</p>
     {% block content %}
     {% endblock %}
     </div>

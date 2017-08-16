@@ -20,7 +20,11 @@ from notespool import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 	url(r'^$', views.index, name='index'),
+	url(r'^oauth/', include('social_django.urls', namespace='social')),
 	url(r'^login/', views.loginuser, name='login'),
+	url(r'^administrator/', views.administrator, name='administrator'),
+	url(r'^edit_account/(?P<account>[^/]+)', views.editAccount, name='editAccounts'),
+	url(r'^delete_account/(?P<account>[^/]+)', views.deleteAccount, name='deleteAccounts'),
 	url(r'^logout/', views.logout, name='logout'),
 	url(r'^account/', views.account, name='account'),
 	url(r'^activation/',views.activate, name='activation'),

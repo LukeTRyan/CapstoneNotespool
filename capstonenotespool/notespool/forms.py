@@ -33,3 +33,13 @@ class RegistrationForm(forms.Form):
 class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 
+class EditAccountForm(forms.Form):
+    GENDER_CHOICES=[('M', 'M'), ('F', 'F')]
+    
+    username = forms.CharField()
+    first_name = forms.CharField(max_length=15)
+    last_name = forms.CharField(max_length=15)
+    gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.RadioSelect())
+    DOB = forms.DateField(widget=forms.DateInput)
+    email = forms.EmailField(widget=forms.EmailInput)
+   

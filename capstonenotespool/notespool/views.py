@@ -1,5 +1,7 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from .models import Student
 from .forms import LoginForm, RegistrationForm, DeleteAccountForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
@@ -20,6 +22,7 @@ password='Uberhaxor123'
 
 
 #home
+@login_required
 def index(request):
 	if 'redirect' in request.session and request.session['redirect'] == "Login":
 		message = "Logged in successfully"
@@ -95,7 +98,11 @@ def createaccount(request):
 		#	message = "Email is not valid QUT email"
 		#	return render(request, "registration_form.html", {'form': form, 'message': message})
 		else:
-			user = User.objects.create_user(username=username, password=password, email=email)
+			user = User.objects.create_user(username=username,password=password,email=email)
+			#newUserModel = Student(student_id = user.id,
+			#						username = username,
+			#						password = password,
+			#						email = email)
 			if user.check_password(password):
 				user = authenticate(username=username, password=password)
 				user.is_active=False
@@ -107,7 +114,6 @@ def createaccount(request):
 				return render(request, 'registration_form.html', {'form' : form, 'message': message})
 	else:
 		return render(request, 'registration_form.html', {'form' : form})
-
 
 
 def activate(request):
@@ -135,7 +141,6 @@ def send_email(toaddr,id):
 	server.quit()
 
 
-
 def passwordreset(request):
 	return render(request, 'password_change_form.html', {})
 
@@ -150,6 +155,9 @@ def logout(request):
 	request.session['user_id'] = None
 	request.session['redirect'] = "Logout"
 	return HttpResponseRedirect('/')
+
+
+
 
 
 def privacypolicy(request):
@@ -181,6 +189,56 @@ def notespool(request):
 		username = request.session['user_id']
 		return render_to_response('notespool.html', {'userp': username})
 	return render_to_response('notespool.html')
+
+	
+
+
+
+
+def administrator(request):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	users = User.objects.all()
+	students = Student.objects.all()
+	return render_to_response('administrator.html', {'userp': username,'users': users, 'students': students})
+
+def editAccount(request, account):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	userProfile = User.objects.get(username = account)
+
+	form = EditAccountForm(request.POST or None)
+
+	data = {'username': userProfile.username,
+            'first_name': userProfile.first_name,
+            'last_name': userProfile.last_name,
+            'gender': userProfile.gender,
+            'DOB': userProfile.DOB,
+            'email': userProfile.email}
+
+	
+
+	return render_to_response('edit_account.html', {'userp': username,'sent_user': userProfile})
+	
+
+def deleteAccount(request, account):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	users = User.objects.all()
+	username = request.session['user_id']
+	deleteUser = User.objects.get(username = account)
+	deleteUser.delete()
+	return render_to_response('administrator.html', {'userp': username, 'users': users})
+
+
+
+
+
 
 def account(request):
 	if request.session['user_id'] is None:

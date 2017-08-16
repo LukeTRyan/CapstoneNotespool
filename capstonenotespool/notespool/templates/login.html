@@ -21,7 +21,7 @@
             {{form.password}}
         </div>
         <br />
-
+        <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
         <p>{% trans "Forgot password" %}? <a href="{% url 'passwordreset' %}">{% trans "Reset it" %}</a>!</p>
         <p>{% trans "Not member" %}? <a href="{% url 'createaccount' %}">{% trans "Register" %}</a>!</p>
         <input class="btn btn-primary" type="submit" value="Login" />

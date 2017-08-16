@@ -1,0 +1,69 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+  
+<form action="\edit_account/{{sent_user.username}}" method="post">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #53A86C;
+            color: white;
+        }
+    </style>
+    <table style="width:600px">
+        <tr>
+            <th style="width:30px"> Username </th>
+            <th style="width:30px"> First name </th>
+            <th style="width:30px"> Last Name </th>
+            <th style="width:30px"> Gender </th>
+            <th style="width:30px"> DOB </th>
+            <th style="width:30px"> Email </th>
+        </tr>
+        <tr>
+            <td>
+                {{ form.username }}
+
+            </td>
+            <td>
+                {{ form.first_name }}
+
+            </td>
+            <td>
+                {{ form.last_name }}
+
+            </td>
+            <td>
+                {{ form.gender.errors }}
+                {{ form.gender }}
+
+            </td>
+            <td>
+                {{ form.DOB.errors }}
+                {{ form.DOB }}
+
+            </td>
+            <td>
+                {{ form.email.errors }}
+                {{ form.email }}
+
+            </td>
+        </tr>
+    </table>
+    <input type="submit" value="edit_account" />
+</form>
+
+{% endblock %}
