@@ -13,9 +13,9 @@ class Student(models.Model):
 	username = models.CharField(max_length=50, unique=True, blank=True)
 	password = models.CharField(max_length=15, unique=True)
 	email = models.EmailField(max_length=40, unique=True)
-	units_enrolled = models.IntegerField()
-	comments = models.CharField(max_length=100)
-	social = models.CharField(max_length=100)
+	units_enrolled = models.IntegerField(null=True)
+	comments = models.CharField(max_length=100, null=True)
+	social = models.CharField(max_length=100, null=True)
 
 def __str__(self):
 	return self.username + ' - ' + self.password

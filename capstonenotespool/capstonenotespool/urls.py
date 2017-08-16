@@ -28,6 +28,7 @@ urlpatterns = [
 	url(r'^logout/', views.logout, name='logout'),
 	url(r'^account/', views.account, name='account'),
 	url(r'^activation/',views.activate, name='activation'),
+	url(r'^activatereset/',views.activatereset, name='activatereset'),
 	url(r'^createaccount/', views.createaccount, name='createaccount'),
 	url(r'^privacypolicy/', views.privacypolicy, name='privacypolicy'),
 	url(r'^useragreement/', views.useragreement, name='useragreement'),

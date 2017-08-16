@@ -43,3 +43,5 @@ class EditAccountForm(forms.Form):
     DOB = forms.DateField(widget=forms.DateInput)
     email = forms.EmailField(widget=forms.EmailInput)
    
+class PasswordResetForm(forms.Form):
+	email = forms.EmailField(widget=forms.EmailInput)

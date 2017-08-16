@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Student
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -22,7 +22,6 @@ password='Uberhaxor123'
 
 
 #home
-@login_required
 def index(request):
 	if 'redirect' in request.session and request.session['redirect'] == "Login":
 		message = "Logged in successfully"
@@ -99,10 +98,11 @@ def createaccount(request):
 		#	return render(request, "registration_form.html", {'form': form, 'message': message})
 		else:
 			user = User.objects.create_user(username=username,password=password,email=email)
-			#newUserModel = Student(student_id = user.id,
-			#						username = username,
-			#						password = password,
-			#						email = email)
+			newUserModel = Student(student_id = user.id,
+									username = username,
+									password = password,
+									email = email)
+			newUserModel.save()
 			if user.check_password(password):
 				user = authenticate(username=username, password=password)
 				user.is_active=False
@@ -123,8 +123,18 @@ def activate(request):
 	user.save()
 	request.session['redirect'] = "NewAccount"  
 	return render_to_response('activation.html')
-	
 
+def activatereset(request):
+	id=int(request.GET.get('id'))
+	user = User.objects.get(id=id)
+	deleteUser = Student.objects.get(student_id = user.id)
+	deleteUser.delete()
+	user.delete()
+	user.is_active=False
+	request.session['user_id'] = None
+	request.session['redirect'] = "activatereset"  
+	return render_to_response('activatereset.html')
+	
 
 def send_email(toaddr,id):
 	text = "Hi!\nHow are you?\nHere is the link to activate your account:\nhttp://127.0.0.1:8000/activation/?id=%s" %(id)
@@ -140,17 +150,44 @@ def send_email(toaddr,id):
 	server.sendmail(fromaddr,[toaddr],msg)
 	server.quit()
 
+def send_reset_email(toaddr,id):
+	text = "Hi!\nHow are you?\nHere is the link to reset your password:\nhttp://127.0.0.1:8000/activatereset/?id=%s" %(id)
+	part1 = MIMEText(text, 'plain')
+	msg = MIMEMultipart('alternative')
+	msg.attach(part1)
+	subject="Reset your password at Capstone Notespool"
+	msg="""\From: %s\nTo: %s\nSubject: %s\n\n%s""" %(fromaddr,toaddr,subject,msg.as_string())
+	server = smtplib.SMTP('smtp.gmail.com:587')
+	server.ehlo()
+	server.starttls()
+	server.login(username,password)
+	server.sendmail(fromaddr,[toaddr],msg)
+	server.quit()
+
 
 def passwordreset(request):
-	return render(request, 'password_change_form.html', {})
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		return HttpResponseRedirect('/')
 
+	form = PasswordResetForm(data=request.POST)
+	if form.is_valid():
+		email = form.cleaned_data["email"]
+		if email and User.objects.filter(email=email).exclude(username=username).count():   #email match verification
+			user = User.objects.get(email = email)
+			id=user.id
+			email=user.email
+			send_reset_email(email,id)
+			message = "Reset Email Sent"
+			return render(request, 'password_change_form.html', {'form' : form, 'message': message})
+	else:
+		return render(request, 'password_change_form.html', {'form' : form})
+		
 def logout(request):
 	if request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
 
 	username = request.session['user_id']
 	user = User.objects.get(username = username)
-
 	[s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == user.id]
 	request.session['user_id'] = None
 	request.session['redirect'] = "Logout"
@@ -200,7 +237,7 @@ def administrator(request):
 		return HttpResponseRedirect('/')
 
 	username = request.session['user_id']
-	users = User.objects.all()
+	users = Student.objects.all()
 	return render_to_response('administrator.html', {'userp': username,'users': users})
 
 def editAccount(request, account):
@@ -216,8 +253,6 @@ def editAccount(request, account):
             'first_name': userProfile.first_name,
             'last_name': userProfile.last_name,
             'email': userProfile.email}
-
-	
 
 	return render_to_response('edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form})
 	
@@ -249,7 +284,7 @@ def account(request):
 		password = form.cleaned_data['password']
 		user = authenticate(username = username, password = password)
 		if user is not None:
-			deleteUser = User.objects.get(username = username)
+			deleteUser = Student.objects.get(username = username)
 			deleteUser.delete()
 			user.delete()
 			user.is_active=False
