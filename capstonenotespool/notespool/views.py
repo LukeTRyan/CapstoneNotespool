@@ -2,7 +2,7 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from .models import Student
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -286,9 +286,36 @@ def deleteAccount(request, account):
 	username = request.session['user_id']
 	deleteUser = User.objects.get(username = account)
 	deleteUser.delete()
+	deleteStudent = Student.objects.get(username = account)
+	deleteStudent.delete()
 	return render_to_response('administrator.html', {'userp': username, 'users': users})
 
+def createAccount(request):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
 
+	username = request.session['user_id']
+
+	form = CreateAccountForm(request.POST or None)
+
+	if form.is_valid():
+		username = form.cleaned_data['username']
+		password = form.cleaned_data['password']
+		first_name = form.cleaned_data['first_name']
+		last_name = form.cleaned_data['last_name']
+		email = form.cleaned_data['email']
+	
+		if User.objects.filter(username = username).exists() == False and User.objects.filter(email = email).exists() == False:
+			user = User.objects.create_user(username=username,password=password,email=email, first_name = first_name, last_name = last_name)
+			newUserModel = Student(student_id = user.id,
+									username = username,
+									password = password,
+									email = email)
+			newUserModel.save()
+			user.save()
+			request.session['redirect'] = "User_created"
+			return HttpResponseRedirect('/administrator')
+	return render(request,'create_account.html', {'userp': username, 'form': form})
 
 
 

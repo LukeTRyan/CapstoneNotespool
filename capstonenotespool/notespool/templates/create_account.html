@@ -2,7 +2,7 @@
 {% block title %}Admin{% endblock %}
 {% block content %}
   
-<form action="\edit_account/{{sent_user.username}}" method="post">
+<form action="/createaccount/" method="post">
     {% csrf_token %}
     <style>
         table {
@@ -57,7 +57,7 @@
             </td>
         </tr>
     </table>
-    <input class="btn btn-primary" type="submit" value="Edit Account" />
+    <input class="btn btn-primary" type="submit" value="Create User" />
 </form>
 
 {% endblock %}

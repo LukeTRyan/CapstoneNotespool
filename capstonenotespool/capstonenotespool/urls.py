@@ -25,6 +25,7 @@ urlpatterns = [
 	url(r'^administrator/', views.administrator, name='administrator'),
 	url(r'^edit_account/(?P<account>[^/]+)', views.editAccount, name='editAccounts'),
 	url(r'^delete_account/(?P<account>[^/]+)', views.deleteAccount, name='deleteAccounts'),
+	url(r'^createaccount/', views.createAccount, name='createaccount'),
 	url(r'^logout/', views.logout, name='logout'),
 	url(r'^account/', views.account, name='account'),
 	url(r'^activation/',views.activate, name='activation'),
