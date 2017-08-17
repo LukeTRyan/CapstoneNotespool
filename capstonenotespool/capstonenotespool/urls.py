@@ -30,13 +30,15 @@ urlpatterns = [
 	url(r'^account/', views.account, name='account'),
 	url(r'^activation/',views.activate, name='activation'),
 	url(r'^activatereset/',views.activatereset, name='activatereset'),
-	url(r'^createaccount/', views.createaccount, name='createaccount'),
+	url(r'^registeraccount/', views.registeraccount, name='registeraccount'),
 	url(r'^privacypolicy/', views.privacypolicy, name='privacypolicy'),
 	url(r'^useragreement/', views.useragreement, name='useragreement'),
 	url(r'^passwordreset/', views.passwordreset, name='passwordreset'),
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
+        url(r'^accounts/profile/', views.notespool, name='notespool'),
+    
 	
 
     

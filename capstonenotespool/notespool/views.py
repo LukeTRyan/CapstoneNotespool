@@ -65,7 +65,7 @@ def loginuser(request):
 
 
 #Creates user account
-def createaccount(request):
+def registeraccount(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		request.session['redirect'] = "AlreadyLogged"                    
 		return HttpResponseRedirect('/')
@@ -267,6 +267,14 @@ def editAccount(request, account):
 			user.last_name = last_name
 			user.email = email
 			user.save()
+
+			student = Student.objects.get(username = account)
+			student.username = username
+			student.password = password
+			student.first_name = first_name
+			student.last_name = last_name
+			student.email = email
+			student.save()
 
 			request.session['redirect'] = "User_edited"
 			return HttpResponseRedirect('/administrator')
