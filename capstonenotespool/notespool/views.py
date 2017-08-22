@@ -1,5 +1,6 @@
 from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
+from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from .models import Student
 from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm
@@ -15,6 +16,7 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.shortcuts import get_object_or_404
+from django.contrib.auth import logout as django_logout
 
 fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
@@ -31,7 +33,7 @@ def index(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('index.html', {'userp': username})
-	return render_to_response('index.html')
+	return render(request, 'index.html', {})
 	
 
 #logs in user
@@ -178,20 +180,14 @@ def passwordreset(request):
 		else:
 			message = "Account associated with that email does not exist"
 			return render(request, 'password_change_form.html', {'form' : form, 'message': message})
-	else:
-		return render(request, 'password_change_form.html', {'form' : form, 'message': message})
+	return render(request, 'password_change_form.html', {'form' : form})
 
 #logs out the user
-def logout(request):
-	if request.session['user_id'] is None:
-		return HttpResponseRedirect('/login')
 
-	username = request.session['user_id']
-	user = User.objects.get(username = username)
-	[s.delete() for s in Session.objects.all() if s.get_decoded().get('_auth_user_id') == user.id]
-	request.session['user_id'] = None
-	request.session['redirect'] = "Logout"
+def logout(request):
+	django_logout(request)
 	return HttpResponseRedirect('/')
+	
 
 
 
@@ -230,6 +226,7 @@ def notespool(request):
 
 
 #function index to view, edit, create and delete users 
+
 def administrator(request):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -239,6 +236,7 @@ def administrator(request):
 	return render_to_response('administrator.html', {'userp': username,'users': users})
 
 #admin function to edit user details 
+
 def editAccount(request, account):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -258,30 +256,36 @@ def editAccount(request, account):
 		first_name = form.cleaned_data['first_name']
 		last_name = form.cleaned_data['last_name']
 		email = form.cleaned_data['email']
+		
+		if User.objects.filter(username = username).exists() and (username != account):
+			username = request.session['user_id']
+			message = "Username already exists"
+			return render(request,'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
 
-		if username == account or User.objects.filter(username = username).exists() == False:
-			user = User.objects.get(username = account)
-			user.username = username
-			user.password = password
-			user.first_name = first_name
-			user.last_name = last_name
-			user.email = email
-			user.save()
+		if User.objects.filter(email = email).exists() and (email != userProfile.email):
+			username = request.session['user_id']
+			message = "Email already exists"
+			return render(request,'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
 
-			student = Student.objects.get(username = account)
-			student.username = username
-			student.password = password
-			student.first_name = first_name
-			student.last_name = last_name
-			student.email = email
-			student.save()
+		user = User.objects.get(username = account)
+		user.username = username
+		user.password = password
+		user.first_name = first_name
+		user.last_name = last_name
+		user.email = email
+		user.save()
 
-			request.session['redirect'] = "User_edited"
-			return HttpResponseRedirect('/administrator')
-		else:
-			message = "Username not valid"
-			form = EditAccountForm(initial=data)  
-			return render(request, 'edit_account.html', {'userp': username, 'message': message, 'sent_user': userProfile, 'form': form})
+		student = Student.objects.get(username = account)
+		student.username = username
+		student.password = password
+		student.first_name = first_name
+		student.last_name = last_name
+		student.email = email
+		student.save()
+
+		request.session['redirect'] = "User_edited"
+		return HttpResponseRedirect('/administrator')
+		
 	form = EditAccountForm(request.POST or None, initial=data) 
 	return render(request, 'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form})
 	
@@ -298,6 +302,7 @@ def deleteAccount(request, account):
 	deleteStudent.delete()
 	return render_to_response('administrator.html', {'userp': username, 'users': users})
 
+
 def createAccount(request):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -313,17 +318,28 @@ def createAccount(request):
 		last_name = form.cleaned_data['last_name']
 		email = form.cleaned_data['email']
 	
-		if User.objects.filter(username = username).exists() == False and User.objects.filter(email = email).exists() == False:
-			user = User.objects.create_user(username=username,password=password,email=email, first_name = first_name, last_name = last_name)
+		if User.objects.filter(username = username).exists():
+			username = request.session['user_id']
+			message = "Username already exists"
+			return render(request,'create_account.html', {'userp': username, 'form': form, 'message': message})
+		if User.objects.filter(email = email).exists():
+			username = request.session['user_id']
+			message = "Email already exists"
+			return render(request,'create_account.html', {'userp': username, 'form': form, 'message': message})
+		else:
+			user = User.objects.create_user(username=username,password=password,email=email,first_name = first_name,last_name = last_name)
+			user.save()
 			newUserModel = Student(student_id = user.id,
 									username = username,
 									password = password,
-									email = email)
+									email = email,
+									first_name = first_name,
+									last_name = last_name)
 			newUserModel.save()
-			user.save()
 			request.session['redirect'] = "User_created"
 			return HttpResponseRedirect('/administrator')
-	return render(request,'create_account.html', {'userp': username, 'form': form})
+	else:
+		return render(request,'create_account.html', {'userp': username, 'form': form})
 
 
 

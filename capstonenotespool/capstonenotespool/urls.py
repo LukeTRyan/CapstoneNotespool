@@ -37,7 +37,7 @@ urlpatterns = [
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
-        url(r'^accounts/profile/', views.notespool, name='notespool'),
+    url(r'^accounts/profile/', views.index, name='index'),
     
 	
 
