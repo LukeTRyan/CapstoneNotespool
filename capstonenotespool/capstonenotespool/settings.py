@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'social_django',
 	'notespool',
 ]
 
@@ -48,6 +49,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'capstonenotespool.urls'
@@ -55,7 +57,7 @@ ROOT_URLCONF = 'capstonenotespool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/capstonenotespool/templates/'],
+        'DIRS': ['C:/Users/Luke__000/Desktop/CapstoneNotespool/capstonenotespool/notespool/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -63,9 +65,22 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+				'social_django.context_processors.backends',  
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
+]
+
+SOCIAL_AUTH_FACEBOOK_KEY = '1435414656508185'  # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '39f35788182fed8ef6f4284c46b89df7'  # App Secret
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.twitter.TwitterOAuth',
+    'social_core.backends.facebook.FacebookOAuth2',
+
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 WSGI_APPLICATION = 'capstonenotespool.wsgi.application'
@@ -143,11 +158,3 @@ EMAIL_HOST_USER = 'LukeTRyan95@gmail.com'
 EMAIL_HOST_PASSWORD = ''
 SERVER_EMAIL = 'LukeTRyan95@gmail.com'
 DEFAULT_FROM_EMAIL = "LukeTRyan95@gmail.com"
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = '/media/'
-...
-INSTALLED_APPS = (
-    ...
-    'myapp',
-)

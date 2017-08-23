@@ -10,12 +10,14 @@ class Admin(models.Model):
 #database model for students 
 class Student(models.Model):
 	student_id = models.IntegerField(unique=True, primary_key=True)
-	username = models.CharField(max_length=50, unique=True, blank=True)
-	password = models.CharField(max_length=15, unique=True)
-	email = models.EmailField(max_length=40, unique=True)
-	units_enrolled = models.IntegerField()
-	comments = models.CharField(max_length=100)
-	social = models.CharField(max_length=100)
+	username = models.CharField(max_length=50)
+	password = models.CharField(max_length=15)
+	first_name = models.CharField(max_length=15, null=True)
+	last_name = models.CharField(max_length=15, null=True)
+	email = models.EmailField(max_length=40)
+	units_enrolled = models.IntegerField(null=True)
+	comments = models.CharField(max_length=100, null=True)
+	social = models.CharField(max_length=100, null=True)
 
 def __str__(self):
 	return self.username + ' - ' + self.password

@@ -1,0 +1,69 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+  
+<h2> View all Users & Edit their Accounts </h2>
+
+<form action="/createaccount/" method="get">
+    <input class="btn btn-primary" type="submit" value="Create User" />
+</form>
+<br />
+<p> Click the "Edit User" hyperlink to make changes...</p>
+<table style="width:800px" border="1">
+<style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+</style>
+    <tr></tr>
+    <h2>Students</h2>
+    {% for i in users %}
+    <tr></tr>
+    <tr>
+        <th style="background-color: #53A86C; color: white;"> {{ i.username }} </th>
+    </tr>
+    <tr>
+        <td> User ID: <br> {{ i.id }} </td>
+    </tr>
+    <tr>
+        <td> Password: <br> {{ i.password }} </td>
+    </tr>
+    <tr>
+        <td> First Name: <br> {{ i.first_name }} </td>
+    </tr>
+    <tr>
+        <td> Last Name: <br> {{ i.last_name }} </td>
+    </tr>
+    <tr>
+        <td> Email: <br> {{ i.email }} </td>
+    </tr>
+    <tr>
+        <td> <a href="\edit_account/{{ i.username }}/"> Edit User </a> </td>
+    </tr>
+    <tr>
+        <td> <a href="\delete_account/{{ i.username }}/"> Delete User </a> </td>
+    </tr>
+   
+    {% endfor %}
+</table>
+
+
+
+
+{% endblock %}

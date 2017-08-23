@@ -30,18 +30,25 @@
                         <li><a href="/contact">Contact</a></li>
                     {% else %}
                         <li><a href="/login/">Login</a></li>
-                        <li><a href="/createaccount">Create Account</a></li>
+                        <li><a href="/registeraccount">Create Account</a></li>
                         <li><a href="/aboutus">About us</a></li>
                         <li><a href="/contact">Contact</a></li>
+                    {% endif %}
+                    {% if userp == "admin" %}
+                        <li><a href="/administrator/">Admin</a></li>
                     {% endif %}
                 </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container -->
     </nav>
-
-    <p>Hello, {{userp}}</p>
+    {% if message is not none %}
+    <script>
+        alert('{{ message }}');
+    </script>
+    {% endif %}
 
     <div class="container">
+    <p>Hello, {{userp}}</p>
     {% block content %}
     {% endblock %}
     </div>

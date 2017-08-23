@@ -3,12 +3,12 @@
     "",
     "\\capstonenotespool",
     "\\capstonenotespool\\capstonenotespool",
-    "\\capstonenotespool\\capstonenotespool\\templates",
-    "\\capstonenotespool\\capstonenotespool\\templates\\layout",
     "\\capstonenotespool\\notespool",
+    "\\capstonenotespool\\notespool\\templates",
+    "\\capstonenotespool\\notespool\\templates\\layout",
     "\\capstonenotespool\\static",
     "\\capstonenotespool\\static\\css"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\capstonenotespool\\notespool\\templates\\create_account.html",
   "PreviewInSolutionExplorer": false
 }

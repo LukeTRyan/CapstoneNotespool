@@ -27,18 +27,11 @@ class LoginForm(forms.Form):
 
 #registration form for users
 class RegistrationForm(forms.Form):
-	username = forms.CharField(max_length=15);
+	username = forms.CharField(max_length=15)
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	email = forms.EmailField(widget=forms.EmailInput)
 
 class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
-
-
-class DocumentForm(forms.Form):
-    docfile = forms.FileField(
-        label='Select a file',
-        help_text='max. 42 megabytes'
-    )
 

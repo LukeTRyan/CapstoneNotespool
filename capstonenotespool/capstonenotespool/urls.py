@@ -20,22 +20,23 @@ from notespool import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
 	url(r'^$', views.index, name='index'),
+	url(r'^oauth/', include('social_django.urls', namespace='social')),
 	url(r'^login/', views.loginuser, name='login'),
+	url(r'^administrator/', views.administrator, name='administrator'),
+	url(r'^edit_account/(?P<account>[^/]+)', views.editAccount, name='editAccounts'),
+	url(r'^delete_account/(?P<account>[^/]+)', views.deleteAccount, name='deleteAccounts'),
+	url(r'^createaccount/', views.createAccount, name='createaccount'),
 	url(r'^logout/', views.logout, name='logout'),
 	url(r'^account/', views.account, name='account'),
 	url(r'^activation/',views.activate, name='activation'),
-	url(r'^createaccount/', views.createaccount, name='createaccount'),
+	url(r'^activatereset/',views.activatereset, name='activatereset'),
+	url(r'^registeraccount/', views.registeraccount, name='registeraccount'),
 	url(r'^privacypolicy/', views.privacypolicy, name='privacypolicy'),
 	url(r'^useragreement/', views.useragreement, name='useragreement'),
 	url(r'^passwordreset/', views.passwordreset, name='passwordreset'),
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
-    url(r'^', include('myapp.urls')),
-    urlpatterns = patterns('myapp.views',
-    url(r'^list/$', 'list', name='list'),
-)
-) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 	
 
     
