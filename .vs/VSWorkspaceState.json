@@ -9,6 +9,6 @@
     "\\capstonenotespool\\static",
     "\\capstonenotespool\\static\\css"
   ],
-  "SelectedNode": "\\capstonenotespool\\notespool\\templates\\create_account.html",
+  "SelectedNode": "\\capstonenotespool\\notespool\\templates\\layout\\layout.html",
   "PreviewInSolutionExplorer": false
 }

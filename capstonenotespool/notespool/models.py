@@ -64,46 +64,46 @@ class StudyNotes(models.Model):
 	location = models.IntegerField()
 
 class Document(models.Model):
-    docfile = models.FileField(upload_to='documents/%Y/%m/%d')
+	docfile = models.FileField(upload_to='documents/%Y/%m/%d')
 
 class Exam(models.Model):
-    """
-    Exam's model, works as a wrapper for the questions
-    """
-    name = models.CharField(max_length=64, verbose_name=u'Exam name', )
-    slug = models.SlugField()
+	"""
+	Exam's model, works as a wrapper for the questions
+	"""
+	name = models.CharField(max_length=64, verbose_name=u'Exam name', )
+	slug = models.SlugField()
 
-    def __str__(self):
-        return self.name
+	def __str__(self):
+		return self.name
 
 
 class Question(models.Model):
-    question_text = models.CharField(max_length=256, verbose_name=u'Question\'s text')
-    is_published = models.BooleanField(default=False)
-    exam = models.ForeignKey(Exam, related_name='questions')
+	question_text = models.CharField(max_length=256, verbose_name=u'Question\'s text')
+	is_published = models.BooleanField(default=False)
+	exam = models.ForeignKey(Exam, related_name='questions')
 
-    def __str__(self):
-        return "{content} - {published}".format(content=self.question_text, published=self.is_published)
+	def __str__(self):
+		return "{content} - {published}".format(content=self.question_text, published=self.is_published)
 
 
 class Answer(models.Model):
-    """
-    Answer's Model, which is used as the answer in Question Model
-    """
-    text = models.CharField(max_length=128, verbose_name=u'Answer\'s text')
-    is_valid = models.BooleanField(default=False)
-    question = models.ForeignKey(Question, related_name='answers')
+	"""
+	Answer's Model, which is used as the answer in Question Model
+	"""
+	text = models.CharField(max_length=128, verbose_name=u'Answer\'s text')
+	is_valid = models.BooleanField(default=False)
+	question = models.ForeignKey(Question, related_name='answers')
 
-    def __str__(self):
-        return self.text
+	def __str__(self):
+		return self.text
 
- class Event(models.Model):
-    title = models.CharField(max_length=255)
-    date = models.DateField()
-    is_outdoors = models.BooleanField()
+class Event(models.Model):
+	title = models.CharField(max_length=255)
+	date = models.DateField()
+	is_outdoors = models.BooleanField()
 
-    index = djangosearch.ModelIndex(text=['title'], 
-                                    additional=['date', 'is_outdoors'])
+	index = djangosearch.ModelIndex(text=['title'], 
+	additional=['date', 'is_outdoors'])
 
 # run a search
 results = Event.index.search("django conference")

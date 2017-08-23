@@ -22,7 +22,7 @@ class LoginForm(forms.Form):
 			if not user.is_active:
 				raise forms.ValidationError("User is no longer active.")
 		return super(LoginForm, self).clean(*args, **kwargs)
-         captcha = CaptchaField()
+		captcha = CaptchaField()
 
 
 #registration form for users
@@ -35,3 +35,19 @@ class RegistrationForm(forms.Form):
 class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 
+class EditAccountForm(forms.Form):
+	username = forms.CharField(max_length=15)
+	password = forms.CharField(max_length=15)
+	first_name = forms.CharField(max_length=15)
+	last_name = forms.CharField(max_length=15)
+	email = forms.EmailField(widget=forms.EmailInput)
+
+class CreateAccountForm(forms.Form):
+	username = forms.CharField(max_length=15)
+	password = forms.CharField(max_length=15)
+	first_name = forms.CharField(max_length=15)
+	last_name = forms.CharField(max_length=15)
+	email = forms.EmailField(widget=forms.EmailInput)
+   
+class PasswordResetForm(forms.Form):
+	email = forms.EmailField(widget=forms.EmailInput)
