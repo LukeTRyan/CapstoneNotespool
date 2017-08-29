@@ -22,7 +22,7 @@ class LoginForm(forms.Form):
 			if not user.is_active:
 				raise forms.ValidationError("User is no longer active.")
 		return super(LoginForm, self).clean(*args, **kwargs)
-		#captcha = CaptchaField()
+		captcha = CaptchaField()
 
 
 #registration form for users

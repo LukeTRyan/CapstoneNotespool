@@ -38,5 +38,5 @@ urlpatterns = [
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
 	url(r'^list/$', views.list, name='list'),
-	
+    url(r'^captcha/', include('captcha.urls')),
 ]

@@ -24,6 +24,7 @@
         <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
         <p>{% trans "Forgot password" %}? <a href="{% url 'passwordreset' %}">{% trans "Reset it" %}</a>!</p>
         <p>{% trans "Not member" %}? <a href="{% url 'registeraccount' %}">{% trans "Register" %}</a>!</p>
+        <button class='js-captcha-refresh'></button>
         <input class="btn btn-primary" type="submit" value="Login" />
 
     </form>
