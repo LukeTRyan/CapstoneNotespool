@@ -58,7 +58,7 @@ ROOT_URLCONF = 'capstonenotespool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/notespool/templates/'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,6 +72,7 @@ TEMPLATES = [
         },
     },
 ]
+
 
 SOCIAL_AUTH_FACEBOOK_KEY = '1435414656508185'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '39f35788182fed8ef6f4284c46b89df7'  # App Secret

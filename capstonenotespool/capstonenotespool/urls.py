@@ -14,6 +14,8 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
+from django.conf.urls.static import static
+from django.conf import settings
 from django.contrib import admin
 from notespool import views
 
@@ -39,4 +41,4 @@ urlpatterns = [
 	url(r'^notespool/', views.notespool, name='notespool'),
 	url(r'^list/$', views.list, name='list'),
     url(r'^captcha/', include('captcha.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

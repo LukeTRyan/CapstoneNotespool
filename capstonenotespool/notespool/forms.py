@@ -9,6 +9,7 @@ from captcha.fields import CaptchaField
 class LoginForm(forms.Form):
 	username = forms.CharField()
 	password = forms.CharField(widget=forms.PasswordInput)
+	captcha = CaptchaField()
 
 	def clean(self, *args, **kwargs):
 		username = self.cleaned_data.get("username")
@@ -22,7 +23,6 @@ class LoginForm(forms.Form):
 			if not user.is_active:
 				raise forms.ValidationError("User is no longer active.")
 		return super(LoginForm, self).clean(*args, **kwargs)
-		captcha = CaptchaField()
 
 
 #registration form for users
@@ -31,6 +31,7 @@ class RegistrationForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	email = forms.EmailField(widget=forms.EmailInput)
+	captcha = CaptchaField()
 
 class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)

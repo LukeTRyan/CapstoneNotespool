@@ -221,7 +221,8 @@ def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('notespool.html', {'userp': username})
-	return render_to_response('notespool.html')
+	else:
+		return HttpResponseRedirect('/')
 
 	
 
@@ -344,8 +345,6 @@ def createAccount(request):
 		return render(request,'create_account.html', {'userp': username, 'form': form})
 
 
-
-
 def account(request):
 	if request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
@@ -371,22 +370,26 @@ def account(request):
 
 
 def list(request):
-     # Handle file upload
-     if request.method == 'POST':
-         form = DocumentForm(request.POST, request.FILES)
-         if form.is_valid():
-             newdoc = Document(docfile = request.FILES['docfile'])
-             newdoc.save()
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	# Handle file upload
+	if request.method == 'POST':
+		form = DocumentForm(request.POST, request.FILES)
+		if form.is_valid():
+			newdoc = Document(docfile = request.FILES['docfile'])
+			newdoc.save()
  
-             # Redirect to the document list after POST
-             return HttpResponseRedirect(reverse('views.list'))
-     else:
-         form = DocumentForm() # A empty, unbound form
+			# Redirect to the document list after POST
+			return HttpResponseRedirect(reverse('views.list'))
+	else:
+		form = DocumentForm() # A empty, unbound form
  
-     # Load documents for the list page
-     documents = Document.objects.all()
+    # Load documents for the list page
+	documents = Document.objects.all()
  
-     # Render list page with the documents and the form
-     return render(request, 'list.html',
-         {'documents': documents, 'form': form}
-     ) 
+    # Render list page with the documents and the form
+	return render(request, 'list.html',
+		{'documents': documents, 'form': form, 'userp':username}
+	) 

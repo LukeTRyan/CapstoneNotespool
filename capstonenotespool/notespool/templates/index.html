@@ -7,7 +7,9 @@
     <div style="text-align:center;">
         <h1>Welcome to Capstone Notespool</h1>
         <p>
+            {% if userp is not none %}
             <a class="btn btn-lg btn-primary" href="/notespool" role="button">Notespool</a>
+            {% endif %}
         </p>
     </div>
 </div>

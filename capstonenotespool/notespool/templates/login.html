@@ -19,14 +19,15 @@
             {{help_text|safe}}
             <label for="form.password.id_for_label">Password: </label><br>
             {{form.password}}
+
         </div>
         <br />
         <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
         <p>{% trans "Forgot password" %}? <a href="{% url 'passwordreset' %}">{% trans "Reset it" %}</a>!</p>
         <p>{% trans "Not member" %}? <a href="{% url 'registeraccount' %}">{% trans "Register" %}</a>!</p>
-        <button class='js-captcha-refresh'></button>
+        {{ form.captcha }}
+        <button class='js-captcha-refresh'>Refresh Captcha</button><br><br>
         <input class="btn btn-primary" type="submit" value="Login" />
-
     </form>
 </div>
 {% endblock %}

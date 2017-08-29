@@ -35,9 +35,12 @@
                         <li><a href="/contact">Contact</a></li>
                     {% endif %}
                     {% if userp == "admin" %}
-                        <li><a href="/administrator/">Admin</a></li>
-                    {% endif %}
-                </ul>
+                    <li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/administrator/">View Users</a></li>
+                            <li><a href="/createaccount/">Create Users</a></li>
+                            {% endif %}
+                        </ul>
             </div><!--/.nav-collapse -->
         </div><!--/.container -->
     </nav>
@@ -48,7 +51,9 @@
     {% endif %}
 
     <div class="container">
+    {% if userp is not none %}
     <p>Hello, {{userp}}</p>
+    {% endif %}
     {% block content %}
     {% endblock %}
     </div>

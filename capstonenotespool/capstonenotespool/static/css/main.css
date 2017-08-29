@@ -1,16 +1,18 @@
 ﻿.navbar-default {
     background-color: #292929;
+    position: relative;
+    display: inline-block;
 }
 
 .navbar-default .navbar-nav > li > a {
         color: #FFF;
 }
 
-.navbar-default .navbar-nav > li > a:hover {
-        color: #CCC;
+    .navbar-default .navbar-nav > li > a:hover {
+        color: #00ff21;
 }
 
-    .navbar-default .navbar-brand {
+.navbar-default .navbar-brand {
         color: #FFF;
 }
 
