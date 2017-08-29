@@ -102,11 +102,11 @@ class Event(models.Model):
 	date = models.DateField()
 	is_outdoors = models.BooleanField()
 
-	index = djangosearch.ModelIndex(text=['title'], 
-	additional=['date', 'is_outdoors'])
+	#index = djangosearch.ModelIndex(text=['title'], 
+	#additional=['date', 'is_outdoors'])
 
 # run a search
-results = Event.index.search("django conference")
+#results = Event.index.search("django conference")
 
 
 

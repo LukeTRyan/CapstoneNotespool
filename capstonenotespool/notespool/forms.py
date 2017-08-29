@@ -22,7 +22,7 @@ class LoginForm(forms.Form):
 			if not user.is_active:
 				raise forms.ValidationError("User is no longer active.")
 		return super(LoginForm, self).clean(*args, **kwargs)
-		captcha = CaptchaField()
+		#captcha = CaptchaField()
 
 
 #registration form for users
@@ -51,3 +51,10 @@ class CreateAccountForm(forms.Form):
    
 class PasswordResetForm(forms.Form):
 	email = forms.EmailField(widget=forms.EmailInput)
+
+class DocumentForm(forms.Form):
+     docfile = forms.FileField(
+         label='Select a file',
+         help_text='max. 42 megabytes'
+     )
+ 

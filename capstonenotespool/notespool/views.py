@@ -2,8 +2,8 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import Student
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm
+from .models import Student, Document
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -17,6 +17,8 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import logout as django_logout
+from django.template import RequestContext
+from django.core.urlresolvers import reverse
 
 fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
@@ -366,3 +368,25 @@ def account(request):
 			message = "Incorrect credentials"
 			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})
 	return render(request, "account.html", {'form': form, 'userp': username})
+
+
+def list(request):
+     # Handle file upload
+     if request.method == 'POST':
+         form = DocumentForm(request.POST, request.FILES)
+         if form.is_valid():
+             newdoc = Document(docfile = request.FILES['docfile'])
+             newdoc.save()
+ 
+             # Redirect to the document list after POST
+             return HttpResponseRedirect(reverse('views.list'))
+     else:
+         form = DocumentForm() # A empty, unbound form
+ 
+     # Load documents for the list page
+     documents = Document.objects.all()
+ 
+     # Render list page with the documents and the form
+     return render(request, 'list.html',
+         {'documents': documents, 'form': form}
+     ) 
