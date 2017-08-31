@@ -3,12 +3,10 @@
     "",
     "\\capstonenotespool",
     "\\capstonenotespool\\capstonenotespool",
-    "\\capstonenotespool\\notespool",
-    "\\capstonenotespool\\notespool\\templates",
-    "\\capstonenotespool\\notespool\\templates\\layout",
-    "\\capstonenotespool\\static",
+    "\\capstonenotespool\\capstonenotespool\\static",
+    "\\capstonenotespool\\capstonenotespool\\static\\css",
     "\\capstonenotespool\\static\\css"
   ],
-  "SelectedNode": "\\capstonenotespool\\capstonenotespool\\urls.py",
+  "SelectedNode": "\\capstonenotespool\\capstonenotespool\\static\\css\\main.css",
   "PreviewInSolutionExplorer": false
 }

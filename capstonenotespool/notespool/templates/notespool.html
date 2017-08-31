@@ -1,4 +1,18 @@
 {% extends 'layout/layout.html' %}
 {% block title %}Notespool{% endblock %}
 {% block content %}
+<br />
+<form action="/create_unit" method="get">
+    <input class="btn btn-success btn-lg" type="submit" value="Create Unit" />
+</form>
+
+<br>
+{% for i in units %}    
+    {% if i.approval == True %}
+        <h2><a href="\notespool/{{ i.unit_name }}/"> {{i.unit_name}} </a></h2>
+    {% endif %}
+{% endfor %}
+
+
+
 {% endblock %}

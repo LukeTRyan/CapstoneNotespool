@@ -58,7 +58,7 @@ ROOT_URLCONF = 'capstonenotespool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/capstonenotespool/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -146,11 +146,7 @@ USE_TZ = True
 
 
 STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-	os.path.join(BASE_DIR, "static"),
-]
-
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True

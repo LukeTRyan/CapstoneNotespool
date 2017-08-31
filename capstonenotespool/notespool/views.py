@@ -2,17 +2,18 @@ from django.shortcuts import render, render_to_response
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm
+from .models import Student, Document, Unit
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.sessions.models import Session
 from django.http import HttpResponse, HttpResponseRedirect
-from .functions import password_verification, email_verification
+from .functions import password_verification, email_verification, id_generator
 from xml.dom import minidom
 from django.db.models import Count
 import smtplib
+import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.shortcuts import get_object_or_404
@@ -114,7 +115,7 @@ def registeraccount(request):
 	else:
 		return render(request, 'registration_form.html', {'form' : form})
 
-
+#activates user accounts
 def activate(request):
 	id=int(request.GET.get('id'))
 	user = User.objects.get(id=id)
@@ -123,6 +124,7 @@ def activate(request):
 	request.session['redirect'] = "NewAccount"  
 	return render_to_response('activation.html')
 
+#deletes the user account for password reset
 def activatereset(request):
 	id=int(request.GET.get('id'))
 	user = User.objects.get(id=id)
@@ -185,51 +187,52 @@ def passwordreset(request):
 	return render(request, 'password_change_form.html', {'form' : form})
 
 #logs out the user
-
 def logout(request):
 	django_logout(request)
 	return HttpResponseRedirect('/')
 	
-
-
-
+#Site privacy policy
 def privacypolicy(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('privacypolicy.html', {'userp': username})
 	return render_to_response('privacypolicy.html')
 
+#User agreement/terms of use
 def useragreement(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('useragreement.html', {'userp': username})
 	return render_to_response('useragreement.html')
 
+#Site owners background
 def aboutus(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('aboutus.html', {'userp': username})
 	return render_to_response('aboutus.html')
-    
+   
+#Site owners contact information
 def contact(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('contact.html', {'userp': username})
 	return render_to_response('contact.html')
 
+#Notespool homepage
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
-		return render_to_response('notespool.html', {'userp': username})
+
+		units = Unit.objects.all()
+		return render_to_response('notespool.html', {'userp': username, 'units':units})
 	else:
 		return HttpResponseRedirect('/')
-
+	return render_to_response('notespool.html', {'userp': username})
 	
 
 
-
 #function index to view, edit, create and delete users 
-
 def administrator(request):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -238,8 +241,109 @@ def administrator(request):
 	users = User.objects.all()
 	return render_to_response('administrator.html', {'userp': username,'users': users})
 
-#admin function to edit user details 
+#admin function to view units
+def view_unit(request):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
 
+	username = request.session['user_id']
+	units = Unit.objects.all()
+	return render_to_response('view_units.html', {'userp': username,'units': units})
+
+#function to create units 
+def create_unit(request):
+	if request.session['user_id'] is None:
+		return HttpResponseRedirect('/login')
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+
+	form = CreateUnitForm(request.POST or None)
+		
+	if form.is_valid():
+		unit_name = form.cleaned_data['unit_name']
+		unit_code = form.cleaned_data['unit_code']
+
+		if Unit.objects.filter(unit_name = unit_name).exists():
+			username = request.session['user_id']
+			message = "Unit already exists"
+			return render(request,'create_unit.html', {'userp': username, 'form': form, 'message': message})
+
+		if Unit.objects.filter(unit_code = unit_code).exists():
+			username = request.session['user_id']
+			message = "Unit already exists"
+			return render(request,'create_unit.html', {'userp': username, 'form': form, 'message': message})
+		else:
+			newUnit = Unit(unit_id = id_generator(), unit_name = unit_name, unit_code = unit_code, created_by = username)
+			newUnit.save()
+			request.session['redirect'] = "Unit_created"
+			return HttpResponseRedirect('/notespool')
+	else:
+		return render(request, 'create_unit.html', {'userp':username, 'form':form}) 
+
+#admin function to delete units
+def delete_unit(request,unitid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	units = Unit.objects.all()
+	deleteUnit = Unit.objects.get(unit_id = unitid)
+	deleteUnit.delete()
+	return render_to_response('view_units.html', {'userp': username, 'units': units})
+
+#admin function to edit units
+def edit_unit(request,unitid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	unitDetails = Unit.objects.get(unit_id = unitid)
+	form = EditUnitForm(request.POST or None)
+	data = {'unit_name': unitDetails.unit_name,
+            'unit_code': unitDetails.unit_code,
+            'approval': unitDetails.approval}
+
+	if form.is_valid():
+		unit_name = form.cleaned_data['unit_name']
+		unit_code = form.cleaned_data['unit_code']
+		approval = form.cleaned_data['approval']
+
+	
+		if Unit.objects.filter(unit_name = unit_name).exists() and (unit_name != unitDetails.unit_name):
+			username = request.session['user_id']
+			message = "Unit name already exists"
+			return render(request,'edit_unit.html', {'userp': username,'sent_unit': unitDetails, 'form': form, 'message': message})
+
+		if Unit.objects.filter(unit_code = unit_code).exists() and (unit_code != unitDetails.unit_code):
+			username = request.session['user_id']
+			message = "Unit code already exists"
+			return render(request,'edit_unit.html', {'userp': username,'sent_unit': unitDetails, 'form': form, 'message': message})
+
+		unitDetails.unit_name = unit_name
+		unitDetails.unit_code = unit_code
+		unitDetails.approval = approval
+		unitDetails.save()
+
+		request.session['redirect'] = "Unit_edited"
+		return HttpResponseRedirect('/view_unit/')
+	
+	form = EditUnitForm(request.POST or None, initial=data) 
+	return render(request, 'edit_unit.html', {'userp': username,'sent_unit': unitDetails, 'form': form})
+
+#admin function to approve the unit once it has been created
+def approve_unit(request,unitid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	units = Unit.objects.all()
+	approveUnit = Unit.objects.get(unit_id = unitid)
+	approveUnit.approval = True
+	approveUnit.save()
+	return render_to_response('view_units.html', {'userp': username, 'units': units})
+
+
+#admin function to edit user details 
 def editAccount(request, account):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -292,7 +396,7 @@ def editAccount(request, account):
 	form = EditAccountForm(request.POST or None, initial=data) 
 	return render(request, 'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form})
 	
-
+#admin function to delete existing accounts
 def deleteAccount(request, account):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -305,7 +409,7 @@ def deleteAccount(request, account):
 	deleteStudent.delete()
 	return render_to_response('administrator.html', {'userp': username, 'users': users})
 
-
+#admin function to create accounts
 def createAccount(request):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -344,7 +448,7 @@ def createAccount(request):
 	else:
 		return render(request,'create_account.html', {'userp': username, 'form': form})
 
-
+#user account - users can edit and delete their accounts from here
 def account(request):
 	if request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
@@ -368,7 +472,7 @@ def account(request):
 			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})
 	return render(request, "account.html", {'form': form, 'userp': username})
 
-
+#list of uploaded documents - currently limited to admin
 def list(request):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -391,5 +495,5 @@ def list(request):
  
     # Render list page with the documents and the form
 	return render(request, 'list.html',
-		{'documents': documents, 'form': form, 'userp':username}
-	) 
+		{'documents': documents, 'form': form, 'userp':username}) 
+

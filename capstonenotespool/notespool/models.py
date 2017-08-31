@@ -25,12 +25,14 @@ def __str__(self):
 class Unit(models.Model):
 	unit_id = models.IntegerField(unique=True, primary_key=True)
 	unit_name = models.CharField(max_length=50, unique=True)
-	staff = models.IntegerField()
-	students = models.IntegerField()
-	created_by = models.IntegerField()
+	unit_code = models.CharField(max_length=50, unique=True)
+	staff = models.IntegerField(null=True)
+	students = models.IntegerField(null=True)
+	created_by = models.CharField(max_length=20)
 	created_on = models.DateField(default=datetime.datetime.now)
-	subpages = models.IntegerField()
-	notes = models.IntegerField()
+	subpages = models.IntegerField(null=True)
+	notes = models.IntegerField(null=True)
+	approval = models.NullBooleanField(default=False)
 
 #database model for staff 
 class Staff(models.Model):

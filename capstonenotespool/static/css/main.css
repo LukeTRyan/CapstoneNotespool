@@ -8,8 +8,8 @@
         color: #FFF;
 }
 
-    .navbar-default .navbar-nav > li > a:hover {
-        color: #00ff21;
+.navbar-default .navbar-nav > li > a:hover {
+        color: #CCC;
 }
 
 .navbar-default .navbar-brand {
