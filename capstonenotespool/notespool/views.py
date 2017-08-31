@@ -223,13 +223,24 @@ def contact(request):
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
-
 		units = Unit.objects.all()
 		return render_to_response('notespool.html', {'userp': username, 'units':units})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('notespool.html', {'userp': username})
-	
+
+
+def unit_page(request,unitname):
+        if 'user_id' in request.session and request.session['user_id'] is not None:
+                username = request.session['user_id']
+                unit = Unit.objects.get(unit_name = unitname)
+                unitName = unit.unit_name
+                return render_to_response('unit_page.html', {'userp': username, 'unitName':unitName})
+        else:
+                return HttpResponseRedirect('/')
+        return render_to_response('unit_page.html', {'userp': username})
+
+
 
 
 #function index to view, edit, create and delete users 
@@ -374,13 +385,12 @@ def editAccount(request, account):
 			message = "Email already exists"
 			return render(request,'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
 
-		user = User.objects.get(username = account)
-		user.username = username
-		user.password = password
-		user.first_name = first_name
-		user.last_name = last_name
-		user.email = email
-		user.save()
+		userProfile.username = username
+		userProfile.password = password
+		userProfile.first_name = first_name
+		userProfile.last_name = last_name
+		userProfile.email = email
+		userProfile.save()
 
 		student = Student.objects.get(username = account)
 		student.username = username
@@ -486,7 +496,7 @@ def list(request):
 			newdoc.save()
  
 			# Redirect to the document list after POST
-			return HttpResponseRedirect(reverse('views.list'))
+			return HttpResponseRedirect('/list')
 	else:
 		form = DocumentForm() # A empty, unbound form
  

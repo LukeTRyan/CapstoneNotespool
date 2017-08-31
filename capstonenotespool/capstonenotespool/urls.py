@@ -44,6 +44,7 @@ urlpatterns = [
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
+        url(r'^unit_page/(?P<unitname>[^/]+)', views.unit_page, name='unit_page'),
 	url(r'^list/$', views.list, name='list'),
     url(r'^captcha/', include('captcha.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
