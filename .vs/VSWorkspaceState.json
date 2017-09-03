@@ -3,10 +3,15 @@
     "",
     "\\capstonenotespool",
     "\\capstonenotespool\\capstonenotespool",
-    "\\capstonenotespool\\capstonenotespool\\static",
-    "\\capstonenotespool\\capstonenotespool\\static\\css",
-    "\\capstonenotespool\\static\\css"
+    "\\capstonenotespool\\media\\documents",
+    "\\capstonenotespool\\media\\documents\\2017",
+    "\\capstonenotespool\\media\\documents\\2017\\08",
+    "\\capstonenotespool\\media\\documents\\2017\\08\\29",
+    "\\capstonenotespool\\notespool",
+    "\\capstonenotespool\\notespool\\templates",
+    "\\capstonenotespool\\notespool\\templates\\layout",
+    "\\capstonenotespool\\static"
   ],
-  "SelectedNode": "\\capstonenotespool\\capstonenotespool\\static\\css\\main.css",
+  "SelectedNode": "\\capstonenotespool\\capstonenotespool\\urls.py",
   "PreviewInSolutionExplorer": false
 }
