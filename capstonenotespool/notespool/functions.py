@@ -1,4 +1,6 @@
 import re
+import string
+import random
 from django.contrib.auth.models import User
 
 def password_verification(password):
@@ -22,3 +24,6 @@ def email_verification(email):
 		return True
 	else:
 		return False
+
+def id_generator(size=6, chars=string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))

@@ -3,7 +3,11 @@
     "",
     "\\capstonenotespool",
     "\\capstonenotespool\\capstonenotespool",
-    "\\capstonenotespool\\notespool"
+    "\\capstonenotespool\\notespool",
+    "\\capstonenotespool\\notespool\\templates",
+    "\\capstonenotespool\\notespool\\templates\\layout",
+    "\\capstonenotespool\\static",
+    "\\capstonenotespool\\static\\css"
   ],
   "SelectedNode": "\\capstonenotespool\\db.sqlite3",
   "PreviewInSolutionExplorer": false

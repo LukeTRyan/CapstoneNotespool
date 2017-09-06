@@ -1,0 +1,70 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Notespool{% endblock %}
+{% block content %}
+<br />
+
+<form action="/create_unit/" method="post">
+    {% csrf_token %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #53A86C;
+            color: white;
+        }
+    </style>
+    <table style="width:600px">
+        <tr>
+            <th style="width:30px"> Unit Name </th>
+            <th style="width:30px"> Unit Code </th>
+        </tr>
+        <tr>
+            <td>
+                {{ form.unit_name.errors }}
+                {{ form.unit_name }}
+
+            </td>
+            <td>
+                {{ form.unit_code.errors }}
+                {{ form.unit_code }}
+
+            </td>
+        </tr>
+    </table>
+    {{ form.captcha }}
+    <button class='js-captcha-refresh'>Refresh Captcha</button><br><br>
+    <input class="btn btn-success" type="submit" value="Create Unit" />
+</form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

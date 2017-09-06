@@ -1,0 +1,51 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Edit Unit{% endblock %}
+{% block content %}
+  
+<form action="\edit_unit/{{sent_unit.unit_id}}" method="post">
+    {% csrf_token %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #53A86C;
+            color: white;
+        }
+    </style>
+    <table style="width:600px">
+        <tr>
+            <th style="width:30px"> Unit Name </th>
+            <th style="width:30px"> Unit Code </th>
+            <th style="width:30px"> Approval </th>
+        </tr>
+        <tr>
+            <td>
+                {{ form.unit_name }}
+
+            </td>
+            <td>
+                {{ form.unit_code }}
+
+            </td>
+            <td>
+                {{ form.approval }}
+            </td>
+        </tr>
+    </table>
+    <input class="btn btn-primary" type="submit" value="Edit Unit" />
+</form>
+
+{% endblock %}

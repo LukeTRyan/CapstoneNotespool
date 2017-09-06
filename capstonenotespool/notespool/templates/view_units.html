@@ -1,0 +1,66 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Notespool{% endblock %}
+{% block content %}
+<h2> View all Units, Create, Edit and Remove </h2>
+<form action="/create_unit" method="get">
+    <input class="btn btn-success" type="submit" value="Create Unit" />
+</form>
+<table style="width:800px" border="1">
+<style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+</style>
+
+    <h2>Units</h2>
+
+    {% for i in units %}
+    <tr></tr>
+    <tr>
+        <th style="background-color: #53A86C; color: white;"> {{ i.unit_name }} </th>
+    </tr>
+    <tr>
+        <td> Unit ID: <br> {{ i.unit_id }} </td>
+    </tr>
+    <tr>
+        <td> Unit Code: <br> {{ i.unit_code }} </td>
+    </tr>
+    <tr>
+        <td> Created By: <br> {{ i.created_by }} </td>
+    </tr>
+    <tr>
+        <td> Created On: <br> {{ i.created_on }} </td>
+    </tr>
+    <tr>
+        <td> Approval status: <br> {{ i.approval }} </td>
+    </tr>
+    <tr>
+        <td> <a href="\edit_unit/{{ i.unit_id }}/"> Edit Unit </a> </td>
+    </tr>
+    <tr>
+        <td> <a href="\approve_unit/{{ i.unit_id }}/"> Approve Unit </a> </td>
+    </tr>
+    <tr>
+        <td> <a href="\delete_unit/{{ i.unit_id }}/"> Delete Unit </a> </td>
+    </tr>
+
+
+    {% endfor %}
+
+{% endblock %}

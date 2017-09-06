@@ -31,7 +31,6 @@ class RegistrationForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	email = forms.EmailField(widget=forms.EmailInput)
-	captcha = CaptchaField()
 
 class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
@@ -58,4 +57,13 @@ class DocumentForm(forms.Form):
          label='Select a file',
          help_text='max. 42 megabytes'
      )
+
+class CreateUnitForm(forms.Form):
+	unit_name = forms.CharField(max_length=50)
+	unit_code = forms.CharField(max_length=50)
+	captcha = CaptchaField()
  
+class EditUnitForm(forms.Form):
+	unit_name = forms.CharField(max_length=50)
+	unit_code = forms.CharField(max_length=50)
+	approval = forms.NullBooleanField()
