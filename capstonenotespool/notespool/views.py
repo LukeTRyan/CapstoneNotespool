@@ -293,8 +293,6 @@ def unit_subpage(request,unitname,subpageid):
 		username = request.session['user_id']
 		unit = Unit.objects.get(unit_name = unitname)
 		unitName = unit.unit_name
-<<<<<<< HEAD
-=======
 
 		subpage = UnitSubpage.objects.get(subpage_id = subpageid)
 		subpageNAME = subpage.subpage_name
@@ -303,7 +301,6 @@ def unit_subpage(request,unitname,subpageid):
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
->>>>>>> f520ccb77a4c2caa5d291a9b70ac5e7ca8cac44d
 
 		subpage = UnitSubpage.objects.get(subpage_id = subpageid)
 		subpageNAME = subpage.subpage_name
