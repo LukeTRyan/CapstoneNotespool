@@ -1,9 +1,9 @@
 {% extends 'layout/layout.html' %}
-{% block title %}Create Unit{% endblock %}
+{% block title %}Create Subpage{% endblock %}
 {% block content %}
 <br />
 
-<form action="/create_unit/" method="post">
+<form action="\create_subpage/{{sent_unit.unit_name}}" method="post">
     {% csrf_token %}
     <style>
         table {
@@ -26,27 +26,21 @@
             color: white;
         }
     </style>
-    <table style="width:600px">
+    <table style="width:30px">
         <tr>
-            <th style="width:30px"> Unit Name </th>
-            <th style="width:30px"> Unit Code </th>
+            <th style="width:30px"> Subpage Name </th>
         </tr>
         <tr>
             <td>
-                {{ form.unit_name.errors }}
-                {{ form.unit_name }}
-
-            </td>
-            <td>
-                {{ form.unit_code.errors }}
-                {{ form.unit_code }}
+                {{ form.subpage_name.errors }}
+                {{ form.subpage_name }}
 
             </td>
         </tr>
     </table>
     {{ form.captcha }}
     <button class='js-captcha-refresh'>Refresh Captcha</button><br><br>
-    <input class="btn btn-success" type="submit" value="Create Unit" />
+    <input class="btn btn-success" type="submit" value="Create Subpage" />
 </form>
 
 

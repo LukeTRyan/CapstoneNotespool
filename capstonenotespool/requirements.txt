@@ -9,3 +9,7 @@ virtualenvwrapper-win==1.2.1
 waitress==1.0.0
 web.py==0.40.dev0
 whitenoise==3.2.1
+python-social-auth==0.3.5
+django-social-auth==0.7.22
+social-auth-app-django==1.0.0
+django-simple-captcha==0.5.5

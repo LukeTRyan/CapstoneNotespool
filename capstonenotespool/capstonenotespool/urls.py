@@ -6,8 +6,7 @@ Examples:
 Function views
     1. Add an import:  from my_app import views
     2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
-
-    -based views
+Class-based views
     1. Add an import:  from other_app.views import Home
     2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
 Including another URLconf
@@ -45,11 +44,10 @@ urlpatterns = [
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
 	url(r'^notespool/', views.notespool, name='notespool'),
-        url(r'^unit_page/(?P<unitname>[^/]+)', views.unit_page, name='unit_page'),
+    url(r'^unit_page/(?P<unitname>[^/]+)', views.unit_page, name='unit_page'),
+	url(r'^unit_subpage/(?P<unitname>[^/]+)/(?P<subpageid>[^/]+)', views.unit_subpage, name='unit_subpage'),
+	url(r'^create_subpage/(?P<unitname>[^/]+)', views.create_subpage, name='create_subpage'),
+	url(r'^view_subpages/', views.view_subpages, name='view_subpages'),
 	url(r'^list/$', views.list, name='list'),
     url(r'^captcha/', include('captcha.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
