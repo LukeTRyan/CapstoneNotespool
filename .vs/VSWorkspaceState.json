@@ -5,9 +5,7 @@
     "\\capstonenotespool\\capstonenotespool",
     "\\capstonenotespool\\notespool",
     "\\capstonenotespool\\notespool\\templates",
-    "\\capstonenotespool\\notespool\\templates\\layout",
-    "\\capstonenotespool\\static",
-    "\\capstonenotespool\\static\\css"
+    "\\capstonenotespool\\notespool\\templates\\layout"
   ],
   "SelectedNode": "\\capstonenotespool\\db.sqlite3",
   "PreviewInSolutionExplorer": false
