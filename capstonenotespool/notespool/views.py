@@ -276,7 +276,6 @@ def notespool(request):
 		return HttpResponseRedirect('/')
 	return render_to_response('notespool.html', {'userp': username})
 
-
 def unit_page(request,unitname):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
@@ -302,7 +301,6 @@ def unit_subpage(request,unitname,subpageid):
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
-
 
 #function index to view, edit, create and delete users 
 def administrator(request):
@@ -424,6 +422,16 @@ def delete_unit(request,unitid):
 	UnitSubpage.objects.filter(unit = deleteUnit.unit_name).delete()
 	return render_to_response('view_units.html', {'userp': username, 'units': units})
 
+def delete_subpage(request,subpageid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	subpages = UnitSubpage.objects.all()
+	deletesubpage = UnitSubpage.objects.get(subpage_id = subpageid)
+	deletesubpage.delete()
+	return render_to_response('view_subpages.html', {'userp': username, 'subpages': subpages})
+
 #admin function to edit units
 def edit_unit(request,unitid):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
@@ -475,6 +483,17 @@ def approve_unit(request,unitid):
 	approveUnit.save()
 	return render_to_response('view_units.html', {'userp': username, 'units': units})
 
+
+def approve_subpage(request,subpageid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	subpages = UnitSubpage.objects.all()
+	approvesubpage = UnitSubpage.objects.get(subpage_id = subpageid)
+	approvesubpage.approval = True
+	approvesubpage.save()
+	return render_to_response('view_subpages.html', {'userp': username, 'subpages': subpages})
 
 #admin function to edit user details 
 def editAccount(request, account):

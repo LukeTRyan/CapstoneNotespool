@@ -26,8 +26,6 @@
         }
 </style>
 
-    <h2>Units</h2>
-
     {% for i in subpages %}
     <tr></tr>
     <tr>
@@ -46,10 +44,10 @@
         <td> Approval status: <br> {{ i.approval }} </td>
     </tr>
     <tr>
-        <td> <a href="\approve_unit/{{ i.subpage_id }}/"> Approve Subpage </a> </td>
+        <td> <a href="\approve_subpage/{{ i.subpage_id }}/"> Approve Subpage </a> </td>
     </tr>
     <tr>
-        <td> <a href="\delete_unit/{{ i.subpage_id }}/"> Delete Subpage </a> </td>
+        <td> <a href="\delete_subpage/{{ i.subpage_id }}/"> Delete Subpage </a> </td>
     </tr>
 
 
