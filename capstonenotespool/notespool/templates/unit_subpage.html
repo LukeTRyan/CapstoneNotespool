@@ -1,8 +1,23 @@
 {% extends 'layout/layout.html' %}
-{% block title %}Notespool{% endblock %}
+{% block title %}{{subpageNAME}}{% endblock %}
 {% block content %}
 <br />
 
 <h1>Hello, Welcome to the {{subpageNAME}} page for {{unitName}} </h1>
+{% csrf_token %}
+
+<form action="\unit_subpage/{{unitName}}/{{subpageNAME}}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>{{ form.non_field_errors }}</p>
+    <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+    <p>
+        {{ form.docfile.errors }}
+        {{ form.docfile }}
+    </p>
+    <p><input type="submit" value="Upload" /></p>
+
+</form>
+
+
 
 {% endblock %}

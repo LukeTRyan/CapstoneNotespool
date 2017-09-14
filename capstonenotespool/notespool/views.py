@@ -294,21 +294,25 @@ def unit_subpage(request,unitname,subpageid):
 		unit = Unit.objects.get(unit_name = unitname)
 		unitName = unit.unit_name
 
+		# Handle file upload
+		if request.method == 'POST':
+			form = DocumentForm(request.POST, request.FILES)
+			if form.is_valid():
+				newdoc = Document(docfile = request.FILES['docfile'])
+				newdoc.save()
+				# Redirect to the document list after POST
+				return HttpResponseRedirect('/list')
+		else:
+			form = DocumentForm() # A empty, unbound form
+
 		subpage = UnitSubpage.objects.get(subpage_id = subpageid)
 		subpageNAME = subpage.subpage_name
 
-		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpageNAME})
+		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpageNAME, 'form':form, 'subpageid':subpageid})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
 
-		subpage = UnitSubpage.objects.get(subpage_id = subpageid)
-		subpageNAME = subpage.subpage_name
-
-		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpageNAME})
-	else:
-		return HttpResponseRedirect('/')
-	return render_to_response('unit_subpage.html', {'userp': username})
 
 #function index to view, edit, create and delete users 
 def administrator(request):
@@ -656,3 +660,16 @@ def list(request):
 	return render(request, 'list.html',
 		{'documents': documents, 'form': form, 'userp':username}) 
 
+
+def delete_document(request,documentpk):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	documents = Document.objects.all()
+	for document in documents:
+		if Document.objects.get(pk = documentpk):
+			document.docfile.delete()
+			document.delete()
+			return HttpResponseRedirect('/list')
+	return render_to_response('list.html', {'userp': username, 'documents': documents})

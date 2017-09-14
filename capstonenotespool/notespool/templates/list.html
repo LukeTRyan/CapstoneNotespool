@@ -1,4 +1,4 @@
-{% extends 'layout/layout.html' %}
+﻿{% extends 'layout/layout.html' %}
 {% block title %}Documents{% endblock %}
 {% block content %}
 <html>
@@ -18,6 +18,9 @@
         {% for document in documents %}
 
         <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+        <tr>
+            <td> <a href="\delete_document/{{ document.pk }}/"> Delete Document </a> </td>
+        </tr>
         {% endfor %}
 
     </ul>
