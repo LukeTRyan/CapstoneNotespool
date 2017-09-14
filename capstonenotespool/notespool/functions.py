@@ -25,5 +25,5 @@ def email_verification(email):
 	else:
 		return False
 
-def id_generator(size=6, chars=string.digits):
+def id_generator(size=8, chars=string.digits):
     return ''.join(random.choice(chars) for _ in range(size))

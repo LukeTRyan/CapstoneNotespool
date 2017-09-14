@@ -3,7 +3,20 @@
 {% block content %}
 <br />
 
-<h1>Hello, Welcome to the notespool for {{unitName}} </h1>
 
+<h1>Hello, Welcome to the Notespool for {{unitName}} </h1>
 
+<form action="\create_subpage/{{unitName}}" method="get">
+    <input class="btn btn-success btn-lg" type="submit" value="Create Subpage" />
+</form>
+<br />
+{% for i in subpages %}
+    {% if i.approval == True %}
+        <table>
+            <tr>
+                <td> <a href="\unit_subpage/{{ i.unit }}/{{ i.subpage_id }}/"> {{ i.subpage_name }} </a> </td>
+            </tr>
+        </table>
+    {% endif %}
+{% endfor %}
 {% endblock %}

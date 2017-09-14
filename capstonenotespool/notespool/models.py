@@ -43,11 +43,15 @@ class Staff(models.Model):
 	units = models.IntegerField()
 
 class UnitSubpage(models.Model):
-	subpage_id = models.IntegerField(unique=True, primary_key=True)
-	unit = models.IntegerField()
-	studynotes = models.IntegerField()
-	images = models.ImageField()
-	quiz = models.CharField(max_length=100)
+	subpage_id = models.IntegerField(primary_key=True)
+	subpage_name = models.CharField(max_length=50, null=True)
+	unit = models.CharField(max_length=50, null=True)
+	studynotes = models.IntegerField(null=True)
+	created_by = models.CharField(max_length=20, null=True)
+	created_on = models.DateField(default=datetime.datetime.now)
+	approval = models.NullBooleanField(default=False)
+	images = models.ImageField(null=True)
+	quiz = models.CharField(max_length=100, null=True)
 
 
 class Comment(models.Model):

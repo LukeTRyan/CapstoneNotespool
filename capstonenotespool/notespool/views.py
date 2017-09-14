@@ -1,9 +1,10 @@
 from django.shortcuts import render, render_to_response
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document, Unit
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm
+from .models import Student, Document, Unit, UnitSubpage
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -25,56 +26,52 @@ fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
 password='Uberhaxor123'
 
-from calendar import HTMLCalendar
-from datetime import date
-from itertools import groupby
+#from calendar import HTMLCalendar
+#from datetime import date
+#from itertools import groupby
 
-from django.utils.html import conditional_escape as esc
+#from django.utils.html import conditional_escape as esc
 
-class UpcomingAssessment(HTMLCalendar):
+#class UpcomingAssessment(HTMLCalendar):
 
-    def __init__(self, assessments):
-        super(UpcomingAssessment, self).__init__()
-        self.assessments = self.group_by_day(assessments)
+#	def __init__(self, assessments):
+#		super(UpcomingAssessment, self).__init__()
+#		self.assessments = self.group_by_day(assessments)
 
-    def formatday(self, day, weekday):
-        if day != 0:
-            cssclass = self.cssclasses[weekday]
-            if date.today() == date(self.year, self.month, day):
-                cssclass += ' today'
-            if day in self.assessments:
-                cssclass += ' filled'
-                body = ['<ul>
-    ']
-    for assessment in self.assessments[day]:
-    body.append('
-    <li>
-        ')
-        body.append('<a href="%s">
-            ' % assessment.get_absolute_url())
-            body.append(esc(assessment.title))
-            body.append('
-        </a>
-    </li>')
-    body.append('
-</ul>')
-                return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
-            return self.day_cell(cssclass, day)
-        return self.day_cell('noday', '&nbsp;')
+#	def formatday(self, day, weekday):
+#		if day != 0:
+#			cssclass = self.cssclasses[weekday]
+#			if date.today() == date(self.year, self.month, day):
+#				cssclass += ' today'
+#			if day in self.assessments:
+#				cssclass += ' filled'
+#				body = ['<ul>']
+#	for assessment in self.assessments[day]:
+#		body.append('')
+#	<li>
+#       body.append('<a href="%s">' % assessment.get_absolute_url())
+#          body.append(esc(assessment.title))
+#            body.append('')
+#       </a>
+#    </li>
+#    body.append('')
+#</ul>
+#                return self.day_cell(cssclass, '%d %s' % (day, ''.join(body)))
+#           return self.day_cell(cssclass, day)
+#        return self.day_cell('noday', '&nbsp;')
 
-    def formatmonth(self, year, month):
-        self.year, self.month = year, month
-        return super(UpcomingAssessment, self).formatmonth(year, month)
+ #   def formatmonth(self, year, month):
+ #       self.year, self.month = year, month
+ #       return super(UpcomingAssessment, self).formatmonth(year, month)
 
-    def group_by_day(self, assessments):
-        field = lambda assessment: assessment.performed_at.day
-        return dict(
-            [(day, list(items)) for day, items in groupby(assessments, field)]
-        )
+#    def group_by_day(self, assessments):
+#        field = lambda assessment: assessment.performed_at.day
+#        return dict(
+#            [(day, list(items)) for day, items in groupby(assessments, field)]
+#        )
 
-    def day_cell(self, cssclass, body):
-        return '<td class="%s">%s</td>' % (cssclass, body)
-
+#    def day_cell(self, cssclass, body):
+#        return '<td class="%s">%s</td>' % (cssclass, body)
 
 #home
 def index(request):
@@ -188,7 +185,7 @@ def activatereset(request):
 	
 #sends verification email to the user 
 def send_email(toaddr,id):
-	text = "Hi!\nHow are you?\nHere is the link to activate your account:\nhttp://127.0.0.1:8000/activation/?id=%s" %(id)
+	text = "Hi!\nHow are you?\nHere is the link to activate your account:\nhttps://capstonenotespool.herokuapp.com/activation/?id=%s" %(id)
 	part1 = MIMEText(text, 'plain')
 	msg = MIMEMultipart('alternative')
 	msg.attach(part1)
@@ -279,19 +276,39 @@ def notespool(request):
 		return HttpResponseRedirect('/')
 	return render_to_response('notespool.html', {'userp': username})
 
-
 def unit_page(request,unitname):
-        if 'user_id' in request.session and request.session['user_id'] is not None:
-                username = request.session['user_id']
-                unit = Unit.objects.get(unit_name = unitname)
-                unitName = unit.unit_name
-                return render_to_response('unit_page.html', {'userp': username, 'unitName':unitName})
-        else:
-                return HttpResponseRedirect('/')
-        return render_to_response('unit_page.html', {'userp': username})
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+		unit = Unit.objects.get(unit_name = unitname)
+		unitName = unit.unit_name
 
+		subpages = UnitSubpage.objects.filter(unit = unitname)
+		return render_to_response('unit_page.html', {'userp': username, 'unitName':unitName, 'subpages':subpages})
+	else:
+		return HttpResponseRedirect('/')
+	return render_to_response('unit_page.html', {'userp': username})
 
+def unit_subpage(request,unitname,subpageid):
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+		unit = Unit.objects.get(unit_name = unitname)
+		unitName = unit.unit_name
 
+		subpage = UnitSubpage.objects.get(subpage_id = subpageid)
+		subpageNAME = subpage.subpage_name
+
+		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpageNAME})
+	else:
+		return HttpResponseRedirect('/')
+	return render_to_response('unit_subpage.html', {'userp': username})
+
+		subpage = UnitSubpage.objects.get(subpage_id = subpageid)
+		subpageNAME = subpage.subpage_name
+
+		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpageNAME})
+	else:
+		return HttpResponseRedirect('/')
+	return render_to_response('unit_subpage.html', {'userp': username})
 
 #function index to view, edit, create and delete users 
 def administrator(request):
@@ -311,12 +328,28 @@ def view_unit(request):
 	units = Unit.objects.all()
 	return render_to_response('view_units.html', {'userp': username,'units': units})
 
+def view_subpages(request):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	subpages = UnitSubpage.objects.all()
+	return render_to_response('view_subpages.html', {'userp': username,'subpages': subpages})
+
+
 #function to create units 
 def create_unit(request):
 	if request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
+
+	try: 
+		get_latest = Unit.objects.latest('unit_id')
+		latest_id = get_latest.unit_id
+	except ObjectDoesNotExist:
+		latest_id = 0
+
 
 	form = CreateUnitForm(request.POST or None)
 		
@@ -334,12 +367,54 @@ def create_unit(request):
 			message = "Unit already exists"
 			return render(request,'create_unit.html', {'userp': username, 'form': form, 'message': message})
 		else:
-			newUnit = Unit(unit_id = id_generator(), unit_name = unit_name, unit_code = unit_code, created_by = username)
+			newUnit = Unit(unit_id = latest_id + 1, unit_name = unit_name, unit_code = unit_code, created_by = username)
 			newUnit.save()
+
+			AssessmentSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Assessment", unit = newUnit.unit_name, created_by = username)
+			AssessmentSubpage.save()
+
+			QuizSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Quizzes", unit = newUnit.unit_name, created_by = username)
+			QuizSubpage.save()
+
+			LectureSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Lectures", unit = newUnit.unit_name, created_by = username)
+			LectureSubpage.save()
+
+			TutorialSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Tutorials", unit = newUnit.unit_name, created_by = username)
+			TutorialSubpage.save()
+			
+
 			request.session['redirect'] = "Unit_created"
 			return HttpResponseRedirect('/notespool')
 	else:
 		return render(request, 'create_unit.html', {'userp':username, 'form':form}) 
+
+
+def create_subpage(request,unitname):
+	if request.session['user_id'] is None:
+		return HttpResponseRedirect('/login')
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+
+	unitDetails = Unit.objects.get(unit_name = unitname)
+
+	form = CreateSubpageForm(request.POST or None)
+		
+	if form.is_valid():
+		subpage_name = form.cleaned_data['subpage_name']
+
+		if UnitSubpage.objects.filter(subpage_name = subpage_name).exists():
+			username = request.session['user_id']
+			message = "subpage already exists"
+			return render(request,'create_subpage.html', {'userp': username,'sent_unit': unitDetails, 'form': form, 'message': message})
+
+		else:
+			newSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = subpage_name, unit = unitname, created_by = username)
+			newSubpage.save()
+
+			request.session['redirect'] = "subpage_created"
+			return HttpResponseRedirect('/notespool')
+	else:
+		return render(request, 'create_subpage.html', {'userp':username, 'sent_unit': unitDetails, 'form':form}) 
 
 #admin function to delete units
 def delete_unit(request,unitid):
@@ -350,7 +425,20 @@ def delete_unit(request,unitid):
 	units = Unit.objects.all()
 	deleteUnit = Unit.objects.get(unit_id = unitid)
 	deleteUnit.delete()
+
+	subpages = UnitSubpage.objects.all()
+	UnitSubpage.objects.filter(unit = deleteUnit.unit_name).delete()
 	return render_to_response('view_units.html', {'userp': username, 'units': units})
+
+def delete_subpage(request,subpageid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	subpages = UnitSubpage.objects.all()
+	deletesubpage = UnitSubpage.objects.get(subpage_id = subpageid)
+	deletesubpage.delete()
+	return render_to_response('view_subpages.html', {'userp': username, 'subpages': subpages})
 
 #admin function to edit units
 def edit_unit(request,unitid):
@@ -403,6 +491,17 @@ def approve_unit(request,unitid):
 	approveUnit.save()
 	return render_to_response('view_units.html', {'userp': username, 'units': units})
 
+
+def approve_subpage(request,subpageid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	subpages = UnitSubpage.objects.all()
+	approvesubpage = UnitSubpage.objects.get(subpage_id = subpageid)
+	approvesubpage.approval = True
+	approvesubpage.save()
+	return render_to_response('view_subpages.html', {'userp': username, 'subpages': subpages})
 
 #admin function to edit user details 
 def editAccount(request, account):
@@ -555,5 +654,5 @@ def list(request):
  
     # Render list page with the documents and the form
 	return render(request, 'list.html',
-		{'documents': documents, 'form': form, 'userp':username}
-	) 
+		{'documents': documents, 'form': form, 'userp':username}) 
+

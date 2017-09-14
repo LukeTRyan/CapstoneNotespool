@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+import dj_database_url
+DATABASES = { 'default': dj_database_url.config() }
 
 # Application definition
 
@@ -50,6 +52,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware',
 	'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
@@ -81,7 +84,6 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.github.GithubOAuth2',
     'social_core.backends.twitter.TwitterOAuth',
     'social_core.backends.facebook.FacebookOAuth2',
-
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -91,10 +93,11 @@ WSGI_APPLICATION = 'capstonenotespool.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
+#database settings for local server
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'capstonenotespool',
+	'default': {
+		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+		'NAME': 'capstonenotespool',
 		'USER': 'postgres',
 		'PASSWORD': 'root',
 		'HOST': '',
@@ -102,6 +105,17 @@ DATABASES = {
     }
 }
 
+#database settings for heroku
+#DATABASES = {
+#    'default': {
+#       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#       'NAME': 'd95o7ihf5kempt',
+#		'USER': 'tgafvrhipvwdne',
+#		'PASSWORD': '3530c597dc26a7efb292686caa8bdd5eb9fed9f9473114f0b57f6dc942db60b0',
+#		'HOST': 'ec2-54-83-205-71.compute-1.amazonaws.com',
+#		'PORT': '5432',
+#    }
+#}
 
 
 ACCOUNT_ACTIVATION_DAYS = 7
@@ -144,9 +158,14 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
