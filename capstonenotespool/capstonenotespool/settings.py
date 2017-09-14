@@ -94,28 +94,28 @@ WSGI_APPLICATION = 'capstonenotespool.wsgi.application'
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 #database settings for local server
-#DATABASES = {
-#	'default': {
-#		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#		'NAME': 'capstonenotespool',
-#		'USER': 'postgres',
-#		'PASSWORD': 'root',
-#		'HOST': '',
-#		'PORT': '',
-#    }
-#}
-
-#database settings for heroku
 DATABASES = {
-    'default': {
+	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd3j0rtdjiopqof',
-		'USER': 'pxqmwhjxsnrfmo',
-		'PASSWORD': 'c3f0053c614337041b9ff6de0ee7c54a9749dd95194ece88f0461a95141aecd7',
-		'HOST': 'ec2-23-23-248-247.compute-1.amazonaws.com',
-		'PORT': '5432',
+		'NAME': 'capstonenotespool',
+		'USER': 'postgres',
+		'PASSWORD': 'root',
+		'HOST': '',
+		'PORT': '',
     }
 }
+
+#database settings for heroku
+##DATABASES = {
+##    'default': {
+##		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+##        'NAME': 'd3j0rtdjiopqof',
+##		'USER': 'pxqmwhjxsnrfmo',
+##		'PASSWORD': 'c3f0053c614337041b9ff6de0ee7c54a9749dd95194ece88f0461a95141aecd7',
+##		'HOST': 'ec2-23-23-248-247.compute-1.amazonaws.com',
+##		'PORT': '5432',
+##    }
+##}
 
 
 ACCOUNT_ACTIVATION_DAYS = 7

@@ -12,7 +12,7 @@ from django.contrib.sessions.models import Session
 from django.http import HttpResponse, HttpResponseRedirect
 from .functions import password_verification, email_verification, id_generator
 from xml.dom import minidom
-from django.db.models import Count
+from django.db.models import Count, Q
 import smtplib
 import datetime
 from email.mime.text import MIMEText
@@ -316,29 +316,57 @@ def unit_subpage(request,unitname,subpageid):
 
 #function index to view, edit, create and delete users 
 def administrator(request):
-	if 'user_id' not in request.session or request.session['user_id'] != "admin":
-		return HttpResponseRedirect('/')
+        if 'user_id' not in request.session or request.session['user_id'] != "admin":
+                return HttpResponseRedirect('/')
 
-	username = request.session['user_id']
-	users = User.objects.all()
-	return render_to_response('administrator.html', {'userp': username,'users': users})
+        username = request.session['user_id']
+        users = User.objects.all()
+        query = request.GET.get("q")
+        if query:
+                users = users.filter(
+                        Q(username__icontains=query)|
+                        Q(id__icontains=query)|
+                        Q(first_name__icontains=query)|
+                        Q(last_name__icontains=query)|
+                        Q(email__icontains=query)
+                        ).distinct()
+        return render_to_response('administrator.html', {'userp': username,'users': users})
 
 #admin function to view units
 def view_unit(request):
-	if 'user_id' not in request.session or request.session['user_id'] != "admin":
-		return HttpResponseRedirect('/')
+        if 'user_id' not in request.session or request.session['user_id'] != "admin":
+                return HttpResponseRedirect('/')
+	
+        username = request.session['user_id']
+        units = Unit.objects.all()
+        query = request.GET.get("q")
+        if query:
+                units = units.filter(
+                        Q(unit_name__icontains=query)|
+                        Q(unit_id__icontains=query)|
+                        Q(unit_code__icontains=query)
+                        ).distinct()
+	
+	
+        return render_to_response('view_units.html', {'userp': username,'units': units})
 
-	username = request.session['user_id']
-	units = Unit.objects.all()
-	return render_to_response('view_units.html', {'userp': username,'units': units})
+
 
 def view_subpages(request):
-	if 'user_id' not in request.session or request.session['user_id'] != "admin":
-		return HttpResponseRedirect('/')
+        if 'user_id' not in request.session or request.session['user_id'] != "admin":
+                return HttpResponseRedirect('/')
 
-	username = request.session['user_id']
-	subpages = UnitSubpage.objects.all()
-	return render_to_response('view_subpages.html', {'userp': username,'subpages': subpages})
+        username = request.session['user_id']
+        subpages = UnitSubpage.objects.all()
+        query = request.GET.get("q")
+        if query:
+                subpages = subpages.filter(
+                        Q(subpage_id__icontains=query)|
+                        Q(subpage_name__icontains=query)|
+                        Q(unit__icontains=query)
+                        ).distinct()
+	
+        return render_to_response('view_subpages.html', {'userp': username,'subpages': subpages})
 
 
 #function to create units 
@@ -374,16 +402,16 @@ def create_unit(request):
 			newUnit = Unit(unit_id = latest_id + 1, unit_name = unit_name, unit_code = unit_code, created_by = username)
 			newUnit.save()
 
-			AssessmentSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Assessment", unit = newUnit.unit_name, created_by = username)
+			AssessmentSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Assessment", unit = newUnit.unit_name, created_by = username, approval = True)
 			AssessmentSubpage.save()
 
-			QuizSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Quizzes", unit = newUnit.unit_name, created_by = username)
+			QuizSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Quizzes", unit = newUnit.unit_name, created_by = username, approval = True)
 			QuizSubpage.save()
 
-			LectureSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Lectures", unit = newUnit.unit_name, created_by = username)
+			LectureSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Lectures", unit = newUnit.unit_name, created_by = username,  approval = True)
 			LectureSubpage.save()
 
-			TutorialSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Tutorials", unit = newUnit.unit_name, created_by = username)
+			TutorialSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Tutorials", unit = newUnit.unit_name, created_by = username,  approval = True)
 			TutorialSubpage.save()
 			
 
@@ -637,28 +665,35 @@ def account(request):
 
 #list of uploaded documents - currently limited to admin
 def list(request):
-	if 'user_id' not in request.session or request.session['user_id'] != "admin":
-		return HttpResponseRedirect('/')
+        if 'user_id' not in request.session or request.session['user_id'] != "admin":
+                return HttpResponseRedirect('/')
 
-	username = request.session['user_id']
-	# Handle file upload
-	if request.method == 'POST':
-		form = DocumentForm(request.POST, request.FILES)
-		if form.is_valid():
-			newdoc = Document(docfile = request.FILES['docfile'])
-			newdoc.save()
+        username = request.session['user_id']
+        # Handle file upload
+        if request.method == 'POST':
+                form = DocumentForm(request.POST, request.FILES)
+                if form.is_valid():
+                        newdoc = Document(docfile = request.FILES['docfile'])
+                        newdoc.save()
  
-			# Redirect to the document list after POST
-			return HttpResponseRedirect('/list')
-	else:
-		form = DocumentForm() # A empty, unbound form
+                        # Redirect to the document list after POST
+                        return HttpResponseRedirect('/list')
+        else:
+                form = DocumentForm() # A empty, unbound form
  
-    # Load documents for the list page
-	documents = Document.objects.all()
+        # Load documents for the list page
+        documents = Document.objects.all()
+        query = request.GET.get("q")
+        if query:
+                documents = documents.filter(
+                        Q(pk__icontains=query)|
+                        Q(docfile__icontains=query)
+                        ).distinct()
+	
  
-    # Render list page with the documents and the form
-	return render(request, 'list.html',
-		{'documents': documents, 'form': form, 'userp':username}) 
+        # Render list page with the documents and the form
+        return render(request, 'list.html',
+                {'documents': documents, 'form': form, 'userp':username}) 
 
 
 def delete_document(request,documentpk):
