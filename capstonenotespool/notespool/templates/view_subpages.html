@@ -2,6 +2,14 @@
 {% block title %}View Subpages{% endblock %}
 {% block content %}
 <h2> View all Subpages </h2>
+<br>
+
+<form method='GET' action=''>
+<input type='text' name='q' placeholder='Search Subpages' value='{{ request.GET.q }}'/>
+<input type='submit' value='Search'/>
+</form>
+
+<br>
 
 <table style="width:800px" border="1">
 <style>
@@ -27,8 +35,6 @@
 </style>
 
 
-    <h2>Units</h2>
-
     {% for i in subpages %}
     <tr></tr>
     <tr>
@@ -47,19 +53,11 @@
         <td> Approval status: <br> {{ i.approval }} </td>
     </tr>
     <tr>
-<<<<<<< HEAD
         <td> <a href="\approve_subpage/{{ i.subpage_id }}/"> Approve Subpage </a> </td>
     </tr>
     <tr>
         <td> <a href="\delete_subpage/{{ i.subpage_id }}/"> Delete Subpage </a> </td>
-=======
-        <td> <a href="\approve_unit/{{ i.subpage_id }}/"> Approve Subpage </a> </td>
     </tr>
-    <tr>
-        <td> <a href="\delete_unit/{{ i.subpage_id }}/"> Delete Subpage </a> </td>
->>>>>>> f520ccb77a4c2caa5d291a9b70ac5e7ca8cac44d
-    </tr>
-
 
     {% endfor %}
 
