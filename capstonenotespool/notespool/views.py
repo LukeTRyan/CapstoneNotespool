@@ -676,7 +676,7 @@ def report(request):
 			request.session['user_id'] = None
 			return HttpResponseRedirect('/')
 		else:
-			message = "Incorrect credentials"
+			message = "Content Removed"
 			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})
 	return render(request, "account.html", {'form': form, 'userp': username})
 

@@ -2,11 +2,15 @@
   "ExpandedNodes": [
     "",
     "\\capstonenotespool",
-    "\\capstonenotespool\\capstonenotespool",
+    "\\capstonenotespool\\media",
+    "\\capstonenotespool\\media\\documents",
+    "\\capstonenotespool\\media\\documents\\2017",
+    "\\capstonenotespool\\media\\documents\\2017\\08",
+    "\\capstonenotespool\\media\\documents\\2017\\08\\29",
     "\\capstonenotespool\\notespool",
     "\\capstonenotespool\\notespool\\templates",
     "\\capstonenotespool\\notespool\\templates\\layout"
   ],
-  "SelectedNode": "\\capstonenotespool\\notespool\\templates\\view_subpages.html",
+  "SelectedNode": "\\capstonenotespool\\lockscript.sqlite3",
   "PreviewInSolutionExplorer": false
 }
