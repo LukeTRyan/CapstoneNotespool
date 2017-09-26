@@ -673,3 +673,29 @@ def delete_document(request,documentpk):
 			document.delete()
 			return HttpResponseRedirect('/list')
 	return render_to_response('list.html', {'userp': username, 'documents': documents})
+
+
+
+#report content		
+def report(request):		
+	if request.session['user_id'] is None:		
+		return HttpResponseRedirect('/login')		
+	if 'user_id' in request.session and request.session['user_id'] is not None:		
+		username = request.session['user_id']		
+		
+	form = ReportContent(request.POST)		
+	if form.is_valid():		
+		username = request.session['user_id']		
+		password = form.cleaned_data['password']		
+		user = authenticate(username = username, password = password)		
+		if user is not None:		
+			deleteDocument = Student.objects.get(username = username)		
+			deleteDocument.delete()		
+			user.delete()		
+			user.is_active=False		
+			request.session['user_id'] = None		
+			return HttpResponseRedirect('/')		
+		else:		
+			message = "Content Removed"		
+			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})		
+	return render(request, "account.html", {'form': form, 'userp': username})
