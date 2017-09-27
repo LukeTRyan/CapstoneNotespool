@@ -3,8 +3,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document, Unit, UnitSubpage
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm
+from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -85,7 +85,6 @@ def index(request):
 		return render_to_response('index.html', {'userp': username})
 	return render(request, 'index.html', {})
 	
-
 #logs in user
 def loginuser(request):
 	form = LoginForm(request.POST or None)
@@ -114,7 +113,6 @@ def loginuser(request):
 			return render(request,'registration_form.html', {'errormessage':'Invalid login'})
 	else:
 		return render(request, 'login.html', {'form': form})
-
 
 #Creates user account
 def registeraccount(request):
@@ -294,12 +292,50 @@ def unit_subpage(request,unitname,subpagename):
 		username = request.session['user_id']
 		unit = Unit.objects.get(slug = unitname)
 		unitName = unit.unit_name
+		unitSLUG = unit.slug
+		quizzes = Exam.objects.all()
 
-		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpagename})
+		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
 
+def create_quiz(request,unitname,subpagename):
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+		unit = Unit.objects.get(slug = unitname)
+		
+		form = CreateQuizForm(request.POST or None)
+
+		if form.is_valid():
+			quiz_name = form.cleaned_data['quiz_name']
+			if Exam.objects.filter(name = quiz_name).exists() and Exam.objects.filter(unit = unit.unit_name):
+				message = "Quiz already exists"
+				return render(request,'create_quiz.html', {'userp': username, 'unit': unit, 'form': form, 'message': message, 'subpagename':subpagename})
+			else:
+
+				try: 
+					get_latest = Exam.objects.latest('exam_id')
+					latest_id = get_latest.exam_id
+				except ObjectDoesNotExist:
+					latest_id = 0
+
+				newquiz = Exam(exam_id = latest_id + 1, name = quiz_name, unit = unit.unit_name, created_by = username)
+				newquiz.save()
+				return HttpResponseRedirect('/notespool')
+	else:
+		return HttpResponseRedirect('/login')
+	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
+
+def delete_quiz(request,unitname,examid):
+	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	quizzes = Exam.objects.all()
+	deletequiz = Exam.objects.get(exam_id = examid, unit = unitname)
+	deletequiz.delete()
+	return HttpResponseRedirect('/notespool')
 
 #function index to view, edit, create and delete users 
 def administrator(request):
@@ -337,8 +373,6 @@ def view_unit(request):
 	
 		return render_to_response('view_units.html', {'userp': username,'units': units})
 
-
-
 def view_subpages(request):
         if 'user_id' not in request.session or request.session['user_id'] != "admin":
                 return HttpResponseRedirect('/')
@@ -354,7 +388,6 @@ def view_subpages(request):
                         ).distinct()
 	
         return render_to_response('view_subpages.html', {'userp': username,'subpages': subpages})
-
 
 #function to create units 
 def create_unit(request):
@@ -406,7 +439,6 @@ def create_unit(request):
 			return HttpResponseRedirect('/notespool')
 	else:
 		return render(request, 'create_unit.html', {'userp':username, 'form':form}) 
-
 
 def create_subpage(request,unitname):
 	if request.session['user_id'] is None:
@@ -509,7 +541,6 @@ def approve_unit(request,unitid):
 	approveUnit.approval = True
 	approveUnit.save()
 	return render_to_response('view_units.html', {'userp': username, 'units': units})
-
 
 def approve_subpage(request,subpageid):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
@@ -682,7 +713,6 @@ def list(request):
         return render(request, 'list.html',
                 {'documents': documents, 'form': form, 'userp':username}) 
 
-
 def delete_document(request,documentpk):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -695,7 +725,6 @@ def delete_document(request,documentpk):
 			document.delete()
 			return HttpResponseRedirect('/list')
 	return render_to_response('list.html', {'userp': username, 'documents': documents})
-
 
 #report content		
 def report(request):		

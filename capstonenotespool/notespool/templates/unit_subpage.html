@@ -1,10 +1,78 @@
 {% extends 'layout/layout.html' %}
-{% block title %}{{subpageNAME}}{% endblock %}
+{% block title %}{{subpageNAME}} - {{unitName}}{% endblock %}
 {% block content %}
 <br />
 
 <h1>Hello, Welcome to the {{subpageNAME}} page for {{unitName}} </h1>
 
+{% if subpageNAME  == "Quizzes" %}
+    <form action="\create_quiz/{{unitSLUG}}/{{subpageNAME}}" method="get">
+    <input class="btn btn-success btn-lg" type="submit" value="Create Quiz" />
+    </form>
+
+<table style="width:800px" border="1">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+ 
+    {% for i in quizzes %}
+        {% if i.unit == unitName %}
+            <tr></tr>
+            <tr>
+                <th style="background-color: #53A86C; color: white;"> {{ i.name }} </th>
+            </tr>
+            <tr>
+                <td> ID: <br> {{ i.exam_id }} </td>
+            </tr>
+            <tr>
+                <td> Unit: <br> {{ i.unit }} </td>
+            </tr>
+            <tr>
+                <td> created by: <br> {{ i.created_by }} </td>
+            </tr>
+            <tr>
+                <td> Created on: <br> {{ i.created_on }} </td>
+            </tr>
+            <tr>
+                <td> date modified: <br> {{ i.date_modified }} </td>
+            </tr>
+            <tr>
+                <td> <a href="\delete_quiz/{{ i.unit }}/{{i.exam_id}}"> Delete Quiz </a> </td>
+            </tr>
+        {% endif %}
+    {% endfor %}
 
 
-{% endblock %}
+
+
+
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+    {% endblock %}

@@ -69,3 +69,6 @@ class EditUnitForm(forms.Form):
 	unit_name = forms.CharField(max_length=50)
 	unit_code = forms.CharField(max_length=50)
 	approval = forms.NullBooleanField()
+
+class CreateQuizForm(forms.Form):
+	quiz_name = forms.CharField(max_length=64)

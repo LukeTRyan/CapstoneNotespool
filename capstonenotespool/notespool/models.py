@@ -78,7 +78,6 @@ class Comment(models.Model):
 	date_created = models.DateField(default=datetime.datetime.now)
 	date_modified = models.DateField(default=datetime.datetime.now)
 	student_created = models.IntegerField()
-	location = models.IntegerField()
 	content = models.CharField(max_length=100)
 
 class StudyNotes(models.Model):
@@ -86,7 +85,6 @@ class StudyNotes(models.Model):
 	type = models.CharField(max_length=100)
 	created_by = models.IntegerField()
 	created_on = models.DateField(default=datetime.datetime.now)
-	location = models.IntegerField()
 
 class Document(models.Model):
 	docfile = models.FileField(upload_to='documents/%Y/%m/%d')
@@ -96,7 +94,12 @@ class Exam(models.Model):
 	Exam's model, works as a wrapper for the questions
 	"""
 	name = models.CharField(max_length=64, verbose_name=u'Exam name', )
+	exam_id = models.IntegerField(unique=True, primary_key=True)
+	unit = models.CharField(max_length=50, null=True)
 	slug = models.SlugField()
+	created_by = models.CharField(max_length=20, null=True)
+	created_on = models.DateField(default=datetime.datetime.now)
+	date_modified = models.DateField(default=datetime.datetime.now)
 
 	def __str__(self):
 		return self.name

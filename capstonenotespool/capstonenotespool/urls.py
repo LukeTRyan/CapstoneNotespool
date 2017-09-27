@@ -50,6 +50,8 @@ urlpatterns = [
 	url(r'^unit_subpage/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)', views.unit_subpage, name='unit_subpage'),
 	url(r'^create_subpage/(?P<unitname>[^/]+)', views.create_subpage, name='create_subpage'),
 	url(r'^view_subpages/', views.view_subpages, name='view_subpages'),
+	url(r'^create_quiz/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)', views.create_quiz, name='create_quiz'),
+	url(r'^delete_quiz/(?P<unitname>[^/]+)/(?P<examid>[^/]+)', views.delete_quiz, name='delete_quiz'),
 	url(r'^list/$', views.list, name='list'),
 	url(r'^delete_document/(?P<documentpk>[^/]+)', views.delete_document, name='delete_document'),
     url(r'^captcha/', include('captcha.urls')),
