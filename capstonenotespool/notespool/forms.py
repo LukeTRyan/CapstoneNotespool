@@ -61,11 +61,9 @@ class DocumentForm(forms.Form):
 class CreateUnitForm(forms.Form):
 	unit_name = forms.CharField(max_length=50)
 	unit_code = forms.CharField(max_length=50)
-	captcha = CaptchaField()
 
 class CreateSubpageForm(forms.Form):
 	subpage_name = forms.CharField(max_length=50)
-	captcha = CaptchaField()
  
 class EditUnitForm(forms.Form):
 	unit_name = forms.CharField(max_length=50)

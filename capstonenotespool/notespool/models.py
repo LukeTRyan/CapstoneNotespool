@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
-
+from django.utils.text import slugify
+from django.db.models.signals import pre_save
 #database model for admin
 class Admin(models.Model):
 	admin_id = models.IntegerField(unique=True, primary_key=True)
@@ -33,6 +34,24 @@ class Unit(models.Model):
 	subpages = models.IntegerField(null=True)
 	notes = models.IntegerField(null=True)
 	approval = models.NullBooleanField(default=False)
+	slug = models.SlugField(unique=True, null=True)
+
+def create_slug(instance, new_slug=None):
+	slug = slugify(instance.unit_name)
+	if new_slug is not None:
+		slug = new_slug
+	qs = Unit.objects.filter(slug=slug).order_by("-id")
+	exists = qs.exists()
+	if exists:
+		new_slug = "%s-%s" %(slug, qs.first().id)
+		return create_slug(instance, new_slug=new_slug)
+	return slug
+
+def pre_save_post_receiver(sender, instance, *args, **kwargs):
+	if not instance.slug:
+		instance.slug = create_slug(instance)
+
+pre_save.connect(pre_save_post_receiver, sender=Unit)
 
 #database model for staff 
 class Staff(models.Model):
@@ -102,17 +121,4 @@ class Answer(models.Model):
 
 	def __str__(self):
 		return self.text
-
-class Event(models.Model):
-	title = models.CharField(max_length=255)
-	date = models.DateField()
-	is_outdoors = models.BooleanField()
-
-	#index = djangosearch.ModelIndex(text=['title'], 
-	#additional=['date', 'is_outdoors'])
-
-# run a search
-#results = Event.index.search("django conference")
-
-
 
