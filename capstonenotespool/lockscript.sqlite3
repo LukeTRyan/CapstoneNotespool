@@ -1,3 +1,2 @@
 ALTER USER 'example'@'localhost' ACCOUNT LOCK;
 ALTER USER 'example'@'localhost' ACCOUNT UNLOCK;
-TIME = _

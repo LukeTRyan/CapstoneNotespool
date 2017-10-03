@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -106,16 +106,16 @@ DATABASES = {
 }
 
 #database settings for heroku
-##DATABASES = {
-##    'default': {
-##		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-##        'NAME': 'd3j0rtdjiopqof',
-##		'USER': 'pxqmwhjxsnrfmo',
-##		'PASSWORD': 'c3f0053c614337041b9ff6de0ee7c54a9749dd95194ece88f0461a95141aecd7',
-##		'HOST': 'ec2-23-23-248-247.compute-1.amazonaws.com',
-##		'PORT': '5432',
-##    }
-##}
+#DATABASES = {
+#    'default': {
+#       'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#       'NAME': 'd95o7ihf5kempt',
+#		'USER': 'tgafvrhipvwdne',
+#		'PASSWORD': '3530c597dc26a7efb292686caa8bdd5eb9fed9f9473114f0b57f6dc942db60b0',
+#		'HOST': 'ec2-54-83-205-71.compute-1.amazonaws.com',
+#		'PORT': '5432',
+#    }
+#}
 
 
 ACCOUNT_ACTIVATION_DAYS = 7

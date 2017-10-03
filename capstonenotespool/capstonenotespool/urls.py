@@ -51,6 +51,5 @@ urlpatterns = [
 	url(r'^create_subpage/(?P<unitname>[^/]+)', views.create_subpage, name='create_subpage'),
 	url(r'^view_subpages/', views.view_subpages, name='view_subpages'),
 	url(r'^list/$', views.list, name='list'),
-	url(r'^delete_document/(?P<documentpk>[^/]+)', views.delete_document, name='delete_document'),
     url(r'^captcha/', include('captcha.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

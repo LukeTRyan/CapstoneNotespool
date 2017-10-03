@@ -1,4 +1,4 @@
-﻿{% extends 'layout/layout.html' %}
+{% extends 'layout/layout.html' %}
 {% block title %}Documents{% endblock %}
 {% block content %}
 <html>
@@ -11,11 +11,6 @@
 
 </head>
 
-<form method='GET' action=''>
-<input type='text' name='q' placeholder='Search Documents' value='{{ request.GET.q }}'/>
-<input type='submit' value='Search'/>
-</form>
-
 <body>
     <!-- List of uploaded documents -->
     {% if documents %}
@@ -23,9 +18,6 @@
         {% for document in documents %}
 
         <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
-        <tr>
-            <td> <a href="\delete_document/{{ document.pk }}/"> Delete Document </a> </td>
-        </tr>
         {% endfor %}
 
     </ul>
