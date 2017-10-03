@@ -1,0 +1,56 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Edit Quiz{% endblock %}
+{% block content %}
+<br />
+
+<h1>{{exam.name}}</h1>
+<br />
+{% for i in questions %}
+   <b> {{i.question_text}}</b>
+        {% for i in answers %}
+            {{i.text}}
+<br />
+        {% endfor %}
+<br />
+{% endfor %}
+<br />
+<form action="\edit_quiz/{{unit.slug}}/{{subpagename}}/{{exam.slug}}" method="post">
+    {% csrf_token %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #53A86C;
+            color: white;
+        }
+    </style>
+        <table style="width:30%">
+            <tr>
+                <th style="width:30%"> Question </th>
+            </tr>
+            <tr>
+                <td>
+                    {{form.question_text.errors}}
+                    <p>Add Question</p>{{ form.question_text }}
+                    {{form.answer_text.errors}}
+                    <p>Add Answer</p>{{form.answer_text}}
+                </td>
+            </tr>
+        </table>
+    <input class="btn btn-success" type="submit" value="Submit" />
+</form>
+
+{% endblock %}

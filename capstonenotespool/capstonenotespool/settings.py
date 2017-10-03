@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'social_django',
 	'captcha',
+	'ckeditor',
 	'notespool',
 ]
 
@@ -178,3 +179,6 @@ DEFAULT_FROM_EMAIL = "LukeTRyan95@gmail.com"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+CKEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
+CKEDITOR_UPLOAD_PATH = '/media/'
