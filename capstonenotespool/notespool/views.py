@@ -85,7 +85,7 @@ def index(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('index.html', {'userp': username})
-	return render_to_response(request, 'index.html', {})
+	return render(request, 'index.html', {})
 	
 #logs in user
 def loginuser(request):
@@ -536,7 +536,7 @@ def create_unit(request):
 			message = "Unit already exists"
 			return render(request,'create_unit.html', {'userp': username, 'form': form, 'message': message})
 		else:
-			newUnit = Unit(unit_id = latest_id + 1, unit_name = unit_name, unit_code = unit_code, created_by = username)
+			newUnit = Unit(unit_id = latest_id + 1, unit_name = unit_name, unit_code = unit_code, created_by = username, slug = unit_name)
 			newUnit.save()
 
 			AssessmentSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Assessment", unit = newUnit.unit_name, created_by = username, approval = True)

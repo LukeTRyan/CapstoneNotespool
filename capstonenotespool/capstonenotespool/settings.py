@@ -62,7 +62,7 @@ ROOT_URLCONF = 'capstonenotespool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/capstonenotespool/templates/'],
+        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/notespool/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,7 +123,7 @@ DATABASES = {
 
 #database settings for heroku
 #DATABASES = {
-#    'default': {
+#   'default': {
 #		'ENGINE': 'django.db.backends.postgresql_psycopg2',
 #        'NAME': 'd3j0rtdjiopqof',
 #		'USER': 'pxqmwhjxsnrfmo',
