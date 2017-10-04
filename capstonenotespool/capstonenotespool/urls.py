@@ -54,6 +54,7 @@ urlpatterns = [
 	url(r'^delete_quiz/(?P<unitname>[^/]+)/(?P<examid>[^/]+)', views.delete_quiz, name='delete_quiz'),
 	url(r'edit_question/(?P<questionid>[^/]+)/(?P<examid>[^/]+)/(?P<examslug>[^/]+)', views.edit_question, name='edit_question'),
 	url(r'^edit_quiz/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<quizname>[^/]+)', views.edit_quiz, name='edit_quiz'),
+	url(r'^take_quiz/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<quizname>[^/]+)', views.take_quiz, name='take_quiz'),
 	url(r'^list/$', views.list, name='list'),
 	url(r'^delete_document/(?P<documentpk>[^/]+)', views.delete_document, name='delete_document'),
     url(r'^captcha/', include('captcha.urls')),

@@ -1,7 +1,8 @@
 {% extends 'layout/layout.html' %}
 {% block title %}Admin{% endblock %}
 {% block content %}
-  
+ 
+<br />
 <form action="/create_account/" method="post">
     {% csrf_token %}
     <style>
@@ -61,5 +62,6 @@
     </table>
     <input class="btn btn-primary" type="submit" value="Create User" />
 </form>
+<br />
 
 {% endblock %}

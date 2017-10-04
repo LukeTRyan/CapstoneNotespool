@@ -84,3 +84,19 @@ class PostForm(forms.Form):
 class EditQuestionForm(forms.Form):
 	question_text = forms.CharField(max_length=256)
 	answer_text = forms.CharField(max_length=128)
+
+class MultiWidgetBasic(forms.widgets.MultiWidget):
+    def __init__(self, attrs=None):
+        widgets = [forms.TextInput()]
+        super(MultiWidgetBasic, self).__init__(widgets, attrs)
+
+
+class MultiExampleField(forms.fields.MultiValueField):
+    widget = MultiWidgetBasic
+
+    def __init__(self, *args, **kwargs):
+        list_fields = [forms.fields.CharField(max_length=31)]
+        super(MultiExampleField, self).__init__(list_fields, *args, **kwargs)
+
+class TakeQuizForm(forms.Form):
+	answer_text = MultiExampleField()

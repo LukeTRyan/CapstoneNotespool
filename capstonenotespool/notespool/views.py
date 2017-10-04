@@ -2,9 +2,10 @@ from django.shortcuts import render, render_to_response
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db import IntegrityError
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm, TakeQuizForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -84,7 +85,7 @@ def index(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		return render_to_response('index.html', {'userp': username})
-	return render(request, 'index.html', {})
+	return render_to_response(request, 'index.html', {})
 	
 #logs in user
 def loginuser(request):
@@ -337,12 +338,10 @@ def edit_quiz(request,unitname,subpagename,quizname):
 	examInstance = Exam.objects.get(slug = quizname)
 	unit = Unit.objects.get(slug = unitname)
 	createdBy = examInstance.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
 		return HttpResponseRedirect('/')
-	username = request.session['user_id']
 
-	if request.method == 'GET':
-			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+	username = request.session['user_id']
 
 	questions = Question.objects.all()
 	answers = Answer.objects.all()
@@ -370,9 +369,41 @@ def edit_quiz(request,unitname,subpagename,quizname):
 		else:
 			examInstance.choices = examInstance.choices + 1
 		examInstance.save()
-		return HttpResponseRedirect(request.session['previous_url'])
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-	return render_to_response('edit_quiz.html', {'userp': username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
+	return render_to_response('edit_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
+
+def take_quiz(request,unitname,subpagename,quizname):
+	examInstance = Exam.objects.get(slug = quizname)
+	unit = Unit.objects.get(slug = unitname)
+	username = request.session['user_id']
+	questions = Question.objects.all()
+	answers = Answer.objects.all()
+
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	form = TakeQuizForm()
+	form = TakeQuizForm(request.POST)
+
+	if request.method == "POST":
+		form = TakeQuizForm(request.POST)
+		newObject = request.POST.copy()
+		newlist = (dict(newObject.lists()))
+		popped = newlist.pop('answer_text_0')
+		count = 0
+		totalCorrect = 0
+		for i in popped:
+			if str(i) == str(answers[count]):
+				count = count +1
+				totalCorrect = totalCorrect +1
+			else:
+				count = count +1
+		print("Total attempted", count)
+		print("Total correct", totalCorrect)
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename':subpagename })
 
 def edit_question(request, questionid, examid, examslug):
 	examInstance = Exam.objects.get(exam_id = examid)
@@ -411,10 +442,11 @@ def edit_question(request, questionid, examid, examslug):
 	form = EditQuestionForm(request.POST or None, initial=data)
 	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
 
-
 def delete_quiz(request,unitname,examid):
-	if 'user_id' not in request.session or request.session['user_id'] != "admin":
-		return HttpResponseRedirect('/')
+	examInstance = Exam.objects.get(exam_id = examid)
+	createdBy = examInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 	username = request.session['user_id']
 	quizzes = Exam.objects.all()

@@ -1,0 +1,25 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Take Quiz{% endblock %}
+{% block content %}
+<br />
+
+<h1>Quiz - {{exam.name}}</h1>
+<br />
+
+<form action="\take_quiz/{{unit.slug}}/{{subpagename}}/{{exam.slug}}" method="post">
+    {% csrf_token %}
+
+    {% for i in answers %}
+        {% if i.related_quiz == exam.exam_id %}
+            <p><b> Question: </b>   {{i.question.question_text}}</p>
+            <p><b> Answer: </b> {{form.answer_text}}
+    <br />
+            <br />
+        {% endif %}
+    {% endfor %}
+    <br />
+    <input class="btn btn-success" type="submit" value="Submit" />
+</form>
+<br />
+
+{% endblock %}

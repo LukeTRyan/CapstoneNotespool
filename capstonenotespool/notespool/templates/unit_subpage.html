@@ -63,10 +63,14 @@
                 <tr>
                     <td> <a href="\edit_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.slug}}" class="btn btn-default">Edit Quiz</a> </td>
                 </tr>
+                <tr>
+                    <td> <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.slug}}" class="btn btn-default">Take Quiz</a> </td>
+                </tr>
             {% endif %}
         {% endfor %}
     {% endif %}
 </table>
+<br />
     
 
     {% if subpageNAME  == "Tutorials" %}
