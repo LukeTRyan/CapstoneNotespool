@@ -4,6 +4,7 @@ from django.contrib.sessions.models import Session
 from django.contrib import auth
 from django.contrib.auth.models import User
 from captcha.fields import CaptchaField
+from ckeditor.widgets import CKEditorWidget
 
 #login form for user login
 class LoginForm(forms.Form):
@@ -61,13 +62,21 @@ class DocumentForm(forms.Form):
 class CreateUnitForm(forms.Form):
 	unit_name = forms.CharField(max_length=50)
 	unit_code = forms.CharField(max_length=50)
-	captcha = CaptchaField()
 
 class CreateSubpageForm(forms.Form):
 	subpage_name = forms.CharField(max_length=50)
-	captcha = CaptchaField()
  
 class EditUnitForm(forms.Form):
 	unit_name = forms.CharField(max_length=50)
 	unit_code = forms.CharField(max_length=50)
 	approval = forms.NullBooleanField()
+
+class CreateQuizForm(forms.Form):
+	quiz_name = forms.CharField(max_length=64)
+
+class EditQuizForm(forms.Form):
+	question_text = forms.CharField(max_length=256)
+	answer_text = forms.CharField(max_length=128)
+
+class PostForm(forms.Form):
+	content = forms.CharField(widget=CKEditorWidget())

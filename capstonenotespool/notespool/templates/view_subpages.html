@@ -3,6 +3,14 @@
 {% block content %}
 <h2> View all Subpages </h2>
 
+<br />
+<form method='GET' action=''>
+    <input type='text' name='q' placeholder='Search Subpages' value='{{ request.GET.q }}' />
+    <input type='submit' value='Search' />
+</form>
+
+<br />
+
 <table style="width:800px" border="1">
 <style>
         table {
@@ -27,7 +35,7 @@
 </style>
 
 
-    <h2>Units</h2>
+    
 
     {% for i in subpages %}
     <tr></tr>

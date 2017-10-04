@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'social_django',
 	'captcha',
+	'ckeditor',
 	'notespool',
 ]
 
@@ -105,18 +106,6 @@ DATABASES = {
     }
 }
 
-#database settings for heroku
-#DATABASES = {
-#    'default': {
-#       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#       'NAME': 'd95o7ihf5kempt',
-#		'USER': 'tgafvrhipvwdne',
-#		'PASSWORD': '3530c597dc26a7efb292686caa8bdd5eb9fed9f9473114f0b57f6dc942db60b0',
-#		'HOST': 'ec2-54-83-205-71.compute-1.amazonaws.com',
-#		'PORT': '5432',
-#    }
-#}
-
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
@@ -178,3 +167,6 @@ DEFAULT_FROM_EMAIL = "LukeTRyan95@gmail.com"
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+CKEDITOR_FILENAME_GENERATOR = 'utils.get_filename'
+CKEDITOR_UPLOAD_PATH = '/media/'

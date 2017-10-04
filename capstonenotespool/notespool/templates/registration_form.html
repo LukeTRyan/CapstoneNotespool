@@ -30,6 +30,8 @@
         <p><a href="{% url 'privacypolicy' %}">{% trans "Privacy Policy" %}</a></p>
         <p><a href="{% url 'useragreement' %}">{% trans "User Agreement" %}</a></p>
         <input class="btn btn-primary" type="submit" value="Register Account" />
+			{{ form.captcha }}
+			<button class='js-captcha-refresh'><i class="fa fa-refresh" aria-hidden="true"></i></button><br><br>
 
     </form>
 </div>
