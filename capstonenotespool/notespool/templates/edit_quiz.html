@@ -5,15 +5,19 @@
 
 <h1>{{exam.name}}</h1>
 <br />
-{% for i in questions %}
-   <b> {{i.question_text}}</b>
-        {% for i in answers %}
-            {{i.text}}
-<br />
-        {% endfor %}
-<br />
+
+{% for i in answers %}
+        {% if i.related_quiz == exam.exam_id %}
+            <p><b> Question: </b>   {{i.question.question_text}}</p>
+            <p><b> Answer: </b>   {{i.text}}</p>
+            <a href="\edit_question/{{i.id}}/{{exam.exam_id}}" class="btn btn-default"> Edit/Delete Question </a>
+            <br />
+            <br />
+        {% endif %}
 {% endfor %}
-<br />
+
+
+
 <form action="\edit_quiz/{{unit.slug}}/{{subpagename}}/{{exam.slug}}" method="post">
     {% csrf_token %}
     <style>
@@ -39,18 +43,19 @@
     </style>
         <table style="width:30%">
             <tr>
-                <th style="width:30%"> Question </th>
+                <th style="width:30%"> Add Question </th>
             </tr>
             <tr>
                 <td>
                     {{form.question_text.errors}}
-                    <p>Add Question</p>{{ form.question_text }}
+                    <p>Add Question {{ form.question_text }}</p>
                     {{form.answer_text.errors}}
-                    <p>Add Answer</p>{{form.answer_text}}
+                    <p>Add Answer {{form.answer_text}}</p>
                 </td>
             </tr>
         </table>
     <input class="btn btn-success" type="submit" value="Submit" />
 </form>
+<br />
 
 {% endblock %}

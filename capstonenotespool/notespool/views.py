@@ -297,9 +297,6 @@ def unit_subpage(request,unitname,subpagename):
 		quizzes = Exam.objects.all()
 		questions = Question.objects.all()
 		answers = Answer.objects.all()
-		print(quizzes)
-		print(questions)
-		print(answers)
 
 		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes})
 	else:
@@ -369,6 +366,13 @@ def edit_quiz(request,unitname,subpagename,quizname):
 		newQuestion.save()	
 		newAnswer = Answer(text = answer_text, question = newQuestion, related_quiz = examInstance.exam_id, id = latest_ida + 1)
 		newAnswer.save()
+		if examInstance.choices == None:
+			examInstance.choices = 1
+		else:
+			examInstance.choices = examInstance.choices + 1
+
+		examInstance.save()
+		print(examInstance.choices)
 		return HttpResponseRedirect(request.session['previous_url'])
 
 	return render_to_response('edit_quiz.html', {'userp': username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
