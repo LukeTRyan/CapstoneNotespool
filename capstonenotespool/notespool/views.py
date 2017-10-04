@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -18,6 +18,7 @@ import datetime
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from django.shortcuts import get_object_or_404
+from django.shortcuts import *
 from django.contrib.auth import logout as django_logout
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -294,6 +295,8 @@ def unit_subpage(request,unitname,subpagename):
 		unitName = unit.unit_name
 		unitSLUG = unit.slug
 		quizzes = Exam.objects.all()
+		questions = Question.objects.all()
+		answers = Answer.objects.all()
 
 		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes})
 	else:
@@ -304,7 +307,10 @@ def create_quiz(request,unitname,subpagename):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		unit = Unit.objects.get(slug = unitname)
-		
+
+		if request.method == 'GET':
+			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
 		form = CreateQuizForm(request.POST or None)
 
 		if form.is_valid():
@@ -322,10 +328,89 @@ def create_quiz(request,unitname,subpagename):
 
 				newquiz = Exam(exam_id = latest_id + 1, name = quiz_name, unit = unit.unit_name, created_by = username)
 				newquiz.save()
-				return HttpResponseRedirect('/notespool')
+				return HttpResponseRedirect(request.session['previous_url'])
 	else:
 		return HttpResponseRedirect('/login')
 	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
+
+def edit_quiz(request,unitname,subpagename,quizname):
+	examInstance = Exam.objects.get(slug = quizname)
+	unit = Unit.objects.get(slug = unitname)
+	createdBy = examInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
+	username = request.session['user_id']
+
+	if request.method == 'GET':
+			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	questions = Question.objects.all()
+	answers = Answer.objects.all()
+
+	form = EditQuizForm(request.POST or None)
+	if form.is_valid():
+		question_text = form.cleaned_data['question_text']
+		answer_text = form.cleaned_data['answer_text']
+
+		try: 
+			get_latestq = Question.objects.latest('id')
+			latest_idq = get_latestq.id
+			get_latesta = Answer.objects.latest('id')
+			latest_ida = get_latesta.id
+		except ObjectDoesNotExist:
+			latest_idq = 0
+			latest_ida = 0
+		
+		newQuestion = Question(question_text = question_text, exam = examInstance, related_quiz = examInstance.exam_id, id = latest_idq + 1, is_published = True)
+		newQuestion.save()	
+		newAnswer = Answer(text = answer_text, question = newQuestion, related_quiz = examInstance.exam_id, id = latest_ida + 1)
+		newAnswer.save()
+		if examInstance.choices == None:
+			examInstance.choices = 1
+		else:
+			examInstance.choices = examInstance.choices + 1
+		examInstance.save()
+		return HttpResponseRedirect(request.session['previous_url'])
+
+	return render_to_response('edit_quiz.html', {'userp': username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
+
+def edit_question(request, questionid, examid, examslug):
+	examInstance = Exam.objects.get(exam_id = examid)
+	createdBy = examInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
+	username = request.session['user_id']
+
+	if request.method == 'GET':
+			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	question = Question.objects.get(id = questionid)
+	answer = Answer.objects.get(id = questionid)
+
+	form = EditQuestionForm(request.POST or None)
+	data = {'question_text': question.question_text,
+			'answer_text': answer.text}
+
+	if 'edit_question' in request.POST:
+		if form.is_valid():
+			question_text = form.cleaned_data['question_text']
+			answer_text = form.cleaned_data['answer_text']
+
+			question.question_text = question_text
+			question.save()
+			answer.text = answer_text
+			answer.save()
+			return HttpResponseRedirect(request.session['previous_url'])
+		return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+	elif 'delete_question' in request.POST:
+		question.delete()
+		answer.delete()
+		examInstance.choices = examInstance.choices - 1
+		examInstance.save()
+		return HttpResponseRedirect(request.session['previous_url'])
+	form = EditQuestionForm(request.POST or None, initial=data)
+	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+
 
 def delete_quiz(request,unitname,examid):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
@@ -335,7 +420,7 @@ def delete_quiz(request,unitname,examid):
 	quizzes = Exam.objects.all()
 	deletequiz = Exam.objects.get(exam_id = examid, unit = unitname)
 	deletequiz.delete()
-	return HttpResponseRedirect('/notespool')
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #function index to view, edit, create and delete users 
 def administrator(request):

@@ -4,12 +4,12 @@ from django.contrib.sessions.models import Session
 from django.contrib import auth
 from django.contrib.auth.models import User
 from captcha.fields import CaptchaField
+from ckeditor.widgets import CKEditorWidget
 
 #login form for user login
 class LoginForm(forms.Form):
 	username = forms.CharField()
 	password = forms.CharField(widget=forms.PasswordInput)
-	captcha = CaptchaField()
 
 	def clean(self, *args, **kwargs):
 		username = self.cleaned_data.get("username")
@@ -31,6 +31,7 @@ class RegistrationForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
 	password2 = forms.CharField(widget=forms.PasswordInput)
 	email = forms.EmailField(widget=forms.EmailInput)
+	captcha = CaptchaField()
 
 class DeleteAccountForm(forms.Form):
 	password = forms.CharField(widget=forms.PasswordInput)
@@ -72,3 +73,14 @@ class EditUnitForm(forms.Form):
 
 class CreateQuizForm(forms.Form):
 	quiz_name = forms.CharField(max_length=64)
+
+class EditQuizForm(forms.Form):
+	question_text = forms.CharField(max_length=256)
+	answer_text = forms.CharField(max_length=128)
+
+class PostForm(forms.Form):
+	content = forms.CharField(widget=CKEditorWidget())
+
+class EditQuestionForm(forms.Form):
+	question_text = forms.CharField(max_length=256)
+	answer_text = forms.CharField(max_length=128)

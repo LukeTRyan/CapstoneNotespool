@@ -1,9 +1,9 @@
 {% extends 'layout/layout.html' %}
-{% block title %}Create Subpage{% endblock %}
+{% block title %}Create Quiz{% endblock %}
 {% block content %}
 <br />
 
-<form action="\create_quiz/{{unit.slug}}/{{subpagename}}" method="post">
+<form action="\create_quiz/{{unit.slug}}/{{subpagename}}/" method="post">
     {% csrf_token %}
     <style>
         table {
@@ -34,29 +34,11 @@
             <td>
                 {{ form.quiz_name.errors }}
                 {{ form.quiz_name }}
-
             </td>
         </tr>
     </table>
     <input class="btn btn-success" type="submit" value="Create Quiz" />
 </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<br />
 
 {% endblock %}

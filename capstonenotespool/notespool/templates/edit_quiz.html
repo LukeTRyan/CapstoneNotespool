@@ -1,0 +1,61 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Edit Quiz{% endblock %}
+{% block content %}
+<br />
+
+<h1>Quiz - {{exam.name}}</h1>
+<br />
+
+{% for i in answers %}
+        {% if i.related_quiz == exam.exam_id %}
+            <p><b> Question: </b>   {{i.question.question_text}}</p>
+            <p><b> Answer: </b>   {{i.text}}</p>
+            <a href="\edit_question/{{i.id}}/{{exam.exam_id}}/{{exam.slug}}" class="btn btn-default"> Edit/Delete Question </a>
+            <br />
+            <br />
+        {% endif %}
+{% endfor %}
+
+
+
+<form action="\edit_quiz/{{unit.slug}}/{{subpagename}}/{{exam.slug}}" method="post">
+    {% csrf_token %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #53A86C;
+            color: white;
+        }
+    </style>
+        <table style="width:30%">
+            <tr>
+                <th style="width:30%"> Add Question </th>
+            </tr>
+            <tr>
+                <td>
+                    {{form.question_text.errors}}
+                    <p>Add Question {{ form.question_text }}</p>
+                    {{form.answer_text.errors}}
+                    <p>Add Answer {{form.answer_text}}</p>
+                </td>
+            </tr>
+        </table>
+    <input class="btn btn-success" type="submit" value="Submit" />
+</form>
+<br />
+
+{% endblock %}
