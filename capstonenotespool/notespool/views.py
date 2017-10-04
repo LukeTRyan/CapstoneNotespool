@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib.auth.decorators import login_required
 from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -333,7 +333,6 @@ def create_quiz(request,unitname,subpagename):
 		return HttpResponseRedirect('/login')
 	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
 
-
 def edit_quiz(request,unitname,subpagename,quizname):
 	examInstance = Exam.objects.get(slug = quizname)
 	unit = Unit.objects.get(slug = unitname)
@@ -370,12 +369,47 @@ def edit_quiz(request,unitname,subpagename,quizname):
 			examInstance.choices = 1
 		else:
 			examInstance.choices = examInstance.choices + 1
-
 		examInstance.save()
-		print(examInstance.choices)
 		return HttpResponseRedirect(request.session['previous_url'])
 
 	return render_to_response('edit_quiz.html', {'userp': username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
+
+def edit_question(request, questionid, examid, examslug):
+	examInstance = Exam.objects.get(exam_id = examid)
+	createdBy = examInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
+	username = request.session['user_id']
+
+	if request.method == 'GET':
+			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	question = Question.objects.get(id = questionid)
+	answer = Answer.objects.get(id = questionid)
+
+	form = EditQuestionForm(request.POST or None)
+	data = {'question_text': question.question_text,
+			'answer_text': answer.text}
+
+	if 'edit_question' in request.POST:
+		if form.is_valid():
+			question_text = form.cleaned_data['question_text']
+			answer_text = form.cleaned_data['answer_text']
+
+			question.question_text = question_text
+			question.save()
+			answer.text = answer_text
+			answer.save()
+			return HttpResponseRedirect(request.session['previous_url'])
+		return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+	elif 'delete_question' in request.POST:
+		question.delete()
+		answer.delete()
+		examInstance.choices = examInstance.choices - 1
+		examInstance.save()
+		return HttpResponseRedirect(request.session['previous_url'])
+	form = EditQuestionForm(request.POST or None, initial=data)
+	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
 
 
 def delete_quiz(request,unitname,examid):

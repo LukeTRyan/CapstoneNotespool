@@ -3,14 +3,14 @@
 {% block content %}
 <br />
 
-<h1>{{exam.name}}</h1>
+<h1>Quiz - {{exam.name}}</h1>
 <br />
 
 {% for i in answers %}
         {% if i.related_quiz == exam.exam_id %}
             <p><b> Question: </b>   {{i.question.question_text}}</p>
             <p><b> Answer: </b>   {{i.text}}</p>
-            <a href="\edit_question/{{i.id}}/{{exam.exam_id}}" class="btn btn-default"> Edit/Delete Question </a>
+            <a href="\edit_question/{{i.id}}/{{exam.exam_id}}/{{exam.slug}}" class="btn btn-default"> Edit/Delete Question </a>
             <br />
             <br />
         {% endif %}

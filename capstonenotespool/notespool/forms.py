@@ -80,3 +80,7 @@ class EditQuizForm(forms.Form):
 
 class PostForm(forms.Form):
 	content = forms.CharField(widget=CKEditorWidget())
+
+class EditQuestionForm(forms.Form):
+	question_text = forms.CharField(max_length=256)
+	answer_text = forms.CharField(max_length=128)
