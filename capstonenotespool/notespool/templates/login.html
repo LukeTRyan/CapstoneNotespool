@@ -3,7 +3,6 @@
 {% load i18n %}
 {% block content %}
 
-	<div class="content-wrapper">
 		
 		<form class="lower-content" id="login" action="{% url 'login' %}" method="post">
 			{% csrf_token %}
@@ -49,5 +48,4 @@
 		  </form>
 		</div>
 		
-	</div>	
 {% endblock %}

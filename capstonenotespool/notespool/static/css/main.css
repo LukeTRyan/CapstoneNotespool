@@ -2,9 +2,10 @@
      COLOUR GUIDE     
 **********************
 
-Primary Colour: 		rgba(22, 94, 156);
-Primary Colour (fade): 	rgb(26, 116, 198);
-Secondary Colour: 		rgb(255, 134, 13);
+Primary Colour: 			rgba(22, 94, 156);
+Primary Colour (fade): 		rgb(26, 116, 198);
+Secondary Colour: 			rgb(255, 134, 13);
+Secondary Colour (fade):	rgb(247, 172, 98);
 
 
 
@@ -25,6 +26,7 @@ Secondary Colour: 		rgb(255, 134, 13);
 	float: left;
 
 }
+
 .navbar-default .navbar-nav > li > a {
 		color: #FFFFFF;
 		font-weight: 600;
@@ -55,7 +57,25 @@ Secondary Colour: 		rgb(255, 134, 13);
         color: #FFF;
 }
 
+.navbar-search {
+	margin-top: 10px;
+	color: #000;
+	border:none;
 
+}
+.search-box {
+	width: 300px;
+    padding: 5px;
+    border-radius: 3px;
+	border-style: none;
+}
+
+.navbar-search .btn-success {
+	margin-left: -35px;
+	border-radius: 0px 3px 3px 0px;
+	padding: 5px 18px;
+	margin-top: -3px;
+}
 
 
 /*****Login Page*****/
@@ -64,17 +84,208 @@ Secondary Colour: 		rgb(255, 134, 13);
   width: 400px;
   height: 450px;
 }
+
+#register {
+  width: 400px;
+  height: 450px;
+}
+
+.social-login a:focus, a:hover {
+ text-decoration: none;
+}
+
+
+/*****Register Page*****/
+
+#register-form {
+
+
+
+}
+
+/*****Carousel*****/
+
+
+.carousel {
+	max-height: 100%%;
+	max-width: 75%;
+	display: block;
+    text-align: -webkit-center;	
+		
+}
+
+.carousel-inner {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+.carousel-control .glyphicon-chevron-left {
+	left: 25%
+
+}
+
+.carousel-control .glyphicon-chevron-right {
+	right: 25%
+
+}
+
+.carousel-inner>.item>a>img, .carousel-inner>.item>img{
+    line-height: 1;
+    margin: 0 auto;
+	max-height: 75%;
+	width: 100%;
+}
+
+.carousel-inner>.item>img{
+    line-height: 1;
+    margin: 0 auto;
+	max-height: 75%;
+	width: 100%;
+}
+
+
+/*****Heading and Text*****/
+
+#h1{
+
+}
+
+#h2{
+
+}
+
+#h3{
+
+}
+
+#h4{
+
+}
+
+
+/*****General*****/
+
+label {
+	width: 150px;
+	margin-bottom: 7px;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: rgb(255, 134, 13);
+  border-style: none;
+  border-width: 0px;
+}
+.btn-success:focus,
+.btn-success.focus {
+  color: #fff;
+  background-color: rgb(247, 172, 98);
+}
+.btn-success:hover {
+  color: #fff;
+  background-color: rgb(247, 172, 98);
+
+}
+
+
+.btn-success:active,
+.btn-success.active,
+.open > .dropdown-toggle.btn-success {
+  color: #fff;
+  background-color: rgb(247, 172, 98);
+  border-style: none;
+  border-width: 0px;
+}
+.btn-success:active:hover,
+.btn-success.active:hover,
+.open > .dropdown-toggle.btn-success:hover,
+.btn-success:active:focus,
+.btn-success.active:focus,
+.open > .dropdown-toggle.btn-success:focus,
+.btn-success:active.focus,
+.btn-success.active.focus,
+.open > .dropdown-toggle.btn-success.focus {
+  color: #fff;
+  background-color: rgb(247, 172, 98);
+  border-style: none;
+  border-width: 0px;
+}
+
+.btn-success:active,
+.btn-success.active,
+.open > .dropdown-toggle.btn-success {
+  background-image: none;
+}
+
+
+/*****STRUCTURE*****/
+body {
+  background-color: #eeeeee!important;
+}
+
+
+
+.container {
+	text-align: -webkit-center;
+
+}
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1430px;
+  }
+}
+.content-wrapper {
+  width: 100%;
+  background-color: #fff;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 25px;
+  padding-bottom: 10%;
+  margin-top: -20px;
+  min-height: 550px;
+  text-align: -webkit-center;
+ 
+  
+}
+
+.breadcrumb {
+	text-align: left;
+	background: none;
+	margin-bottom: 0px!important;
+}
+
 .lower-content {
  display: inline-block;
  background-color: #f9f9f9;
  float: left;
  margin: 5px;
  padding: 10px;
+ text-align: left;
 }
 
-#register {
-  width: 400px;
-  height: 450px;
+footer {
+  background-color: rgba(22, 94, 156, 1);
+  color: #fff;
+  height: 163px;
+  max-width: 100%;
+  text-align: left;
+
 }
 
 footer ul {
@@ -86,38 +297,4 @@ footer ul {
 }
 
 
-footer {
-  background-color: rgba(22, 94, 156, 1);
-  color: #fff;
-  height: 180px;
-  max-width: 100%;
-}
-
-.social-login a:focus, a:hover {
- text-decoration: none;
-}
-
-
-
-.carousel-inner>.item>a>img, .carousel-inner>.item>img{
-    line-height: 1;
-    margin: 0 auto;
-    max-width: 80%;
-}
-
-body {
-  background-color: #eeeeee!important;
-}
-
-.container {
-  width: 75%;
-}
-
-.content-wrapper {
-  width: 100%;
-  background-color: #fff;
-  padding: 50px;
-  margin-top: -5px;
-  height: 720px;
-}
 

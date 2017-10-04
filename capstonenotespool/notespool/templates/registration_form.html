@@ -3,25 +3,27 @@
 {% load i18n %}
 {% block content %}
 
-<div class="container">
-    <form action="{% url 'registeraccount' %}" method="post">
+<div class="field-wrapper" id="register-form">
+		<h2> Register Account</h2>
+    <form class="lower-content" action="{% url 'registeraccount' %}" method="post">
         {% csrf_token %}
         {{form.non_field_errors}}
         <br>
-        <div class="fieldWrapper">
-            <label for="form.username.id_for_label">User Name: </label>
+		
+        <div>
+            <label for="form.username.id_for_label">Username: </label>
             {{form.username}}
         </div>
-        <div class="fieldWrapper">
+        <div>
             {{help_text|safe}}
             <label for="form.password.id_for_label">Password: </label>
             {{form.password}}
         </div>
-        <div class="fieldWrapper">
-            <label for="form.verify_password.id_for_label">Verify your password: </label>
+        <div>
+            <label for="form.verify_password.id_for_label">Confirm password: </label>
             {{form.password2}}
         </div>
-        <div class="fieldWrapper">
+        <div>
             <label for="form.email.id_for_label">Email: </label>
             {{form.email}}
         </div>
@@ -34,5 +36,6 @@
 			<button class='js-captcha-refresh'><i class="fa fa-refresh" aria-hidden="true"></i></button><br><br>
 
     </form>
+	
 </div>
 {% endblock %}
