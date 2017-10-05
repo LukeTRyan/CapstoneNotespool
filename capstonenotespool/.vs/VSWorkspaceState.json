@@ -1,11 +1,10 @@
 {
   "ExpandedNodes": [
     "",
-    "\\capstonenotespool",
-    "\\media",
     "\\notespool",
-    "\\notespool\\templates"
+    "\\notespool\\templates",
+    "\\notespool\\templates\\layout"
   ],
-  "SelectedNode": "\\notespool\\templates\\view_subpages.html",
+  "SelectedNode": "\\notespool\\templates\\layout\\layout.html",
   "PreviewInSolutionExplorer": false
 }

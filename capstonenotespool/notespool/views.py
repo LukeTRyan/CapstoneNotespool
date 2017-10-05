@@ -5,7 +5,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm, TakeQuizForm
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm, TakeQuizForm, PostForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -23,6 +23,7 @@ from django.shortcuts import *
 from django.contrib.auth import logout as django_logout
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+
 
 fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
@@ -383,6 +384,9 @@ def take_quiz(request,unitname,subpagename,quizname):
 	if 'user_id' not in request.session:
 		return HttpResponseRedirect('/')
 
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
 	form = TakeQuizForm()
 	form = TakeQuizForm(request.POST)
 
@@ -399,11 +403,10 @@ def take_quiz(request,unitname,subpagename,quizname):
 				totalCorrect = totalCorrect +1
 			else:
 				count = count +1
-		print("Total attempted", count)
-		print("Total correct", totalCorrect)
-		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+		message = ("Total attempted" + ":" + str(count) + "    " + "Total Correct" + ":" +  str(totalCorrect))
+		return render_to_response('take_quiz.html', {'message':message, 'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
 
-	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename':subpagename })
+	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
 
 def edit_question(request, questionid, examid, examslug):
 	examInstance = Exam.objects.get(exam_id = examid)
@@ -453,6 +456,27 @@ def delete_quiz(request,unitname,examid):
 	deletequiz = Exam.objects.get(exam_id = examid, unit = unitname)
 	deletequiz.delete()
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def create_text_field(request, unitname, subpagename):
+	unit = Unit.objects.get(slug = unitname)
+	username = request.session['user_id']
+
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	form = PostForm()
+	if request.method == "POST":
+		form = PostForm(request.POST)
+		return HttpResponseRedirect(request.session['previous_url'])
+		return HttpResponseRedirect(request.session['previous_url'])
+
+
+	return render_to_response('text_field.html', {'userp':username, 'form':form, 'unit':unit, 'subpagename': subpagename })
+
+
 
 #function index to view, edit, create and delete users 
 def administrator(request):
