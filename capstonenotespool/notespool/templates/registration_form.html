@@ -4,8 +4,8 @@
 {% block content %}
 
 <div class="field-wrapper" id="register-form">
-		<h2> Register Account</h2>
     <form class="lower-content" action="{% url 'registeraccount' %}" method="post">
+        <h2> Register Account</h2>
         {% csrf_token %}
         {{form.non_field_errors}}
         <br>

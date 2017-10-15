@@ -60,14 +60,16 @@
     <tr>
         <td> Email: <br> {{ i.email }} </td>
     </tr>
-    <tr>
-        <td> <a href="\edit_account/{{ i.username }}/"> Edit User </a> </td>
-    </tr>
-    <tr>
-        <td> <a href="\delete_account/{{ i.username }}/"> Delete User </a> </td>
-    </tr>
-   
+	{% if i.username != "admin" %}
+		<tr>
+			<td> <a href="\edit_account/{{ i.username }}/"> Edit User </a> </td>
+		</tr>
+		<tr>
+			<td> <a href="\delete_account/{{ i.username }}/"> Delete User </a> </td>
+		</tr>
+	{% endif %}
     {% endfor %}
 </table>
+<br />
 
 {% endblock %}

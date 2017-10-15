@@ -38,7 +38,6 @@ class DeleteAccountForm(forms.Form):
 
 class EditAccountForm(forms.Form):
 	username = forms.CharField(max_length=15)
-	password = forms.CharField(max_length=15)
 	first_name = forms.CharField(max_length=15)
 	last_name = forms.CharField(max_length=15)
 	email = forms.EmailField(widget=forms.EmailInput)
@@ -79,8 +78,25 @@ class EditQuizForm(forms.Form):
 	answer_text = forms.CharField(max_length=128)
 
 class PostForm(forms.Form):
+	title = forms.CharField(max_length=100)
 	content = forms.CharField(widget=CKEditorWidget())
 
 class EditQuestionForm(forms.Form):
 	question_text = forms.CharField(max_length=256)
 	answer_text = forms.CharField(max_length=128)
+
+class MultiWidgetBasic(forms.widgets.MultiWidget):
+    def __init__(self, attrs=None):
+        widgets = [forms.TextInput()]
+        super(MultiWidgetBasic, self).__init__(widgets, attrs)
+
+
+class MultiExampleField(forms.fields.MultiValueField):
+    widget = MultiWidgetBasic
+
+    def __init__(self, *args, **kwargs):
+        list_fields = [forms.fields.CharField(max_length=31)]
+        super(MultiExampleField, self).__init__(list_fields, *args, **kwargs)
+
+class TakeQuizForm(forms.Form):
+	answer_text = MultiExampleField()

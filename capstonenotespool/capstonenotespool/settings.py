@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.contrib import messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 	'social_django',
 	'captcha',
 	'ckeditor',
+	'ckeditor_uploader',
 	'notespool',
 ]
 
@@ -62,7 +64,7 @@ ROOT_URLCONF = 'capstonenotespool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/capstonenotespool/templates/'],
+        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/notespool/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -105,6 +107,13 @@ AUTHENTICATION_BACKENDS = [
 
 WSGI_APPLICATION = 'capstonenotespool.wsgi.application'
 
+MESSAGE_TAGS = {
+	messages.DEBUG: 'alert-info',
+	messages.INFO: 'alert-info',
+	messages.SUCCESS: 'alert-success',
+	messages.WARNING: 'alert-warning',
+	messages.ERROR: 'alert-danger',
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -123,12 +132,12 @@ DATABASES = {
 
 #database settings for heroku
 #DATABASES = {
-#    'default': {
+#   'default': {
 #		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#        'NAME': 'd3j0rtdjiopqof',
-#		'USER': 'pxqmwhjxsnrfmo',
-#		'PASSWORD': 'c3f0053c614337041b9ff6de0ee7c54a9749dd95194ece88f0461a95141aecd7',
-#		'HOST': 'ec2-23-23-248-247.compute-1.amazonaws.com',
+#                'NAME': 'd49fctgf999ta',
+#		'USER': 'gopktzygihicci',
+#		'PASSWORD': 'bfd4da48e75196ed247c50e4af5af94b495cace174740d919c7adab0ee6d61d6',
+#		'HOST': 'ec2-54-235-88-58.compute-1.amazonaws.com',
 #		'PORT': '5432',
 #    }
 #}
