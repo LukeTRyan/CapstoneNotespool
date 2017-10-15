@@ -27,13 +27,22 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/">Home</a></li>
 						{% if userp is not none %}
-							<li><a href="/logout">Log out</a></li>
-							<li><a href="/account">Account</a></li>
+							
+							<li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/logout">Log out</a></li>
+								<li><a href="/view_unit">My Units</a></li>
+								<li><a href="/calendar">Assessment Calendar</a></li>
+							</ul>
 							<li><a href="/aboutus">About us</a></li>
 							<li><a href="/contact">Contact</a></li>
 						{% else %}
-							<li><a href="/login/">Login</a></li>
-							<li><a href="/registeraccount">Create Account</a></li>
+							<li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/login">Login</a></li>
+								<li><a href="/password_change_form">Forgot Password</a></li>
+								<li><a href="/registration_form">Register</a></li>
+							</ul>
 							<li><a href="/aboutus">About us</a></li>
 							<li><a href="/contact">Contact</a></li>
 						{% endif %}
