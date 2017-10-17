@@ -1,0 +1,22 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Add textfield{% endblock %}
+{% block extrahead %}
+<script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+{{ block.super }}
+{% endblock %}
+{% block content %}
+<br />
+
+<form>
+    {{ form.media }}
+    {{ form.as_p }}
+    <input class="btn btn-success" type="submit" value="Create Text Field" />
+</form>
+
+
+
+
+
+
+
+{% endblock %}

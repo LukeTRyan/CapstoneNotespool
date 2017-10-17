@@ -6,7 +6,6 @@
     <input class="btn btn-success btn-lg" type="submit" value="Create Unit" />
 </form>
 
-<br>
 {% for i in units %}    
     {% if i.approval == True %}
         <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_code}} - {{i.unit_name}} </a></h2>

@@ -3,7 +3,6 @@
 {% load i18n %}
 {% block content %}
 
-	<div class="content-wrapper">
 		
 		<form class="lower-content" id="login" action="{% url 'login' %}" method="post">
 			{% csrf_token %}
@@ -26,8 +25,6 @@
 			<br />
 			
 			<br>
-			{{ form.captcha }}
-			<button class='js-captcha-refresh'><i class="fa fa-refresh" aria-hidden="true"></i></button><br><br>
 			<input class="btn btn-primary" type="submit" value="Login" /><br><br>
 			<p style="font-weight: 600;">or</p>
 			<br>
@@ -36,7 +33,6 @@
 			</a>
 			
 		</form>
-		
 		
 		<div class="lower-content" id="register">
 			<h4>New User</h4>
@@ -49,5 +45,4 @@
 		  </form>
 		</div>
 		
-	</div>	
 {% endblock %}

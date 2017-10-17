@@ -2,9 +2,10 @@ from django.shortcuts import render, render_to_response
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.db import IntegrityError
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm
+from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer, StudyNotes
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm, TakeQuizForm, PostForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -22,6 +23,7 @@ from django.shortcuts import *
 from django.contrib.auth import logout as django_logout
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
+
 
 fromaddr='LukeTRyan95@gmail.com'
 username='LukeTRyan95@gmail.com'
@@ -82,8 +84,8 @@ def index(request):
 		request.session['redirect'] = None
 		return render(request, "index.html", {'userp': username, 'message': message})
 	if 'user_id' in request.session and request.session['user_id'] is not None:
-		username = request.session['user_id']
-		return render_to_response('index.html', {'userp': username})
+                username = request.session['user_id']
+                return render_to_response('index.html', {'userp': username})
 	return render(request, 'index.html', {})
 	
 #logs in user
@@ -295,22 +297,31 @@ def unit_subpage(request,unitname,subpagename):
 		unitName = unit.unit_name
 		unitSLUG = unit.slug
 		quizzes = Exam.objects.all()
+		notes = StudyNotes.objects.all()
 		questions = Question.objects.all()
 		answers = Answer.objects.all()
-		print(quizzes)
-		print(questions)
-		print(answers)
 
-		# Handle file upload
-		if request.method == 'POST':
-			form = DocumentForm(request.POST, request.FILES)
-			if form.is_valid():
-				newdoc = Document(docfile = request.FILES['docfile'])
-				newdoc.save()
-				# Redirect to the document list after POST
-				return HttpResponseRedirect('/list')
-		else:
-			form = DocumentForm() # A empty, unbound form
+		return render_to_response('unit_subpage.html', {'notes':notes, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes})
+	else:
+		return HttpResponseRedirect('/')
+	return render_to_response('unit_subpage.html', {'userp': username})
+
+def create_quiz(request,unitname,subpagename):
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+		unit = Unit.objects.get(slug = unitname)
+
+		if request.method == 'GET':
+			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+		form = CreateQuizForm(request.POST or None)
+
+		if form.is_valid():
+			quiz_name = form.cleaned_data['quiz_name']
+			if Exam.objects.filter(name = quiz_name).exists() and Exam.objects.filter(unit = unit.unit_name):
+				message = "Quiz already exists"
+				return render(request,'create_quiz.html', {'userp': username, 'unit': unit, 'form': form, 'message': message, 'subpagename':subpagename})
+			else:
 
 				try: 
 					get_latest = Exam.objects.latest('exam_id')
@@ -318,19 +329,165 @@ def unit_subpage(request,unitname,subpagename):
 				except ObjectDoesNotExist:
 					latest_id = 0
 
-		return render_to_response('unit_subpage.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpageNAME, 'form':form, 'subpageid':subpageid})
+				newquiz = Exam(exam_id = latest_id + 1, name = quiz_name, unit = unit.unit_name, created_by = username)
+				newquiz.save()
+				return HttpResponseRedirect(request.session['previous_url'])
 	else:
 		return HttpResponseRedirect('/login')
 	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
-
 
 def edit_quiz(request,unitname,subpagename,quizname):
 	examInstance = Exam.objects.get(slug = quizname)
 	unit = Unit.objects.get(slug = unitname)
 	createdBy = examInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+
+	questions = Question.objects.all()
+	answers = Answer.objects.all()
+
+	form = EditQuizForm(request.POST or None)
+	if form.is_valid():
+		question_text = form.cleaned_data['question_text']
+		answer_text = form.cleaned_data['answer_text']
+
+		try: 
+			get_latestq = Question.objects.latest('id')
+			latest_idq = get_latestq.id
+			get_latesta = Answer.objects.latest('id')
+			latest_ida = get_latesta.id
+		except ObjectDoesNotExist:
+			latest_idq = 0
+			latest_ida = 0
+		
+		newQuestion = Question(question_text = question_text, exam = examInstance, related_quiz = examInstance.exam_id, id = latest_idq + 1, is_published = True)
+		newQuestion.save()	
+		newAnswer = Answer(text = answer_text, question = newQuestion, related_quiz = examInstance.exam_id, id = latest_ida + 1)
+		newAnswer.save()
+		if examInstance.choices == None:
+			examInstance.choices = 1
+		else:
+			examInstance.choices = examInstance.choices + 1
+		examInstance.save()
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+	return render_to_response('edit_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
+
+def take_quiz(request,unitname,subpagename,quizname):
+	examInstance = Exam.objects.get(slug = quizname)
+	unit = Unit.objects.get(slug = unitname)
+	username = request.session['user_id']
+	questions = Question.objects.all()
+	answers = Answer.objects.all()
+
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	form = TakeQuizForm()
+	form = TakeQuizForm(request.POST)
+
+	if request.method == "POST":
+		form = TakeQuizForm(request.POST)
+		newObject = request.POST.copy()
+		newlist = (dict(newObject.lists()))
+		popped = newlist.pop('answer_text_0')
+		count = 0
+		totalCorrect = 0
+		for i in popped:
+			if str(i) == str(answers[count]):
+				count = count +1
+				totalCorrect = totalCorrect +1
+			else:
+				count = count +1
+		message = ("Total attempted" + ":" + str(count) + "    " + "Total Correct" + ":" +  str(totalCorrect))
+		return render_to_response('take_quiz.html', {'message':message, 'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
+
+	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
+
+def edit_question(request, questionid, examid, examslug):
+	examInstance = Exam.objects.get(exam_id = examid)
+	createdBy = examInstance.created_by
 	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
 		return HttpResponseRedirect('/')
-	return render_to_response('unit_subpage.html', {'userp': username})
+	username = request.session['user_id']
+
+	if request.method == 'GET':
+			request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	question = Question.objects.get(id = questionid)
+	answer = Answer.objects.get(id = questionid)
+
+	form = EditQuestionForm(request.POST or None)
+	data = {'question_text': question.question_text,
+			'answer_text': answer.text}
+
+	if 'edit_question' in request.POST:
+		if form.is_valid():
+			question_text = form.cleaned_data['question_text']
+			answer_text = form.cleaned_data['answer_text']
+
+			question.question_text = question_text
+			question.save()
+			answer.text = answer_text
+			answer.save()
+			return HttpResponseRedirect(request.session['previous_url'])
+		return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+	elif 'delete_question' in request.POST:
+		question.delete()
+		answer.delete()
+		examInstance.choices = examInstance.choices - 1
+		examInstance.save()
+		return HttpResponseRedirect(request.session['previous_url'])
+	form = EditQuestionForm(request.POST or None, initial=data)
+	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+
+def delete_quiz(request,unitname,examid):
+	examInstance = Exam.objects.get(exam_id = examid)
+	createdBy = examInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+	username = request.session['user_id']
+	quizzes = Exam.objects.all()
+	deletequiz = Exam.objects.get(exam_id = examid, unit = unitname)
+	deletequiz.delete()
+	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
+def create_text_field(request, unitname, subpagename):
+	unit = Unit.objects.get(slug = unitname)
+	username = request.session['user_id']
+
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	form = PostForm()
+	if request.method == "POST":
+                if form.is_valid():
+                        form = PostForm(request.POST)
+                        title = form.cleaned_data['title']
+                        content = form.cleaned_data['content']
+
+                        try: 
+                                get_latest = StudyNotes.objects.latest('notes_id')
+                                latest_id = get_latest.notes_id
+                        except ObjectDoesNotExist:
+                                latest_id = 0
+                        
+                        newContent = StudyNotes(notes_id = latest_id, type = title, created_by = username, content = content)
+                        newContent.save()
+                        return HttpResponseRedirect(request.session['previous_url'])
+
+
+	return render_to_response('text_field.html', {'userp':username, 'form':form, 'unit':unit, 'subpagename': subpagename })
+
 
 
 #function index to view, edit, create and delete users 
@@ -415,7 +572,7 @@ def create_unit(request):
 			message = "Unit already exists"
 			return render(request,'create_unit.html', {'userp': username, 'form': form, 'message': message})
 		else:
-			newUnit = Unit(unit_id = latest_id + 1, unit_name = unit_name, unit_code = unit_code, created_by = username)
+			newUnit = Unit(unit_id = latest_id + 1, unit_name = unit_name, unit_code = unit_code, created_by = username, slug = unit_name)
 			newUnit.save()
 
 			AssessmentSubpage = UnitSubpage(subpage_id = id_generator(), subpage_name = "Assessment", unit = newUnit.unit_name, created_by = username, approval = True)
@@ -558,14 +715,12 @@ def editAccount(request, account):
 	userProfile = User.objects.get(username = account)
 	form = EditAccountForm(request.POST or None)
 	data = {'username': userProfile.username,
-			'password': userProfile.password,
             'first_name': userProfile.first_name,
             'last_name': userProfile.last_name,
             'email': userProfile.email}
 
 	if form.is_valid():
 		username = form.cleaned_data['username']
-		password = form.cleaned_data['password']
 		first_name = form.cleaned_data['first_name']
 		last_name = form.cleaned_data['last_name']
 		email = form.cleaned_data['email']
@@ -581,7 +736,6 @@ def editAccount(request, account):
 			return render(request,'edit_account.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
 
 		userProfile.username = username
-		userProfile.password = password
 		userProfile.first_name = first_name
 		userProfile.last_name = last_name
 		userProfile.email = email
@@ -589,7 +743,6 @@ def editAccount(request, account):
 
 		student = Student.objects.get(username = account)
 		student.username = username
-		student.password = password
 		student.first_name = first_name
 		student.last_name = last_name
 		student.email = email
@@ -709,7 +862,6 @@ def list(request):
         return render(request, 'list.html',
                 {'documents': documents, 'form': form, 'userp':username}) 
 
-
 def delete_document(request,documentpk):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
@@ -722,3 +874,27 @@ def delete_document(request,documentpk):
 			document.delete()
 			return HttpResponseRedirect('/list')
 	return render_to_response('list.html', {'userp': username, 'documents': documents})
+
+#report content		
+def report(request):		
+	if request.session['user_id'] is None:		
+		return HttpResponseRedirect('/login')		
+	if 'user_id' in request.session and request.session['user_id'] is not None:		
+		username = request.session['user_id']		
+		
+	form = ReportContent(request.POST)		
+	if form.is_valid():		
+		username = request.session['user_id']		
+		password = form.cleaned_data['password']		
+		user = authenticate(username = username, password = password)		
+		if user is not None:		
+			deleteDocument = Student.objects.get(username = username)		
+			deleteDocument.delete()		
+			user.delete()		
+			user.is_active=False		
+			request.session['user_id'] = None		
+			return HttpResponseRedirect('/')		
+		else:		
+			message = "Content Removed"		
+			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})		
+	return render(request, "account.html", {'form': form, 'userp': username})

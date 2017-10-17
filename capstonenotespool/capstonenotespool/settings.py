@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+from django.contrib import messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
 	'social_django',
 	'captcha',
 	'ckeditor',
+	'ckeditor_uploader',
 	'notespool',
 ]
 
@@ -49,7 +51,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    #'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -62,7 +64,7 @@ ROOT_URLCONF = 'capstonenotespool.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/capstonenotespool/templates/'],
+        'DIRS': ['C:/Users/Luke/Desktop/Capstone/CapstoneNotespool/capstonenotespool/notespool/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -77,9 +79,24 @@ TEMPLATES = [
     },
 ]
 
+SOCIAL_AUTH_PIPELINE = (
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'social_core.pipeline.social_auth.associate_by_email',
+)
 
 SOCIAL_AUTH_FACEBOOK_KEY = '1435414656508185'  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = '39f35788182fed8ef6f4284c46b89df7'  # App Secret
+LOGIN_REDIRECT_URL = '/'
+LOGIN_ERROR_URL = '/contact/'
+LOGIN_URL = '/login/'
+LOGOUT_URL = '/logout/'
 
 AUTHENTICATION_BACKENDS = [
     'social_core.backends.github.GithubOAuth2',
@@ -90,6 +107,13 @@ AUTHENTICATION_BACKENDS = [
 
 WSGI_APPLICATION = 'capstonenotespool.wsgi.application'
 
+MESSAGE_TAGS = {
+	messages.DEBUG: 'alert-info',
+	messages.INFO: 'alert-info',
+	messages.SUCCESS: 'alert-success',
+	messages.WARNING: 'alert-warning',
+	messages.ERROR: 'alert-danger',
+}
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -105,6 +129,18 @@ DATABASES = {
 		'PORT': '',
     }
 }
+
+#database settings for heroku
+#DATABASES = {
+#   'default': {
+#		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#                'NAME': 'd49fctgf999ta',
+#		'USER': 'gopktzygihicci',
+#		'PASSWORD': 'bfd4da48e75196ed247c50e4af5af94b495cace174740d919c7adab0ee6d61d6',
+#		'HOST': 'ec2-54-235-88-58.compute-1.amazonaws.com',
+#		'PORT': '5432',
+#    }
+#}
 
 
 ACCOUNT_ACTIVATION_DAYS = 7

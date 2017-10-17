@@ -14,7 +14,6 @@
 <body>
 <div class="container">
 		<nav class="navbar navbar-default">
-			<div class="container">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
 						<span class="sr-only">Toggle navigation</span>
@@ -28,13 +27,22 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/">Home</a></li>
 						{% if userp is not none %}
-							<li><a href="/logout">Log out</a></li>
-							<li><a href="/account">Account</a></li>
+							
+							<li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/logout">Log out</a></li>
+								<li><a href="/view_unit">My Units</a></li>
+								<li><a href="/calendar">Assessment Calendar</a></li>
+							</ul>
 							<li><a href="/aboutus">About us</a></li>
 							<li><a href="/contact">Contact</a></li>
 						{% else %}
-							<li><a href="/login/">Login</a></li>
-							<li><a href="/registeraccount">Create Account</a></li>
+							<li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/login">Login</a></li>
+								<li><a href="/password_change_form">Forgot Password</a></li>
+								<li><a href="/registration_form">Register</a></li>
+							</ul>
 							<li><a href="/aboutus">About us</a></li>
 							<li><a href="/contact">Contact</a></li>
 						{% endif %}
@@ -48,10 +56,16 @@
 								<li><a href="/list/">View Documents</a></li>
 						{% endif %}
 							</ul>
+					</ul>
+					<form class="navbar-search" method='GET' action=''>
+						<input class="search-box" type='text' name='q' placeholder='Search Units' value='{{ request.GET.q }}' />
+						<button class="btn btn-success" type='submit'><i class="fa fa-search" aria-hidden="true"></i></button>
+					</form>
 				</div><!--/.nav-collapse -->
-			</div><!--/.container -->
 		</nav>
 	</div><!--/.container -->
+	
+
     {% if message is not none %}
     <script>
         alert('{{ message }}');
@@ -59,36 +73,44 @@
     {% endif %}
 
     <div class="container">
-  
-    {% block content %}
-    {% endblock %}
-    </div>
-    <div class="container">	
+		<div class="content-wrapper">
+			
+			<div class="breadcrumb">
+				<a href="/">Home</a>
+			</div>
+			
+			
+			{% block content %}
+			{% endblock %}
+		</div>	
+
 		<footer>
-		  <ul>
-			<h4>Navigation</h4>
-			<li>About Us</li>
-			<li>Contact Us</li>
-			<li>Search for Units</li>
+			  <ul>
+				<h4>Navigation</h4>
+				<li>About Us</li>
+				<li>Contact Us</li>
+				<li>Search for Units</li>
 
-		  </ul>
-		  <ul>
-			<h4>Account</h4>
-			<li>My Quizzes</li>
-			<li>My Units</li>
+			  </ul>
+			  <ul>
+				<h4>Account</h4>
+				<li>My Quizzes</li>
+				<li>My Units</li>
 
-		  </ul>
-		  <ul>
-			<h4> Contact</h4>
-			<li>Email: social@notespool.com</li>
-			<li>Phone: 0400 000 000</li>
-			<li>Twitter: @socialnotespoolqut</li>
-			<li>Facebook: /socialnotespoolqut</li>
-			<li>Instagram: @socialnotespoolqut</li>
-		  </ul>
-
-		</footer>
-	</div>
+			  </ul>
+			  <ul>
+				<h4> Contact</h4>
+				<li>Email: social@notespool.com</li>
+				<li>Phone: 0400 000 000</li>
+				<li>Twitter: @socialnotespoolqut</li>
+				<li>Facebook: /socialnotespoolqut</li>
+				<li>Instagram: @socialnotespoolqut</li>
+			  </ul>
+		</footer>		
+    </div>
+    	
+		
+		
     <script type="text/javascript" src="{% static 'js/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
 

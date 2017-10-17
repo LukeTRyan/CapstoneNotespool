@@ -1,22 +1,87 @@
 {% extends 'layout/layout.html' %}
-{% block title %}{{subpageNAME}}{% endblock %}
+{% block title %}{{subpageNAME}} - {{unitName}}{% endblock %}
 {% block content %}
 <br />
 
 <h1>Hello, Welcome to the {{subpageNAME}} page for {{unitName}} </h1>
-{% csrf_token %}
 
-<form action="\unit_subpage/{{unitName}}/{{subpageNAME}}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p>{{ form.non_field_errors }}</p>
-    <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-    <p>
-        {{ form.docfile.errors }}
-        {{ form.docfile }}
-    </p>
-    <p><input type="submit" value="Upload" /></p>
+{% if subpageNAME  == "Quizzes" %}
+    <form action="\create_quiz/{{unitSLUG}}/{{subpageNAME}}/" method="get">
+        <input class="btn btn-success btn-lg" type="submit" value="Create Quiz" />
+    </form>
+    <br />
 
-</form>
+    <table style="width:800px" border="1">
+        <style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                font-size: 75%;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #f2f2f2
+            }
+
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+ 
+        {% for i in quizzes %}
+            {% if i.unit == unitName %}
+                <tr>
+                    <th style="background-color: #53A86C; color: white;"> {{ i.name }} </th>
+                </tr>
+                <tr>
+                    <td> ID: <br> {{ i.exam_id }} </td>
+                </tr>
+                <tr>
+                    <td> Unit: <br> {{ i.unit }} </td>
+                </tr>
+                <tr>
+                    <td> created by: <br> {{ i.created_by }} </td>
+                </tr>
+                <tr>
+                    <td> Created on: <br> {{ i.created_on }} </td>
+                </tr>
+                <tr>
+                    <td> date modified: <br> {{ i.date_modified }} </td>
+                </tr>
+                 <tr>
+                    <td> Choices: <br> {{ i.choices }} </td>
+                </tr>
+                <tr>
+                    <td> <a href="\delete_quiz/{{ i.unit }}/{{i.exam_id}}" class="btn btn-default"> Delete Quiz </a> </td>
+                </tr>
+                <tr>
+                    <td> <a href="\edit_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.slug}}" class="btn btn-default">Edit Quiz</a> </td>
+                </tr>
+                <tr>
+                    <td> <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.slug}}" class="btn btn-default">Take Quiz</a> </td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</table>
+<br />
+    
+
+    {% if subpageNAME  == "Tutorials" %}
+
+    <form action="\create_text_field/{{unitSLUG}}/{{subpageNAME}}/" method="get">
+        <input class="btn btn-success btn-lg" type="submit" value="Add Tutorial" />
+    </form>
+	
+    {% endif %}
+
+
 
 
 
