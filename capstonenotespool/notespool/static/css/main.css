@@ -16,7 +16,7 @@ Secondary Colour (fade):	rgb(247, 172, 98);
 
 .navbar-default {
     background-color: rgba(22, 94, 156, 1);
-    position: relative;
+    position: fixed;
     display: inline-block;
 	color: #FFFFFF;
 	border-radius: 0px;
@@ -24,6 +24,13 @@ Secondary Colour (fade):	rgb(247, 172, 98);
 	width: 100%;
 	margin-bottom: 0px;
 	float: left;
+	z-index: 50;
+
+}
+
+.navbar-header {
+
+	margin-left: 13%;
 
 }
 
@@ -61,6 +68,8 @@ Secondary Colour (fade):	rgb(247, 172, 98);
 	margin-top: 10px;
 	color: #000;
 	border:none;
+	float: right;
+	margin-right: 13%;
 
 }
 .search-box {
