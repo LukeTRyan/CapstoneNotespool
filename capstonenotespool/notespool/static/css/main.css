@@ -179,6 +179,10 @@ label {
 	margin-bottom: 7px;
 }
 
+
+
+/*Button
+*********/
 .btn-success {
   color: #fff;
   background-color: rgb(255, 134, 13);
@@ -227,6 +231,17 @@ label {
 }
 
 
+.btn-info {
+  background-color: #165e9c!important;
+  border: none!important;
+}
+
+.btn-info:hover {
+  background-color: rgb(26, 116, 198)!important;
+  border: none!important;
+}
+
+
 /*****STRUCTURE*****/
 body {
   background-color: #eeeeee!important;
@@ -257,6 +272,7 @@ body {
 @media (min-width: 1200px) {
   .container {
     width: 1430px;
+	height: auto;
   }
 }
 .content-wrapper {
@@ -265,10 +281,11 @@ body {
   padding-left: 50px;
   padding-right: 50px;
   padding-top: 25px;
-  padding-bottom: 10%;
+  padding-bottom: 50px;
+  height: auto;
   margin-top: -20px;
-  min-height: 550px;
   text-align: -webkit-center;
+  display: flow-root;
  
   
 }
@@ -289,13 +306,45 @@ body {
  text-align: left;
 }
 
+
+.unit-content {
+ display: inline-block;
+ background-color: #f9f9f9;
+ float: left;
+ margin: 5px;
+ text-align: left;
+ min-width: 12%;
+ min-height: 400px;
+}
+.unit-header {
+  background-color: #165e9c;
+  color: white;
+  height: 100%;
+  padding: 1px;
+  text-align: center;
+}
+.calendar {
+ display: inline-block;
+ background-color: #f9f9f9;
+ float: right;
+ margin: 5px;
+ text-align: center;
+ min-height: 400px;
+ min-width: 45%;
+}
+
+
+
+/* Tables
+**********/
+
+
 footer {
   background-color: rgba(22, 94, 156, 1);
   color: #fff;
   height: 163px;
   max-width: 100%;
   text-align: left;
-
 }
 
 footer ul {
@@ -306,5 +355,15 @@ footer ul {
 
 }
 
+footer a {
 
+ color: #fff;
 
+}
+
+footer a:hover {
+
+  color: #fff;
+  text-decoration: underline;
+
+}

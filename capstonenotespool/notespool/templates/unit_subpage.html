@@ -3,7 +3,7 @@
 {% block content %}
 <br />
 
-<h1>Hello, Welcome to the {{subpageNAME}} page for {{unitName}} </h1>
+<h1>{{unitName}} {{subpageNAME}} </h1>
 
 {% if subpageNAME  == "Quizzes" %}
     <form action="\create_quiz/{{unitSLUG}}/{{subpageNAME}}/" method="get">
