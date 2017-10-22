@@ -38,7 +38,6 @@ class DeleteAccountForm(forms.Form):
 
 class EditAccountForm(forms.Form):
 	username = forms.CharField(max_length=15)
-	password = forms.CharField(max_length=15)
 	first_name = forms.CharField(max_length=15)
 	last_name = forms.CharField(max_length=15)
 	email = forms.EmailField(widget=forms.EmailInput)

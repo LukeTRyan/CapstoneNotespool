@@ -3,7 +3,7 @@
 {% block content %}
 <br />
 
-<h1>Hello, Welcome to the {{subpageNAME}} page for {{unitName}} </h1>
+<h1>{{unitName}} {{subpageNAME}} </h1>
 
 {% if subpageNAME  == "Quizzes" %}
     <form action="\create_quiz/{{unitSLUG}}/{{subpageNAME}}/" method="get">
@@ -78,7 +78,7 @@
     <form action="\create_text_field/{{unitSLUG}}/{{subpageNAME}}/" method="get">
         <input class="btn btn-success btn-lg" type="submit" value="Add Tutorial" />
     </form>
-
+	
     {% endif %}
 
 

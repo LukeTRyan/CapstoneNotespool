@@ -4,13 +4,80 @@
 <br />
 
 
-<h1>Hello, Welcome to the Notespool for {{unitName}} </h1>
+<h1>{{unitName}}</h1>
 
-<form action="\create_subpage/{{unitSLUG}}" method="get">
-    <input class="btn btn-success btn-lg" type="submit" value="Create Subpage" />
-</form>
 <br />
-{% for i in subpages %}
+
+<div class="unit-content">
+	<div class="unit-header"><h4> <a style="color:#FFF;"href = "\unit_subpage/{{ unitSLUG }}/Assessment">Assessment</a></h4></div>
+		<div style="padding: 10px; height: 300px;">
+		<li style="list-style-type:none;"><a href ="">Assessment 1</a></li>
+		<li style="list-style-type:none;"><a href =""> Assessment 2</a></li>
+		<li style="list-style-type:none;"><a href =""> Assessment 3</a></li>
+		<li style="list-style-type:none;"><a href =""> Assessment 4</a></li>
+	</div>
+	
+	<div style="font-weight: 500; float: right; padding: 10px; font-size: 12px;">
+		<a href="\create_text_field/{{unitSLUG}}/Assessment/"> Add Notes</a>
+		<br />
+		<a href="\unit_subpage/{{ unitSLUG }}/Assessment"> View More</a>
+	</div>
+</div>
+
+
+<div class="unit-content">
+	<div class="unit-header"><h4> <a style="color:#FFF;"href = "\unit_subpage/{{ unitSLUG }}/Lectures">Lectures</a></h4></div>
+		<div style="padding: 10px; height: 300px;">
+		<li style="list-style-type:none;"><a href =""> Week 1</a></li>
+		<li style="list-style-type:none;"><a href =""> Week 2</a></li>
+		<li style="list-style-type:none;"><a href =""> Week 3</a></li>
+		<li style="list-style-type:none;"><a href =""> Week 4</a></li>
+	 </div>
+	 <div style="font-weight: 500; float: right; padding: 10px; font-size: 12px;">
+		<a href="\create_text_field/{{unitSLUG}}/Lectures/"> Add Notes</a>
+		<br />
+		<a href="\unit_subpage/{{ unitSLUG }}/Lectures"> View More</a>
+	</div>
+</div>
+
+<div class="unit-content">
+	<div class="unit-header"><h4> <a style="color:#FFF;"href = "\unit_subpage/{{ unitSLUG }}/Tutorials">Tutorials</a></h4></div>
+		<div style="padding: 10px; height: 300px;">
+		<li style="list-style-type:none;"><a href =""> Tute A Week 1</a></li>
+		<li style="list-style-type:none;"><a href =""> Tute A Week 2</a></li>
+		<li style="list-style-type:none;"><a href =""> Tute B Week 1</a></li>
+		<li style="list-style-type:none;"><a href =""> Tute B Week 2</a></li>
+	</div>
+	<div style="font-weight: 500; float: right; padding: 10px; font-size: 12px;">
+		<a href="\create_text_field/{{unitSLUG}}/Tutorials/"> Add Notes</a>
+		<br />
+		<a href="\unit_subpage/{{ unitSLUG }}/Tutorials"> View More</a>
+	</div>
+</div>
+
+<div class="unit-content">
+<div class="unit-header"><h4> <a style="color:#FFF;"href = "\unit_subpage/{{ unitSLUG }}/Quizzes">Quizzes</a></h4></div>
+	<div style="padding: 10px; height: 300px;">
+		<li style="list-style-type:none;"><a href =""> Week 1</a></li>
+		<li style="list-style-type:none;"><a href =""> Week 2</a></li>
+		<li style="list-style-type:none;"><a href =""> Week 3</a></li>
+		<li style="list-style-type:none;"><a href =""> Mid Semester Exam Prep</a></li>
+	</div>
+	
+	<div style="font-weight: 500; float: right; padding: 10px; font-size: 12px;">
+		<a href="\create_quiz/{{unitSLUG}}/Quizzes/">Create Quiz</a>
+		<br />
+		<a href="\unit_subpage/{{ unitSLUG }}/Quizzes"> View More</a>
+	</div>
+</div>
+
+<div class="calendar">
+
+	<div class="unit-header"><h4> <a style="color:#FFF;"href = "\unit_subpage/{{ unitSLUG }}/Calendar">Calendar</a></h4></div>
+
+</div>
+
+<!--- {% for i in subpages %}
     {% if i.approval == True %}
         <table>
             <tr>
@@ -18,5 +85,5 @@
             </tr>
         </table>
     {% endif %}
-{% endfor %}
+{% endfor %} -->
 {% endblock %}

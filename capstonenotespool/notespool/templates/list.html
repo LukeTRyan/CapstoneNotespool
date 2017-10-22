@@ -23,9 +23,6 @@
         {% for document in documents %}
 
         <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
-        <tr>
-            <td> <a href="\delete_document/{{ document.pk }}/"> Delete Document </a> </td>
-        </tr>
         {% endfor %}
 
     </ul>

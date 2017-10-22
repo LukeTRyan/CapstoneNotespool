@@ -12,7 +12,6 @@
 	
 </head>
 <body>
-<div class="container">
 		<nav class="navbar navbar-default">
 				<div class="navbar-header">
 					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
@@ -27,13 +26,22 @@
 					<ul class="nav navbar-nav">
 						<li class="active"><a href="/">Home</a></li>
 						{% if userp is not none %}
-							<li><a href="/logout">Log out</a></li>
-							<li><a href="/account">Account</a></li>
+							
+							<li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/logout">Log out</a></li>
+								<li><a href="/notespool">My Units</a></li>
+								<li><a href="/calendar">Assessment Calendar</a></li>
+							</ul>
 							<li><a href="/aboutus">About us</a></li>
 							<li><a href="/contact">Contact</a></li>
 						{% else %}
-							<li><a href="/login/">Login</a></li>
-							<li><a href="/registeraccount">Create Account</a></li>
+							<li class="dropdown"><a class="dropdown-toggle" color="#FFF" data-toggle="dropdown" href="#">Account<span class="caret"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/login">Login</a></li>
+								<li><a href="/password_change_form">Forgot Password</a></li>
+								<li><a href="/registeraccount">Register</a></li>
+							</ul>
 							<li><a href="/aboutus">About us</a></li>
 							<li><a href="/contact">Contact</a></li>
 						{% endif %}
@@ -54,8 +62,6 @@
 					</form>
 				</div><!--/.nav-collapse -->
 		</nav>
-	</div><!--/.container -->
-	
 
     {% if message is not none %}
     <script>
@@ -76,10 +82,10 @@
 		</div>	
 
 		<footer>
-			  <ul>
+			<ul>
 				<h4>Navigation</h4>
-				<li>About Us</li>
-				<li>Contact Us</li>
+				<li><a href="/aboutus">About Us</a></li>
+				<li><a href="/contactus">Contact Us</a></li>
 				<li>Search for Units</li>
 
 			  </ul>
@@ -91,12 +97,13 @@
 			  </ul>
 			  <ul>
 				<h4> Contact</h4>
-				<li>Email: social@notespool.com</li>
-				<li>Phone: 0400 000 000</li>
+				<li>Email: <a href="mailto:social@notespool.com">social@notespool.com</a></li>
+				<li>Phone: <a href="tel:0400000000">0400 000 000</a></li>
 				<li>Twitter: @socialnotespoolqut</li>
 				<li>Facebook: /socialnotespoolqut</li>
 				<li>Instagram: @socialnotespoolqut</li>
 			  </ul>
+			  
 		</footer>		
     </div>
     	
