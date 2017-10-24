@@ -45,6 +45,7 @@ urlpatterns = [
 	url(r'^passwordreset/', views.passwordreset, name='passwordreset'),
 	url(r'^aboutus/', views.aboutus, name='aboutus'),
 	url(r'^contact/', views.contact, name='contact'),
+	url(r'^faq/', views.faq, name='faq'),
 	url(r'^notespool/', views.notespool, name='notespool'),
     url(r'^unit_page/(?P<unitname>[^/]+)', views.unit_page, name='unit_page'),
 	url(r'^unit_subpage/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)', views.unit_subpage, name='unit_subpage'),

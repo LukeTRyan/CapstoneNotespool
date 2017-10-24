@@ -259,6 +259,14 @@ def aboutus(request):
 		username = request.session['user_id']
 		return render_to_response('aboutus.html', {'userp': username})
 	return render_to_response('aboutus.html')
+	
+#FAQs	
+def faq(request):
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+		return render_to_response('faq.html', {'userp': username})
+	return render_to_response('faq.html')	
+	
    
 #Site owners contact information
 def contact(request):
