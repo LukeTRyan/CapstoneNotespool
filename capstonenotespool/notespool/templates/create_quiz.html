@@ -3,17 +3,20 @@
 {% block content %}
 <br />
 
-<form action="\create_quiz/{{unit.slug}}/{{subpagename}}/" method="post">
+<h1>New Quiz for {{unit.slug}}</h1>
+
+<form class="quiz-creation" action="\create_quiz/{{unit.slug}}/{{subpagename}}/" method="post">
     {% csrf_token %}
     <style>
         table {
             border-collapse: collapse;
-            width: 100%;
-            font-size: 75%;
+			width: 100%;
+			text-align: center;
         }
 
         th, td {
-            text-align: left;
+			
+            text-align: center;
             padding: 8px;
         }
 
@@ -25,19 +28,26 @@
             background-color: #53A86C;
             color: white;
         }
+		
+		
+		td input {
+			width: 75%;
+			margin: 10px;
+			font-size: 18px;
+		}
     </style>
-    <table style="width:30px">
+    <table>
         <tr>
-            <th style="width:30px"> Quiz Name </th>
+            <th style="font-size: 18px;">Quiz Name</th>
         </tr>
         <tr>
-            <td>
-                {{ form.quiz_name.errors }}
+            <td style="width:100%;">
+                {{ form.quiz_namez.errors }}
                 {{ form.quiz_name }}
             </td>
         </tr>
     </table>
-    <input class="btn btn-success" type="submit" value="Create Quiz" />
+    <input class="btn btn-success" type="submit" value="Create Quiz"/>
 </form>
 <br />
 

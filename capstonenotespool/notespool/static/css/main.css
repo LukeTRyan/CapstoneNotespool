@@ -2,7 +2,7 @@
      COLOUR GUIDE     
 **********************
 
-Primary Colour: 			rgba(22, 94, 156);
+Primary Colour: 			rgba(22, 94, 156); or #165e9c;
 Primary Colour (fade): 		rgb(26, 116, 198);
 Secondary Colour: 			rgb(255, 134, 13);
 Secondary Colour (fade):	rgb(247, 172, 98);
@@ -244,20 +244,17 @@ label {
 
 /*****STRUCTURE*****/
 body {
-  background-color: #eeeeee!important;
+  background-color: #fbfbfb!important;
 }
 
 
 
-.container {
-	text-align: -webkit-center;
-
-}
 .container {
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
+  text-align: -webkit-center;
 }
 @media (min-width: 768px) {
   .container {
@@ -307,6 +304,40 @@ body {
 }
 
 
+
+/*Quiz Content
+**************/
+.quiz-creation {
+ display: inline-block;
+ background-color: #f9f9f9;
+ margin: 5px;
+ padding: 0px!important;
+ padding-bottom: 10px!important;
+ text-align: center;
+ width: 60%
+}
+
+.quiz-creation-answer {
+ display: inline-block;
+ background-color: #f9f9f9;
+ margin: 5px;
+ padding: 0px!important;
+ padding-bottom: 10px!important;
+ text-align: center;
+}
+
+.quiz-edit-question {
+ display: block;
+ margin: 10px;
+ padding: 10px;
+ text-align: center;
+ max-width: 50%;
+}
+
+
+
+/*Unit Page Content
+*******************/
 .unit-content {
  display: inline-block;
  background-color: #f9f9f9;
@@ -337,7 +368,13 @@ body {
 
 /* Tables
 **********/
+th {
+background-color: #165e9c!important;
+font-weight: 600;
+color: #FFF!important;
+padding: 5px;
 
+}
 
 footer {
   background-color: rgba(22, 94, 156, 1);
