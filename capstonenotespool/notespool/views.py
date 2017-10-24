@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document, Unit, UnitSubpage, Exam, Question, Answer, StudyNotes
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, EditQuestionForm, TakeQuizForm, PostForm
+from .models import Student, Document, Unit, UnitSubpage, Exam, Question, StudyNotes
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, TakeQuizForm, PostForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -309,7 +309,6 @@ def unit_subpage(request,unitname,subpagename):
 		quizzes = Exam.objects.all()
 		notes = StudyNotes.objects.all()
 		questions = Question.objects.all()
-		answers = Answer.objects.all()
 
 		return render_to_response('unit_subpage.html', {'notes':notes, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes})
 	else:
@@ -340,7 +339,7 @@ def create_quiz(request,unitname,subpagename):
 				except ObjectDoesNotExist:
 					latest_id = 0
 
-				newquiz = Exam(exam_id = latest_id + 1, name = quiz_name, unit = unit.unit_name, created_by = username)
+				newquiz = Exam(exam_id = latest_id + 1, name = quiz_name, unit = unit.unit_name, created_by = username, slug = quiz_name)
 				newquiz.save()
 				return HttpResponseRedirect(request.session['previous_url'])
 	else:
@@ -348,36 +347,43 @@ def create_quiz(request,unitname,subpagename):
 	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
 
 #edit quiz function
-def edit_quiz(request,unitname,subpagename,quizname):
-	examInstance = Exam.objects.get(slug = quizname)
+def edit_quiz(request,unitname,subpagename,examid):
+	examInstance = Exam.objects.get(exam_id = examid)
 	unit = Unit.objects.get(slug = unitname)
 	createdBy = examInstance.created_by
 	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
 		return HttpResponseRedirect('/')
 
 	username = request.session['user_id']
-
 	questions = Question.objects.all()
-	answers = Answer.objects.all()
 
 	form = EditQuizForm(request.POST or None)
 	if form.is_valid():
-		question_text = form.cleaned_data['question_text']
-		answer_text = form.cleaned_data['answer_text']
+		question = form.cleaned_data['question']
+		option1 = form.cleaned_data['option1']
+		option2 = form.cleaned_data['option2']
+		option3 = form.cleaned_data['option3']
+		option4 = form.cleaned_data['option4']
+		answer = form.cleaned_data['answer']
 
 		try: 
 			get_latestq = Question.objects.latest('id')
 			latest_idq = get_latestq.id
-			get_latesta = Answer.objects.latest('id')
-			latest_ida = get_latesta.id
 		except ObjectDoesNotExist:
 			latest_idq = 0
-			latest_ida = 0
+			
 		
-		newQuestion = Question(question_text = question_text, exam = examInstance, related_quiz = examInstance.exam_id, id = latest_idq + 1, is_published = True)
+		newQuestion = Question()
+		newQuestion.question = question
+		newQuestion.option1 = option1
+		newQuestion.option2 = option2
+		newQuestion.option3 = option3
+		newQuestion.option4 = option4
+		newQuestion.answer = answer
+		newQuestion.exam = examInstance
+		newQuestion.related_quiz = examInstance.exam_id
+		newQuestion.id = latest_idq + 1
 		newQuestion.save()	
-		newAnswer = Answer(text = answer_text, question = newQuestion, related_quiz = examInstance.exam_id, id = latest_ida + 1)
-		newAnswer.save()
 		if examInstance.choices == None:
 			examInstance.choices = 1
 		else:
@@ -385,42 +391,48 @@ def edit_quiz(request,unitname,subpagename,quizname):
 		examInstance.save()
 		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-	return render_to_response('edit_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
+	return render_to_response('edit_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions})
 
 #take quiz function
-def take_quiz(request,unitname,subpagename,quizname):
-	examInstance = Exam.objects.get(slug = quizname)
-	unit = Unit.objects.get(slug = unitname)
-	username = request.session['user_id']
-	questions = Question.objects.all()
-	answers = Answer.objects.all()
-
+def take_quiz(request,unitname,subpagename,examid):
 	if 'user_id' not in request.session:
 		return HttpResponseRedirect('/')
 
 	if request.method == 'GET':
 		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
-	form = TakeQuizForm()
-	form = TakeQuizForm(request.POST)
+	examInstance = Exam.objects.get(exam_id = examid)
+	unit = Unit.objects.get(slug = unitname)
+	username = request.session['user_id']
+	questions = Question.objects.all()
+	answerList = []
+	answerList2 = []
+	for i in Question.objects.filter(related_quiz = examid):
+		answerList.append(i.answer)
+
+	form = EditQuizForm()
+	form = EditQuizForm(request.POST)
 
 	if request.method == "POST":
-		form = TakeQuizForm(request.POST)
-		newObject = request.POST.copy()
-		newlist = (dict(newObject.lists()))
-		popped = newlist.pop('answer_text_0')
+		form = EditQuizForm(request.POST)
+		submittedObject = request.POST.copy()
+		newList = (dict(submittedObject.lists()))
+		values = newList.values()
+		for i in values:
+			answerList2.append(i)
+
 		count = 0
 		totalCorrect = 0
-		for i in popped:
-			if str(i) == str(answers[count]):
+		for i in range(len(answerList)):
+			if answerList[i] == answerList2[i][0]:
 				count = count +1
 				totalCorrect = totalCorrect +1
 			else:
 				count = count +1
 		message = ("Total attempted" + ":" + str(count) + "    " + "Total Correct" + ":" +  str(totalCorrect))
-		return render_to_response('take_quiz.html', {'message':message, 'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
+		return render_to_response('take_quiz.html', {'message':message, 'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'subpagename': subpagename })
 
-	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
+	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'subpagename': subpagename })
 
 #edit quiz question function
 def edit_question(request, questionid, examid, examslug):
@@ -433,32 +445,42 @@ def edit_question(request, questionid, examid, examslug):
 	if request.method == 'GET':
 			request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
-	question = Question.objects.get(id = questionid)
-	answer = Answer.objects.get(id = questionid)
+	editedQuestion = Question.objects.get(id = questionid)
 
-	form = EditQuestionForm(request.POST or None)
-	data = {'question_text': question.question_text,
-			'answer_text': answer.text}
+	form = EditQuizForm(request.POST or None)
+	data = {'question': editedQuestion.question,
+			'option1':editedQuestion.option1,
+			'option2':editedQuestion.option2,
+			'option3':editedQuestion.option3,
+			'option4':editedQuestion.option4,
+			'answer': editedQuestion.answer}
 
 	if 'edit_question' in request.POST:
 		if form.is_valid():
-			question_text = form.cleaned_data['question_text']
-			answer_text = form.cleaned_data['answer_text']
+			question = form.cleaned_data['question']
+			option1 = form.cleaned_data['option1']
+			option2 = form.cleaned_data['option2']
+			option3 = form.cleaned_data['option3']
+			option4 = form.cleaned_data['option4']
+			answer = form.cleaned_data['answer']
 
-			question.question_text = question_text
-			question.save()
-			answer.text = answer_text
-			answer.save()
+			editedQuestion.question = question
+			editedQuestion.answer = answer 
+			editedQuestion.option1 = option1
+			editedQuestion.option2 = option2
+			editedQuestion.option3 = option3
+			editedQuestion.option4 = option4
+			editedQuestion.save()
 			return HttpResponseRedirect(request.session['previous_url'])
-		return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+		return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':editedQuestion})
+
 	elif 'delete_question' in request.POST:
-		question.delete()
-		answer.delete()
+		editedQuestion.delete()
 		examInstance.choices = examInstance.choices - 1
 		examInstance.save()
 		return HttpResponseRedirect(request.session['previous_url'])
-	form = EditQuestionForm(request.POST or None, initial=data)
-	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
+	form = EditQuizForm(request.POST or None, initial=data)
+	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':editedQuestion})
 
 #delete quiz function
 def delete_quiz(request,unitname,examid):

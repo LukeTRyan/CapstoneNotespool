@@ -74,16 +74,16 @@ class CreateQuizForm(forms.Form):
 	quiz_name = forms.CharField(max_length=64)
 
 class EditQuizForm(forms.Form):
-	question_text = forms.CharField(max_length=256)
-	answer_text = forms.CharField(max_length=128)
+	question = forms.CharField(max_length=256)
+	option1 = forms.CharField(max_length=256)
+	option2 = forms.CharField(max_length=256)
+	option3 = forms.CharField(max_length=256)
+	option4 = forms.CharField(max_length=256)
+	answer = forms.CharField(max_length=256)
 
 class PostForm(forms.Form):
 	title = forms.CharField(max_length=100)
 	content = forms.CharField(widget=CKEditorWidget())
-
-class EditQuestionForm(forms.Form):
-	question_text = forms.CharField(max_length=256)
-	answer_text = forms.CharField(max_length=128)
 
 class MultiWidgetBasic(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):

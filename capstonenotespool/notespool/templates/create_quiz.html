@@ -3,7 +3,7 @@
 {% block content %}
 <br />
 
-<h1>New Quiz for {{unit.slug}}</h1>
+<h1>New Quiz for {{unit.unit_name}}</h1>
 
 <form class="quiz-creation" action="\create_quiz/{{unit.slug}}/{{subpagename}}/" method="post">
     {% csrf_token %}

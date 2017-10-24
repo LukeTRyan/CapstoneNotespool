@@ -10,19 +10,21 @@
 </form>
 <br>
 
-<form action="\take_quiz/{{unit.slug}}/{{subpagename}}/{{exam.slug}}" method="post">
-    {% csrf_token %}
-
-    {% for i in answers %}
+<form action="\take_quiz/{{unit.slug}}/{{subpagename}}/{{exam.exam_id}}" method="post">
+    <div>
+    {% for i in questions %}
         {% if i.related_quiz == exam.exam_id %}
-            <p><b> Question: </b>   {{i.question.question_text}}</p>
-            <p><b> Answer: </b> {{form.answer_text}}
-    <br />
+            <h3>{{ i.question }}</h3>
+            <input type="radio" name="{{i.id}}" value="A" >   A. {{ i.option1 }}<br><br>
+            <input type="radio" name="{{i.id}}" value="B" >   B. {{ i.option2 }}<br><br>
+            <input type="radio" name="{{i.id}}" value="C" >   C. {{ i.option3 }}<br><br>
+            <input type="radio" name="{{i.id}}" value="D" >   D. {{ i.option4 }}<br><br>
             <br />
         {% endif %}
     {% endfor %}
     <br />
     <input class="btn btn-success" type="submit" value="Submit" />
+    </div>
 </form>
 <br />
 

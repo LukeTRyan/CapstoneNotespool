@@ -31,14 +31,22 @@
     </style>
         <table style="width:30%">
             <tr>
-                <th style="width:30%"> Edit Question/Answer </th>
+                <th style="width:30%"> Edit Question </th>
             </tr>
             <tr>
                 <td>
-                    {{form.question_text.errors}}
-                    <p>Edit Question {{ form.question_text }}</p>
-                    {{form.answer_text.errors}}
-                    <p>Edit Answer {{form.answer_text}}</p>
+                    {{form.question.errors}}
+                    <p><label>Question</label> {{ form.question }}</p>
+                    {{form.option1.errors}}
+                    <p><label>Option 1</label> {{ form.option1 }}</p>
+                    {{form.option2.errors}}
+                    <p><label>Option 2</label> {{ form.option2 }}</p>
+                    {{form.option3.errors}}
+                    <p><label>Option 3</label> {{ form.option3 }}</p>
+                    {{form.option4.errors}}
+                    <p><label>Option 4</label> {{ form.option4 }}</p>
+                    {{form.answer.errors}}
+                    <p><label>Answer</label> {{form.answer}}</p>
                 </td>
             </tr>
         </table>

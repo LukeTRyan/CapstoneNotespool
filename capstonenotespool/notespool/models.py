@@ -95,9 +95,6 @@ class Document(models.Model):
 	docfile = models.FileField(upload_to='documents/%Y/%m/%d')
 
 class Exam(models.Model):
-	"""
-	Exam's model, works as a wrapper for the questions
-	"""
 	name = models.CharField(max_length=64, verbose_name=u'Exam name', )
 	exam_id = models.IntegerField(unique=True, primary_key=True)
 	unit = models.CharField(max_length=50, null=True)
@@ -110,44 +107,29 @@ class Exam(models.Model):
 	def __str__(self):
 		return self.name
 
-def create_slug(instance, new_slug=None):
-	slug = slugify(instance.name)
-	if new_slug is not None:
-		slug = new_slug
-	qs = Exam.objects.filter(slug=slug).order_by("-id")
-	exists = qs.exists()
-	if exists:
-		new_slug = "%s-%s" %(slug, qs.first().id)
-		return create_slug(instance, new_slug=new_slug)
-	return slug
-
-def pre_save_post_receiver(sender, instance, *args, **kwargs):
-	if not instance.slug:
-		instance.slug = create_slug(instance)
-
-pre_save.connect(pre_save_post_receiver, sender=Exam)
-
 	
 
 class Question(models.Model):
-	question_text = models.CharField(max_length=256, verbose_name=u'Question\'s text')
+	question = models.TextField(max_length=200,default="")
+	option1 = models.CharField(max_length=50,default="")
+	option2 = models.CharField(max_length=50, default="")
+	option3 = models.CharField(max_length=50, default="")
+	option4 = models.CharField(max_length=50, default="")
+	answer = models.CharField(max_length=50, default="")
 	related_quiz = models.IntegerField()
-	is_published = models.BooleanField(default=False)
-	exam = models.ForeignKey(Exam, related_name='questions')
+	exam = models.ForeignKey(Exam, related_name='question')
 
 	def __str__(self):
-		return "{content} - {published}".format(content=self.question_text, published=self.is_published)
+		return self.question
 
 
-class Answer(models.Model):
-	"""
-	Answer's Model, which is used as the answer in Question Model
-	"""
-	text = models.CharField(max_length=128, verbose_name=u'Answer\'s text')
-	related_quiz = models.IntegerField()
-	is_valid = models.BooleanField(default=False)
-	question = models.ForeignKey(Question, related_name='answers')
-
-	def __str__(self):
-		return self.text
-
+#class Answer(models.Model):
+#	text = models.CharField(max_length=128, verbose_name=u'Answer\'s text')
+#	related_quiz = models.IntegerField()
+#	is_valid = models.BooleanField(default=False)
+#	question = models.ForeignKey(Question, related_name='answers')
+#
+#	def __str__(self):
+#		return self.text
+#
+#

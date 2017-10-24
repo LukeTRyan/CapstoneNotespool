@@ -8,21 +8,20 @@
 <!--- <form action="\unit_subpage/{{unit.slug}}/{{subpagename}}/" method="post">
 	<input class="btn btn-info" type="submit" value="Back" style="width:100px;" />
 </form> -->
-<br>
-{% for i in answers %}
-        {% if i.related_quiz == exam.exam_id %}
-		
-		<div class="quiz-edit-question">
-            <p><b> Question: </b>   {{i.question.question_text}}</p>
-            <p><b> Answer: </b>   {{i.text}}</p>
-            <a href="\edit_question/{{i.id}}/{{exam.exam_id}}/{{exam.slug}}" class="btn btn-info" > Edit/Delete Question </a>
-		
-		</div>
-        {% endif %}
+
+{% for i in questions %}
+	<div class="quiz-edit-question">
+        <p><b> Question: </b>   {{i.question}}</p>
+        <p><b> Option 1: </b>   {{i.option1}}</p>
+        <p><b> Option 2: </b>   {{i.option2}}</p>
+        <p><b> Option 3: </b>   {{i.option3}}</p>
+        <p><b> Option 4: </b>   {{i.option4}}</p>
+        <p><b> Answer: </b>   {{i.answer}}</p>
+        <a href="\edit_question/{{i.id}}/{{exam.exam_id}}/{{exam.slug}}" class="btn btn-info" > Edit/Delete Question </a>
+    </div> 
 {% endfor %}
 
-
-<form class="quiz-creation-answer" action="\edit_quiz/{{unit.slug}}/{{subpagename}}/{{exam.slug}}" method="post">
+<form class="quiz-creation-answer" action="\edit_quiz/{{unit.slug}}/{{subpagename}}/{{exam.exam_id}}" method="post">
     {% csrf_token %}
     <style>
         table {
@@ -48,10 +47,6 @@
 		
 		width: 600px;
 		}
-		
-		
-		
-		
     </style>
         <table>
             <tr>
@@ -59,10 +54,23 @@
             </tr>
             <tr>
                 <td>
-                    {{form.question_text.errors}}
-                    <p><label>Question</label> {{ form.question_text }}</p>
-                    {{form.answer_text.errors}}
-                    <p><label>Answer</label> {{form.answer_text}}</p>
+                    {{form.question.errors}}
+                    <p><label>Question</label> {{ form.question }}</p>
+                    {{form.option1.errors}}
+                    <p><label>A.</label> {{ form.option1 }}</p>
+                    {{form.option2.errors}}
+                    <p><label>B.</label> {{ form.option2 }}</p>
+                    {{form.option3.errors}}
+                    <p><label>C.</label> {{ form.option3 }}</p>
+                    {{form.option4.errors}}
+                    <p><label>D.</label> {{ form.option4 }}</p>
+                    <p><label>Answer</label></p>
+                    <select name="answer">
+                        <option value="A" selected>A</option>
+                        <option value="B" >B</option>
+                        <option value="C" >C</option>
+                        <option value="D" >D</option>
+                    </select>
                 </td>
             </tr>
         </table>
