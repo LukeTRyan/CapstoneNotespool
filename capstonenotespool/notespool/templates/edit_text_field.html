@@ -1,0 +1,28 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Edit textfield{% endblock %}
+{% block extrahead %}
+<script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+{{ block.super }}
+{% endblock %}
+{% block content %}
+<br />
+
+<form action="/edit_text_field/{{unitNAME}}/{{subpagename}}/{{notesid}}/" method="POST">
+    {% csrf_token %}
+    {{ form.media }}
+    <label for="form.title.id_for_label">Title: </label>
+    {{ form.title }}
+    <br />
+    <br />
+    {{ form.content }}
+    <br />
+    <input class="btn btn-success" type="submit" value="Edit Text Field" />
+</form>
+
+
+
+
+
+
+
+{% endblock %}

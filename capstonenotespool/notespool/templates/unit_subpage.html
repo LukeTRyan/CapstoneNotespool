@@ -68,24 +68,172 @@
                 </tr>
             {% endif %}
         {% endfor %}
-    {% endif %}
 </table>
 <br />
+{% endif %}
     
 
-    {% if subpageNAME  == "Tutorials" %}
+{% if subpageNAME  == "Tutorials" %}
+
+        <form action="\create_text_field/{{unitSLUG}}/{{subpageNAME}}/" method="get">
+            <input class="btn btn-success btn-lg" type="submit" value="Add Tutorial" />
+        </form>
+<br />
+
+    <table style="width:800px" border="1">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+
+        {% for i in notes %}
+            {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
+                <tr>
+                    <th style="background-color: #165e9c; color: white;"> <h3>{{ i.type }}</h3> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+                </tr>
+                <tr>
+                    <td><p>{{ i.content|safe|linebreaks }}</p>
+                        {% if userp == i.created_by %}
+                            <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
+                            <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
+                            <a href="" class="btn btn-default" role="button">Comment</a>
+                        {% else %}
+                            <a href="" class="btn btn-default" role="button">Comment</a>
+                        {% endif %}
+                    </td> 
+                </tr>
+             
+            {% endif %}
+        {% endfor %}
+</table>
+{% endif %}
+
+
+{% if subpageNAME  == "Lectures" %}
 
     <form action="\create_text_field/{{unitSLUG}}/{{subpageNAME}}/" method="get">
-        <input class="btn btn-success btn-lg" type="submit" value="Add Tutorial" />
+        <input class="btn btn-success btn-lg" type="submit" value="Add Lecture" />
     </form>
-	
+<br />
+
+    <table style="width:800px" border="1">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+
+    {% for i in notes %}
+    {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
+    <tr>
+        <th style="background-color: #165e9c; color: white;"> <h3>{{ i.type }}</h3> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+    </tr>
+    <tr>
+        <td>
+            <p>{{ i.content|safe|linebreaks }}</p>
+            {% if userp == i.created_by %}
+            <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
+            <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
+            <a href="" class="btn btn-default" role="button">Comment</a>
+            {% else %}
+            <a href="" class="btn btn-default" role="button">Comment</a>
+            {% endif %}
+        </td>
+    </tr>
+
     {% endif %}
+    {% endfor %}
+</table>
+{% endif %}
 
 
+{% if subpageNAME  == "Assessment" %}
 
+<form action="\create_text_field/{{unitSLUG}}/{{subpageNAME}}/" method="get">
+    <input class="btn btn-success btn-lg" type="submit" value="Add Assessment" />
+</form>
+<br />
 
+<table style="width:800px" border="1">
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
 
-    {% endblock %}
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+
+    {% for i in notes %}
+    {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
+    <tr>
+        <th style="background-color: #165e9c; color: white;"> <h3>{{ i.type }}</h3> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+    </tr>
+    <tr>
+        <td>
+            <p>{{ i.content|safe|linebreaks }}</p>
+            {% if userp == i.created_by %}
+            <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
+            <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
+            <a href="" class="btn btn-default" role="button">Comment</a>
+            {% else %}
+            <a href="" class="btn btn-default" role="button">Comment</a>
+            {% endif %}
+        </td>
+    </tr>
+
+    {% endif %}
+    {% endfor %}
+</table>
+{% endif %}
+
+{% endblock %}
 
 
 

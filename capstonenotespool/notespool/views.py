@@ -277,6 +277,7 @@ def notespool(request):
 		return HttpResponseRedirect('/')
 	return render_to_response('notespool.html', {'userp': username})
 
+#main unit page
 def unit_page(request,unitname):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
@@ -290,6 +291,7 @@ def unit_page(request,unitname):
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_page.html', {'userp': username})
 
+#defines unit subpages (lectures,tutorials,assessment,quizzes)
 def unit_subpage(request,unitname,subpagename):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
@@ -306,6 +308,7 @@ def unit_subpage(request,unitname,subpagename):
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
 
+#create quiz function
 def create_quiz(request,unitname,subpagename):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
@@ -336,6 +339,7 @@ def create_quiz(request,unitname,subpagename):
 		return HttpResponseRedirect('/login')
 	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
 
+#edit quiz function
 def edit_quiz(request,unitname,subpagename,quizname):
 	examInstance = Exam.objects.get(slug = quizname)
 	unit = Unit.objects.get(slug = unitname)
@@ -375,6 +379,7 @@ def edit_quiz(request,unitname,subpagename,quizname):
 
 	return render_to_response('edit_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'subpagename':subpagename, 'unit':unit, 'questions':questions, 'answers':answers })
 
+#take quiz function
 def take_quiz(request,unitname,subpagename,quizname):
 	examInstance = Exam.objects.get(slug = quizname)
 	unit = Unit.objects.get(slug = unitname)
@@ -409,6 +414,7 @@ def take_quiz(request,unitname,subpagename,quizname):
 
 	return render_to_response('take_quiz.html', {'userp':username, 'exam': examInstance, 'form':form, 'unit':unit, 'questions':questions, 'answers':answers, 'subpagename': subpagename })
 
+#edit quiz question function
 def edit_question(request, questionid, examid, examslug):
 	examInstance = Exam.objects.get(exam_id = examid)
 	createdBy = examInstance.created_by
@@ -446,6 +452,7 @@ def edit_question(request, questionid, examid, examslug):
 	form = EditQuestionForm(request.POST or None, initial=data)
 	return render(request, 'edit_question.html', {'userp': username,'form': form, 'exam':examInstance, 'question':question})
 
+#delete quiz function
 def delete_quiz(request,unitname,examid):
 	examInstance = Exam.objects.get(exam_id = examid)
 	createdBy = examInstance.created_by
@@ -458,6 +465,7 @@ def delete_quiz(request,unitname,examid):
 	deletequiz.delete()
 	return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
+#create text fields for subpages
 def create_text_field(request, unitname, subpagename):
 	unit = Unit.objects.get(slug = unitname)
 	username = request.session['user_id']
@@ -468,27 +476,64 @@ def create_text_field(request, unitname, subpagename):
 	if request.method == 'GET':
 		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
-	form = PostForm()
+	form = PostForm(request.POST)
 	if request.method == "POST":
-                if form.is_valid():
-                        form = PostForm(request.POST)
-                        title = form.cleaned_data['title']
-                        content = form.cleaned_data['content']
+				if form.is_valid():
+						title = form.cleaned_data['title']
+						content = form.cleaned_data['content']
 
-                        try: 
-                                get_latest = StudyNotes.objects.latest('notes_id')
-                                latest_id = get_latest.notes_id
-                        except ObjectDoesNotExist:
-                                latest_id = 0
+						try: 
+								get_latest = StudyNotes.objects.latest('notes_id')
+								latest_id = get_latest.notes_id
+						except ObjectDoesNotExist:
+								latest_id = 0
                         
-                        newContent = StudyNotes(notes_id = latest_id, type = title, created_by = username, content = content)
-                        newContent.save()
-                        return HttpResponseRedirect(request.session['previous_url'])
+						newContent = StudyNotes(notes_id = latest_id + 1, type = title, created_by = username, content = content, unit = unit.slug, subpage = subpagename)
+						newContent.save()
+						return HttpResponseRedirect(request.session['previous_url'])
+				else:
+					return HttpResponseRedirect('/')
 
 
 	return render_to_response('text_field.html', {'userp':username, 'form':form, 'unit':unit, 'subpagename': subpagename })
 
+def delete_text_field(request, unitname, subpagename, notesid):
+	textField = StudyNotes.objects.get(notes_id = notesid)
+	createdBy = textField.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
 
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	username = request.session['user_id']
+	textField.delete()
+	return HttpResponseRedirect(request.session['previous_url'])
+
+def edit_text_field(request, unitname, subpagename, notesid):
+	textField = StudyNotes.objects.get(notes_id = notesid)
+	createdBy = textField.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	form = PostForm(request.POST or None)
+	data = {'title': textField.type,
+			'content': textField.content}
+
+	if form.is_valid():
+		title = form.cleaned_data['title']
+		content = form.cleaned_data['content']
+
+		textField.type = title
+		textField.content = content
+		textField.date_modified = datetime.datetime.now()
+		textField.save()
+		return HttpResponseRedirect(request.session['previous_url'])
+	form = PostForm(request.POST or None, initial=data)
+	return render(request, 'edit_text_field.html', {'userp': username, 'form': form, 'unitNAME':unitname, 'subpagename':subpagename, 'notesid':notesid })
 
 #function index to view, edit, create and delete users 
 def administrator(request):
@@ -627,8 +672,11 @@ def delete_unit(request,unitid):
 
 	username = request.session['user_id']
 	units = Unit.objects.all()
+	
 	deleteUnit = Unit.objects.get(unit_id = unitid)
+	UnitTextFields = StudyNotes.objects.filter(unit = deleteUnit.unit_name)
 	deleteUnit.delete()
+	UnitTextFields.delete()
 
 	subpages = UnitSubpage.objects.all()
 	UnitSubpage.objects.filter(unit = deleteUnit.unit_name).delete()
@@ -876,7 +924,7 @@ def delete_document(request,documentpk):
 	return render_to_response('list.html', {'userp': username, 'documents': documents})
 
 #report content		
-def report(request):		
+def report(request):
 	if request.session['user_id'] is None:		
 		return HttpResponseRedirect('/login')		
 	if 'user_id' in request.session and request.session['user_id'] is not None:		

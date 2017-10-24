@@ -41,22 +41,18 @@ class Unit(models.Model):
 	approval = models.NullBooleanField(default=False)
 	slug = models.SlugField(unique=True, null=True)
 
-def create_slug(instance, new_slug=None):
-	slug = slugify(instance.unit_name)
-	if new_slug is not None:
-		slug = new_slug
-	qs = Unit.objects.filter(slug=slug).order_by("-id")
-	exists = qs.exists()
-	if exists:
-		new_slug = "%s-%s" %(slug, qs.first().id)
-		return create_slug(instance, new_slug=new_slug)
-	return slug
+	def get_unique_slug(self):
+		slug = slugify(self.unit_name.replace('1', 'i'))
+		unique_slug = slug
+		counter = 1
+		while Unit.objects.filter(slug=unique_slug).exists():
+			unique_slug = '{}-{}'.format(slug, counter)
+			counter += 1
+		return unique_slug
 
-def pre_save_post_receiver(sender, instance, *args, **kwargs):
-	if not instance.slug:
-		instance.slug = create_slug(instance)
-
-pre_save.connect(pre_save_post_receiver, sender=Unit)
+	def save(self, *args, **kwargs):
+		self.slug = self.get_unique_slug()
+		return super(Unit, self).save(*args, **kwargs)
 
 #database model for staff 
 class Staff(models.Model):
@@ -88,8 +84,11 @@ class Comment(models.Model):
 class StudyNotes(models.Model):
 	notes_id = models.IntegerField(unique=True, primary_key=True)
 	type = models.CharField(max_length=100)
-	created_by = models.IntegerField()
+	unit = models.CharField(max_length=50, null=True)
+	subpage = models.CharField(max_length=50, null=True)
+	created_by = models.CharField(max_length=20, null=True)
 	created_on = models.DateField(default=datetime.datetime.now)
+	date_modified = models.DateField(default=datetime.datetime.now)
 	content = RichTextField(null=True)
 
 class Document(models.Model):

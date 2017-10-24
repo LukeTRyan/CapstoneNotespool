@@ -119,28 +119,28 @@ MESSAGE_TAGS = {
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
 
 #database settings for local server
-#DATABASES = {
-#	'default': {
-#		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-#		'NAME': 'capstonenotespool',
-#		'USER': 'postgres',
-#		'PASSWORD': 'root',
-#		'HOST': '',
-#		'PORT': '',
-#    }
-#}
-
-#database settings for heroku
 DATABASES = {
-   'default': {
+	'default': {
 		'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd49fctgf999ta',
-		'USER': 'gopktzygihicci',
-		'PASSWORD': 'bfd4da48e75196ed247c50e4af5af94b495cace174740d919c7adab0ee6d61d6',
-		'HOST': 'ec2-54-235-88-58.compute-1.amazonaws.com',
-		'PORT': '5432',
+		'NAME': 'capstonenotespool',
+		'USER': 'postgres',
+		'PASSWORD': 'root',
+		'HOST': '',
+		'PORT': '',
     }
 }
+
+#database settings for heroku
+#DATABASES = {
+#   'default': {
+#		'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#        'NAME': 'd49fctgf999ta',
+#		'USER': 'gopktzygihicci',
+#		'PASSWORD': 'bfd4da48e75196ed247c50e4af5af94b495cace174740d919c7adab0ee6d61d6',
+#		'HOST': 'ec2-54-235-88-58.compute-1.amazonaws.com',
+#		'PORT': '5432',
+#   }
+#}
 
 
 ACCOUNT_ACTIVATION_DAYS = 7

@@ -56,6 +56,8 @@ urlpatterns = [
 	url(r'^edit_quiz/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<quizname>[^/]+)', views.edit_quiz, name='edit_quiz'),
 	url(r'^take_quiz/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<quizname>[^/]+)', views.take_quiz, name='take_quiz'),
 	url(r'^create_text_field/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)', views.create_text_field, name='create_text_field'),
+	url(r'^delete_text_field/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<notesid>[^/]+)', views.delete_text_field, name='delete_text_field'),
+	url(r'^edit_text_field/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<notesid>[^/]+)', views.edit_text_field, name='edit_text_field'),
 	url(r'^list/$', views.list, name='list'),
     url(r'^captcha/', include('captcha.urls')),
 	url(r'^ckeditor/', include('ckeditor_uploader.urls')),
