@@ -116,6 +116,19 @@ class Exam(models.Model):
 	def __str__(self):
 		return self.name
 
+	def get_unique_slug(self):
+		slug = slugify(self.name.replace('1', 'i'))
+		unique_slug = slug
+		counter = 1
+		while Exam.objects.filter(slug=unique_slug).exists():
+			unique_slug = '{}-{}'.format(slug, counter)
+			counter += 1
+		return unique_slug
+
+	def save(self, *args, **kwargs):
+		self.slug = self.get_unique_slug()
+		return super(Exam, self).save(*args, **kwargs)
+
 	
 class Question(models.Model):
 	question = models.TextField(max_length=200,default="")

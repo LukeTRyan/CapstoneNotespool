@@ -12,6 +12,10 @@
     {% endif %}
 {% endfor %}
 
-
+{% for i in unitsh %}
+    {% if i.approval == True %}
+<h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_code}} - {{i.unit_name}} </a></h2>
+    {% endif %}
+{% endfor %}
 
 {% endblock %}

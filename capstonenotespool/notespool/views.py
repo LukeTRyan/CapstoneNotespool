@@ -280,7 +280,16 @@ def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
 		units = Unit.objects.all()
-		return render_to_response('notespool.html', {'userp': username, 'units':units})
+		query = request.GET.get("q")
+		if query:
+				unitsh = units.filter(
+						Q(unit_name__icontains=query)|
+						Q(unit_id__icontains=query)|
+						Q(unit_code__icontains=query)
+						).distinct()
+				return render_to_response('notespool.html', {'userp': username, 'unitsh':unitsh})
+		else:
+			return render_to_response('notespool.html', {'userp': username, 'units': units})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('notespool.html', {'userp': username})
@@ -354,7 +363,7 @@ def edit_quiz(request,unitname,subpagename,examid):
 	unit = Unit.objects.get(slug = unitname)
 	createdBy = examInstance.created_by
 	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
-		return HttpResponseRedirect('/')
+		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 	username = request.session['user_id']
 	questions = Question.objects.all()
@@ -440,8 +449,11 @@ def take_quiz(request,unitname,subpagename,examid):
 def edit_question(request, questionid, examid, examslug):
 	examInstance = Exam.objects.get(exam_id = examid)
 	createdBy = examInstance.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+	if 'user_id' not in request.session:
 		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
+
 	username = request.session['user_id']
 
 	if request.method == 'GET':
@@ -488,8 +500,10 @@ def edit_question(request, questionid, examid, examslug):
 def delete_quiz(request,unitname,examid):
 	examInstance = Exam.objects.get(exam_id = examid)
 	createdBy = examInstance.created_by
-	if 'user_id' not in request.session or request.session['user_id'] not in (createdBy, 'admin'):
-		return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/')
 
 	username = request.session['user_id']
 	quizzes = Exam.objects.all()
@@ -532,7 +546,9 @@ def create_text_field(request, unitname, subpagename):
 def delete_text_field(request, unitname, subpagename, notesid):
 	textField = StudyNotes.objects.get(notes_id = notesid)
 	createdBy = textField.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	if request.method == 'GET':
@@ -545,7 +561,9 @@ def delete_text_field(request, unitname, subpagename, notesid):
 def edit_text_field(request, unitname, subpagename, notesid):
 	textField = StudyNotes.objects.get(notes_id = notesid)
 	createdBy = textField.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	if request.method == 'GET':
@@ -793,6 +811,7 @@ def editAccount(request, account):
 
 	username = request.session['user_id']
 	userProfile = User.objects.get(username = account)
+	studentProfile = Student.objects.get(username = account)
 	form = EditAccountForm(request.POST or None)
 	data = {'username': userProfile.username,
             'first_name': userProfile.first_name,
@@ -821,12 +840,11 @@ def editAccount(request, account):
 		userProfile.email = email
 		userProfile.save()
 
-		student = Student.objects.get(username = account)
-		student.username = username
-		student.first_name = first_name
-		student.last_name = last_name
-		student.email = email
-		student.save()
+		studentProfile.username = username
+		studentProfile.first_name = first_name
+		studentProfile.last_name = last_name
+		studentProfile.email = email
+		studentProfile.save()
 
 		request.session['redirect'] = "User_edited"
 		return HttpResponseRedirect('/administrator')
@@ -911,52 +929,53 @@ def account(request):
 	return render(request, "account.html", {'form': form, 'userp': username})
 
 def edit_profile(request):
-	if request.session['user_id'] is None:
+	if 'user_id' not in request.session or request.session['user_id'] is None:
 		return HttpResponseRedirect('/login')
-	if 'user_id' in request.session and request.session['user_id'] is not None:
-		username = request.session['user_id']
-
+		
+	username = request.session['user_id']
 	userProfile = User.objects.get(username = username)
-
-	form = EditAccountForm(request.POST)
+	studentProfile = Student.objects.get(username = username)
+	form = EditAccountForm(request.POST or None)
 
 	data = {'username': userProfile.username,
-            'first_name': userProfile.first_name,
-            'last_name': userProfile.last_name,
-            'email': userProfile.email}
+			'first_name': userProfile.first_name,
+			'last_name': userProfile.last_name,
+			'email': userProfile.email}
 
-	if form.is_valid():
-		username = form.cleaned_data['username']
-		first_name = form.cleaned_data['first_name']
-		last_name = form.cleaned_data['last_name']
-		email = form.cleaned_data['email']
+	if request.method == 'POST':
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			first_name = form.cleaned_data['first_name']
+			last_name = form.cleaned_data['last_name']
+			email = form.cleaned_data['email']
 		
-		if User.objects.filter(username = username).exists() and (username != userProfile.username):
-			username = request.session['user_id']
-			message = "Username already exists"
-			return render(request,'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
+			if User.objects.filter(username = username).exists() and (username != userProfile.username):
+				username = request.session['user_id']
+				message = "Username already exists"
+				return render(request,'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
 
-		if User.objects.filter(email = email).exists() and (email != userProfile.email):
-			username = request.session['user_id']
-			message = "Email already exists"
-			return render(request,'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
+			if User.objects.filter(email = email).exists() and (email != userProfile.email):
+				username = request.session['user_id']
+				message = "Email already exists"
+				return render(request,'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
 
 
-		userProfile.username = username
-		userProfile.first_name = first_name
-		userProfile.last_name = last_name
-		userProfile.email = email
-		userProfile.save()
+			userProfile.username = username
+			userProfile.first_name = first_name
+			userProfile.last_name = last_name
+			userProfile.email = email
+			userProfile.save()
 
-		#student = Student.objects.get(username = username)
-		#student.username = username
-		#student.first_name = first_name
-		#student.last_name = last_name
-		#student.email = email
-		#student.save()
+			studentProfile.username = username
+			studentProfile.first_name = first_name
+			studentProfile.last_name = last_name
+			studentProfile.email = email
+			studentProfile.save()
 
-		request.session['redirect'] = "User_edited"
-		return HttpResponseRedirect('/edit_profile')
+			request.session['user_id'] = username
+
+			request.session['redirect'] = "User_edited"
+			return HttpResponseRedirect('/edit_profile')
 		
 	form = EditAccountForm(request.POST or None, initial=data) 
 	return render(request, 'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form})
@@ -996,7 +1015,9 @@ def list(request):
 def upload_document(request,unitname,subpagename,notesid):
 	textField = StudyNotes.objects.get(notes_id = notesid)
 	createdBy = textField.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	if request.method == 'GET':
@@ -1023,7 +1044,11 @@ def upload_document(request,unitname,subpagename,notesid):
 	return render(request, 'upload_document.html', {'userp': username, 'form': form, 'unitNAME':unitname, 'subpagename':subpagename, 'notesid':notesid })
 
 def delete_document(request,documentpk):
-	if 'user_id' not in request.session or request.session['user_id'] != "admin":
+	documentInstance = Document.objects.get(pk = documentpk)
+	createdBy = documentInstance.created_by
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	if request.method == 'GET':
