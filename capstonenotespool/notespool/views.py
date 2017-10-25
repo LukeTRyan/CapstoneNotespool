@@ -1020,10 +1020,12 @@ def upload_document(request,unitname,subpagename,notesid):
 		form = DocumentForm() # A empty, unbound form
 	return render(request, 'upload_document.html', {'userp': username, 'form': form, 'unitNAME':unitname, 'subpagename':subpagename, 'notesid':notesid })
 
-
 def delete_document(request,documentpk):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
 	username = request.session['user_id']
 	documents = Document.objects.all()
@@ -1031,7 +1033,7 @@ def delete_document(request,documentpk):
 		if Document.objects.get(pk = documentpk):
 			document.docfile.delete()
 			document.delete()
-			return HttpResponseRedirect('/list')
+			return HttpResponseRedirect(request.session['previous_url'])
 	return render_to_response('list.html', {'userp': username, 'documents': documents})
 
 #report content		
@@ -1057,3 +1059,26 @@ def report(request):
 			message = "Content Removed"		
 			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})		
 	return render(request, "account.html", {'form': form, 'userp': username})
+
+def add_comment(request, unitname, subpagename, notesid):
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	form = CommentForm(request.POST)
+
+	if form.is_valid():
+		content = form.cleaned_data['content']
+		
+
+def edit_comment(request, unitname, subpagename, notesid, commmentid):
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+def remove_comment(request, unitname, subpagename, notesid, commentid):
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+

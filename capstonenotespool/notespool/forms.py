@@ -100,3 +100,6 @@ class MultiExampleField(forms.fields.MultiValueField):
 
 class TakeQuizForm(forms.Form):
 	answer_text = MultiExampleField()
+
+class CommentForm(forms.Form):
+	content = forms.CharField(max_length=256)

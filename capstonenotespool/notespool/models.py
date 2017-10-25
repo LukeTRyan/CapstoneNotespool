@@ -76,10 +76,14 @@ class UnitSubpage(models.Model):
 
 class Comment(models.Model):
 	comment_id = models.IntegerField(unique=True, primary_key=True)
-	date_created = models.DateField(default=datetime.datetime.now)
+	created_on = models.DateField(default=datetime.datetime.now)
 	date_modified = models.DateField(default=datetime.datetime.now)
 	created_by = models.CharField(max_length=50, null=True)
+	unit = models.CharField(max_length=50, null=True)
+	subpage = models.CharField(max_length=50, null=True)
+	studynote = models.IntegerField(null=True)
 	content = models.CharField(max_length=100)
+
 
 class StudyNotes(models.Model):
 	notes_id = models.IntegerField(unique=True, primary_key=True)
