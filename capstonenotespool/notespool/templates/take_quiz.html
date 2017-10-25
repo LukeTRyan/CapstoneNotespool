@@ -3,27 +3,45 @@
 {% block content %}
 <br />
 
-<h1>Quiz - {{exam.name}}</h1>
-
-<form action="\unit_subpage/{{unit.slug}}/{{subpagename}}/" method="post">
-	<input class="btn btn-success" type="submit" value="Back" />
-</form>
-<br>
+<h1>{{unit.slug}} Quiz - {{exam.name}}</h1>
 
 <form action="\take_quiz/{{unit.slug}}/{{subpagename}}/{{exam.exam_id}}" method="post">
-    <div>
+    <div style="max-width: 75%">
     {% for i in questions %}
         {% if i.related_quiz == exam.exam_id %}
-            <h3>{{ i.question }}</h3>
-            <input type="radio" name="{{i.id}}" value="A" required >   A. {{ i.option1 }}<br><br>
-            <input type="radio" name="{{i.id}}" value="B" >   B. {{ i.option2 }}<br><br>
-            <input type="radio" name="{{i.id}}" value="C" >   C. {{ i.option3 }}<br><br>
-            <input type="radio" name="{{i.id}}" value="D" >   D. {{ i.option4 }}<br><br>
-            <br />
+          
+		<table>
+		<style>
+            table {
+                border-collapse: collapse;
+                width: 100%;
+				margin-bottom: 30px;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 8px;
+            }
+
+            tr:nth-child(odd) {
+                background-color: #f2f2f2
+            }
+
+            th {
+                background-color: #4CAF50;
+                color: white;
+            }
+        </style>
+			<tr><th>{{ i.question }}</tr></th>
+			<tr><td><input type="radio" name="{{i.id}}" value="A" >   A. {{ i.option1 }}</td></tr>
+            <tr><td><input type="radio" name="{{i.id}}" value="B" >   B. {{ i.option2 }}</td></tr>
+            <tr><td><input type="radio" name="{{i.id}}" value="C" >   C. {{ i.option3 }}</td></tr>
+            <tr><td><input type="radio" name="{{i.id}}" value="D" >   D. {{ i.option4 }}</td></tr>	
+		</table>
         {% endif %}
     {% endfor %}
     <br />
-    <input class="btn btn-success" type="submit" value="Submit" />
+    <input class="btn btn-success" style="float: left;" type="submit" value="Submit" /> <a class="btn btn-info" style="float: right;" href ="/unit_subpage/{{unit.slug}}/Quizzes/">Back</a>
     </div>
 </form>
 <br />

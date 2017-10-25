@@ -45,7 +45,6 @@ INSTALLED_APPS = [
 	'ckeditor',
 	'ckeditor_uploader',
 	'notespool',
-	'django_bootstrap_breadcrumbs'
 ]
 
 MIDDLEWARE = [

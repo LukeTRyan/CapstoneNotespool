@@ -7,7 +7,7 @@
 {% block content %}
 <br />
 
-<form action="/edit_text_field/{{unitNAME}}/{{subpagename}}/{{notesid}}/" method="post" enctype="multipart/form-data">
+<form action="/edit_text_field/{{unitNAME}}/{{subpagename}}/{{notesid}}/" method="POST">
     {% csrf_token %}
     {{ form.media }}
     <label for="form.title.id_for_label">Title: </label>
