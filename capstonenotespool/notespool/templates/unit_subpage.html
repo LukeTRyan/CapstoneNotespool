@@ -109,13 +109,13 @@
                         {% for j in document %}
                             {% if j.studynote == i.notes_id %}
                                 <h4><a href="{{ j.docfile.url }}">{{ j.name }}</a>
-                                {% if j.created_by == i.created_by or "admin" %}
+                                {% if j.created_by == i.created_by or userp == "admin" %}
                                     <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
                                   {% endif %}
                             {% endif %}
                         {% endfor %}
                         <br />
-                        {% if userp == i.created_by or "admin" %}
+                        {% if userp == i.created_by or userp == "admin" %}
                             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
                             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
                             <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
@@ -130,7 +130,7 @@
             {% if k.studynote == i.notes_id %}
                 <tr>
                     <td><h4>{{k.created_by}}: {{k.content}} </h4>{{k.created_on}}
-                    {% if userp == k.created_by or "admin" %}
+                    {% if userp == k.created_by or userp == "admin" %}
                         <a href="\edit_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}/" class="btn-sm btn-primary" role="button">Edit</a>
                         <a href="\remove_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}" class="btn-sm btn-danger" role="button">Delete</a>
                     {% endif %}
@@ -186,13 +186,13 @@
             {% for j in document %}
                 {% if j.studynote == i.notes_id %}
                     <h4><a href="{{ j.docfile.url }}">{{ j.name }}</a>
-                    {% if j.created_by == i.created_by or "admin" %}
+                    {% if j.created_by == i.created_by or userp == "admin" %}
                         <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
                     {% endif %}
                 {% endif %}
             {% endfor %}
             <br />
-            {% if userp == i.created_by %}
+            {% if userp == i.created_by or userp == "admin" %}
             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
             <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
@@ -208,7 +208,7 @@
                 <tr>
                     <td>
                     <h4>{{k.created_by}}: {{k.content}} </h4>{{k.created_on}}
-                    {% if userp == k.created_by or "admin" %}
+                    {% if userp == k.created_by or userp == "admin" %}
                     <a href="\edit_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}/" class="btn-sm btn-primary" role="button">Edit</a>
                     <a href="\remove_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}" class="btn-sm btn-danger" role="button">Delete</a>
             {% endif %}
@@ -265,18 +265,18 @@
             {% for j in document %}
             {% if j.studynote == i.notes_id %}
                 <h4><a href="{{ j.docfile.url }}">{{ j.name }}</a>
-                    {% if j.created_by == i.created_by or "admin" %}
+                    {% if j.created_by == i.created_by or userp == "admin" %}
                         <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            {% if userp == i.created_by %}
-            <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
-            <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
-            <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
-            <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
+            {% if userp == i.created_by or userp == "admin" %}
+                <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
+                <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
+                <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
+                <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
             {% else %}
-            <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
+                <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
             {% endif %}
         </td>
     </tr>
@@ -286,7 +286,7 @@
         <tr>
             <td>
             <h4>{{k.created_by}}: {{k.content}} </h4>{{k.created_on}}
-            {% if userp == k.created_by or "admin" %}
+            {% if userp == k.created_by or userp == "admin" %}
             <a href="\edit_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}/" class="btn-sm btn-primary" role="button">Edit</a>
             <a href="\remove_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}" class="btn-sm btn-danger" role="button">Delete</a>
             {% endif %}

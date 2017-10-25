@@ -1097,7 +1097,10 @@ def add_comment(request, unitname, subpagename, notesid):
 def edit_comment(request, unitname, subpagename, notesid, commentid):
 	commentInstance = Comment.objects.get(comment_id = commentid)
 	createdBy = commentInstance.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
 	if request.method == 'GET':
@@ -1122,9 +1125,13 @@ def edit_comment(request, unitname, subpagename, notesid, commentid):
 def remove_comment(request, unitname, subpagename, notesid, commentid):
 	commentInstance = Comment.objects.get(comment_id = commentid)
 	createdBy = commentInstance.created_by
-	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
-		return HttpResponseRedirect('/')
 
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/notespool')
+	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
+		return HttpResponseRedirect('/notespool')
+
+		
 	if request.method == 'GET':
 		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
