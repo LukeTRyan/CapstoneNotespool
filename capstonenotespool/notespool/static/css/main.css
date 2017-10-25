@@ -96,7 +96,7 @@ Secondary Colour (fade):	rgb(247, 172, 98);
 	}
 }
 
-@media(max-width: 1000px){
+@media(max-width: 1100px){
 	.search-box {
 		width: 200px;
 	}
@@ -423,7 +423,19 @@ body {
  min-width: 45%;
 }
 
+@media (max-width: 1199px) {
 
+	.calendar {
+		min-width: 96%!important;
+		min-height: 500px;
+		float: none;
+	}
+	.unit-content {
+ 
+		min-width: 23%;
+		float: none;
+	}
+}
 
 /* Tables
 **********/
