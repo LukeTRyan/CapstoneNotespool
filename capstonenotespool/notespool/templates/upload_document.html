@@ -1,0 +1,23 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Document Upload{% endblock %}
+{% block content %}
+ 
+<html>
+ 
+<body>
+    
+        <form action="/upload_document/{{unitNAME}}/{{subpagename}}/{{notesid}}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <p>Document Title: {{ form.name}} </p>
+                {{ form.non_field_errors }}
+                {{ form.docfile.label_tag }} {{ form.docfile.help_text }}
+                {{ form.docfile.errors }}
+                {{ form.docfile }}
+                <p><input type="submit" value="Upload" /></p>
+        
+        </form>
+    
+</body>
+ {% endblock %}
+ 
+</html>   
