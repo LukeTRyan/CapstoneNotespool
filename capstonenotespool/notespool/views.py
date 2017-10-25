@@ -4,8 +4,8 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document, Unit, UnitSubpage, Exam, Question, StudyNotes
-from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, TakeQuizForm, PostForm
+from .models import Student, Document, Unit, UnitSubpage, Exam, Question, StudyNotes, Comment
+from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, TakeQuizForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
 from django.contrib.auth.models import User
@@ -310,8 +310,9 @@ def unit_subpage(request,unitname,subpagename):
 		quizzes = Exam.objects.all()
 		notes = StudyNotes.objects.all()
 		questions = Question.objects.all()
+		comments = Comment.objects.all()
 
-		return render_to_response('unit_subpage.html', {'notes':notes, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document})
+		return render_to_response('unit_subpage.html', {'notes':notes, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document, 'comments':comments})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
@@ -514,10 +515,10 @@ def create_text_field(request, unitname, subpagename):
 						content = form.cleaned_data['content']
 
 						try: 
-								get_latest = StudyNotes.objects.latest('notes_id')
-								latest_id = get_latest.notes_id
+							get_latest = StudyNotes.objects.latest('notes_id')
+							latest_id = get_latest.notes_id
 						except ObjectDoesNotExist:
-								latest_id = 0
+							latest_id = 0
                         
 						newContent = StudyNotes(notes_id = latest_id + 1, type = title, created_by = username, content = content, unit = unit.slug, subpage = subpagename)
 						newContent.save()
@@ -959,6 +960,7 @@ def edit_profile(request):
 		
 	form = EditAccountForm(request.POST or None, initial=data) 
 	return render(request, 'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form})
+
 #list of uploaded documents - currently limited to admin
 def list(request):
         if 'user_id' not in request.session or request.session['user_id'] != "admin":
@@ -1067,18 +1069,65 @@ def add_comment(request, unitname, subpagename, notesid):
 	if request.method == 'GET':
 		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
+	username = request.session['user_id']
 	form = CommentForm(request.POST)
+	if request.method == 'POST':
+		if form.is_valid():
+			content = form.cleaned_data['content']
+			try: 
+				get_latest = Comment.objects.latest('comment_id')
+				latest_pk = get_latest.comment_id
+			except ObjectDoesNotExist:
+				latest_pk = 0
+
+			newComment = Comment()
+			newComment.comment_id = latest_pk + 1
+			newComment.created_on = datetime.datetime.now()
+			newComment.created_by = username
+			newComment.unit = unitname
+			newComment.subpage = subpagename
+			newComment.studynote = notesid
+			newComment.content = content
+			newComment.save()
+			return HttpResponseRedirect(request.session['previous_url'])
+	else:
+		form = CommentForm() 
+	return render(request, 'add_comment.html', {'userp': username, 'form': form, 'unitNAME':unitname, 'subpagename':subpagename, 'notesid':notesid })
+
+def edit_comment(request, unitname, subpagename, notesid, commentid):
+	commentInstance = Comment.objects.get(comment_id = commentid)
+	createdBy = commentInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	username = request.session['user_id']
+	form = CommentForm(request.POST or None)
+
+	data = {'content': commentInstance.content
+	}
 
 	if form.is_valid():
 		content = form.cleaned_data['content']
-		
 
-def edit_comment(request, unitname, subpagename, notesid, commmentid):
-	if 'user_id' not in request.session:
-		return HttpResponseRedirect('/')
+		commentInstance.content = content
+		commentInstance.save()
+		return HttpResponseRedirect(request.session['previous_url'])
+
+	form = CommentForm(request.POST or None, initial=data) 
+	return render(request, 'edit_comment.html', {'userp': username, 'form': form, 'unitNAME':unitname, 'subpagename':subpagename, 'notesid':notesid, 'commentid': commentid })
 
 def remove_comment(request, unitname, subpagename, notesid, commentid):
-	if 'user_id' not in request.session:
+	commentInstance = Comment.objects.get(comment_id = commentid)
+	createdBy = commentInstance.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
 		return HttpResponseRedirect('/')
 
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
+	username = request.session['user_id']
+	commentInstance.delete()
+	return HttpResponseRedirect(request.session['previous_url'])

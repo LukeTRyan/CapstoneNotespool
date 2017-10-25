@@ -1,0 +1,19 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Add Comment{% endblock %}
+{% block content %}
+ 
+<html>
+<body>
+    
+        <form action="/add_comment/{{unitNAME}}/{{subpagename}}/{{notesid}}" method="post">
+                {% csrf_token %}
+                            {{form.content.errors}}
+                <p>Comment: {{ form.content }} </p>
+                <input class="btn btn-primary" type="submit" value="Add" />
+        
+        </form>
+    
+</body>
+ {% endblock %}
+ 
+</html>   
