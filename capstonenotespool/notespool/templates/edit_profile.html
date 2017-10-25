@@ -1,0 +1,65 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Edit Account{% endblock %}
+{% block content %}
+  
+<form action="{% url 'edit_profile' %}" method="post">
+    {% csrf_token %}
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            font-size: 75%;
+        }
+
+        th, td {
+            text-align: left;
+            padding: 8px;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #f2f2f2
+        }
+
+        th {
+            background-color: #53A86C;
+            color: white;
+        }
+    </style>
+    <table style="width:600px">
+        <tr>
+            <th style="width:30px"> Username </th>
+            <th style="width:30px"> First name </th>
+            <th style="width:30px"> Last Name </th>
+            <th style="width:30px"> Email </th>
+        </tr>
+        <tr>
+            <td>
+                {{ form.username.errors}}
+                {{ form.username }}
+
+            </td>
+            <td>
+                {{ form.first_name }}
+
+            </td>
+            <td>
+                {{ form.last_name }}
+
+            </td>
+            <td>
+                {{ form.email.errors }}
+                {{ form.email }}
+
+            </td>
+        </tr>
+    </table>
+    <input class="btn btn-primary" type="submit" value="Edit Profile" />
+</form>
+<br />
+<h3>Current Profile Information</h3>
+<h4><b>Username:</b></h4> {{sent_user.username}}
+<h4><b>First Name:</b></h4>{{sent_user.first_name}}
+<h4><b>Last Name:</b></h4>{{sent_user.last_name}}
+<h4><b>Email:</b></h4>{{sent_user.email}}
+
+{% endblock %}

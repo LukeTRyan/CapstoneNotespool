@@ -1,4 +1,4 @@
-{% extends 'layout/layout.html' %}
+﻿{% extends 'layout/layout.html' %}
 {% block title %}Documents{% endblock %}
 {% block content %}
 <html>
@@ -19,30 +19,15 @@
 <body>
     <!-- List of uploaded documents -->
     {% if documents %}
-    <ul>
         {% for document in documents %}
-
-        <li><a href="{{ document.docfile.url }}">{{ document.docfile.name }}</a></li>
+        <a href="{{ document.docfile.url }}">{{ document.name }} {{document.studynote}}</a>
+        <a href="\delete_document/{{ document.pk }}" class="btn btn-default"> Delete </a>
+        <br />
         {% endfor %}
-
-    </ul>
     {% else %}
     <p>No documents.</p>
     {% endif %}
 
-    <!-- Upload form. Note enctype attribute! -->
-    <form action="{% url 'list' %}" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <p>{{ form.non_field_errors }}</p>
-        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
-        <p>
-            {{ form.docfile.errors }}
-            {{ form.docfile }}
-
-        </p>
-        <p><input type="submit" value="Upload" /></p>
-
-    </form>
 
     <div class="fb-share-button" data-href="https://notespool" data-layout="button_count" data-size="small" data-mobile-iframe="true"><a class="fb-xfbml-parse-ignore" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fnotespool%2F&amp;src=sdkpreparse">Share</a></div>
     <IFRAME SRC="http://ad-region.doubleclick.net/adi/Nxxxx.site-keyname/Byyyyyyy;sz=widthxheight;kw=[keyword];click=;ord=[timestamp]?" WIDTH=X HEIGHT=Y MARGINWIDTH=0 MARGINHEIGHT=0 HSPACE=0 VSPACE=0 FRAMEBORDER=0 SCROLLING=no BORDERCOLOR='#000000'>

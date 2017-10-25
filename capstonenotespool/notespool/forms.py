@@ -53,10 +53,10 @@ class PasswordResetForm(forms.Form):
 	email = forms.EmailField(widget=forms.EmailInput)
 
 class DocumentForm(forms.Form):
-     docfile = forms.FileField(
-         label='Select a file',
-         help_text='max. 42 megabytes'
-     )
+	docfile = forms.FileField(
+		label='Select a file',
+		help_text='max. 42 megabytes')
+	name = forms.CharField(max_length=50)
 
 class CreateUnitForm(forms.Form):
 	unit_name = forms.CharField(max_length=50)

@@ -78,7 +78,7 @@ class Comment(models.Model):
 	comment_id = models.IntegerField(unique=True, primary_key=True)
 	date_created = models.DateField(default=datetime.datetime.now)
 	date_modified = models.DateField(default=datetime.datetime.now)
-	student_created = models.IntegerField()
+	created_by = models.CharField(max_length=50, null=True)
 	content = models.CharField(max_length=100)
 
 class StudyNotes(models.Model):
@@ -93,6 +93,11 @@ class StudyNotes(models.Model):
 
 class Document(models.Model):
 	docfile = models.FileField(upload_to='documents/%Y/%m/%d')
+	name = models.CharField(max_length=50, null=True)
+	unit = models.CharField(max_length=50, null=True)
+	subpage = models.CharField(max_length=50, null=True)
+	studynote = models.IntegerField(null=True)
+	created_by = models.CharField(max_length=50, null=True)
 
 class Exam(models.Model):
 	name = models.CharField(max_length=64, verbose_name=u'Exam name', )
@@ -108,7 +113,6 @@ class Exam(models.Model):
 		return self.name
 
 	
-
 class Question(models.Model):
 	question = models.TextField(max_length=200,default="")
 	option1 = models.CharField(max_length=50,default="")
@@ -121,15 +125,3 @@ class Question(models.Model):
 
 	def __str__(self):
 		return self.question
-
-
-#class Answer(models.Model):
-#	text = models.CharField(max_length=128, verbose_name=u'Answer\'s text')
-#	related_quiz = models.IntegerField()
-#	is_valid = models.BooleanField(default=False)
-#	question = models.ForeignKey(Question, related_name='answers')
-#
-#	def __str__(self):
-#		return self.text
-#
-#

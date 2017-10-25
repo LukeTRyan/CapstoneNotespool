@@ -306,11 +306,12 @@ def unit_subpage(request,unitname,subpagename):
 		unit = Unit.objects.get(slug = unitname)
 		unitName = unit.unit_name
 		unitSLUG = unit.slug
+		document = Document.objects.all()
 		quizzes = Exam.objects.all()
 		notes = StudyNotes.objects.all()
 		questions = Question.objects.all()
 
-		return render_to_response('unit_subpage.html', {'notes':notes, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes})
+		return render_to_response('unit_subpage.html', {'notes':notes, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_subpage.html', {'userp': username})
@@ -908,6 +909,56 @@ def account(request):
 			return render(request, "account.html", {'form': form, 'message': message, 'userp': username})
 	return render(request, "account.html", {'form': form, 'userp': username})
 
+def edit_profile(request):
+	if request.session['user_id'] is None:
+		return HttpResponseRedirect('/login')
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+
+	userProfile = User.objects.get(username = username)
+
+	form = EditAccountForm(request.POST)
+
+	data = {'username': userProfile.username,
+            'first_name': userProfile.first_name,
+            'last_name': userProfile.last_name,
+            'email': userProfile.email}
+
+	if form.is_valid():
+		username = form.cleaned_data['username']
+		first_name = form.cleaned_data['first_name']
+		last_name = form.cleaned_data['last_name']
+		email = form.cleaned_data['email']
+		
+		if User.objects.filter(username = username).exists() and (username != userProfile.username):
+			username = request.session['user_id']
+			message = "Username already exists"
+			return render(request,'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
+
+		if User.objects.filter(email = email).exists() and (email != userProfile.email):
+			username = request.session['user_id']
+			message = "Email already exists"
+			return render(request,'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form, 'message': message})
+
+
+		userProfile.username = username
+		userProfile.first_name = first_name
+		userProfile.last_name = last_name
+		userProfile.email = email
+		userProfile.save()
+
+		#student = Student.objects.get(username = username)
+		#student.username = username
+		#student.first_name = first_name
+		#student.last_name = last_name
+		#student.email = email
+		#student.save()
+
+		request.session['redirect'] = "User_edited"
+		return HttpResponseRedirect('/edit_profile')
+		
+	form = EditAccountForm(request.POST or None, initial=data) 
+	return render(request, 'edit_profile.html', {'userp': username,'sent_user': userProfile, 'form': form})
 #list of uploaded documents - currently limited to admin
 def list(request):
         if 'user_id' not in request.session or request.session['user_id'] != "admin":
@@ -939,6 +990,36 @@ def list(request):
         # Render list page with the documents and the form
         return render(request, 'list.html',
                 {'documents': documents, 'form': form, 'userp':username}) 
+
+def upload_document(request,unitname,subpagename,notesid):
+	textField = StudyNotes.objects.get(notes_id = notesid)
+	createdBy = textField.created_by
+	if 'user_id' not in request.session or request.session['user_id'] != "admin" or request.session['user_id'] != createdBy:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	username = request.session['user_id']
+	# Handle file upload
+	if request.method == 'POST':
+		form = DocumentForm(request.POST, request.FILES)
+		if form.is_valid():
+			name = form.cleaned_data['name']
+			newdoc = Document(docfile = request.FILES['docfile'])
+			newdoc.name = name
+			newdoc.unit = unitname
+			newdoc.subpage = subpagename
+			newdoc.studynote = notesid
+			newdoc.created_by = username
+			newdoc.save()
+ 
+            # Redirect to the document list after POST
+			return HttpResponseRedirect(request.session['previous_url'])
+	else:
+		form = DocumentForm() # A empty, unbound form
+	return render(request, 'upload_document.html', {'userp': username, 'form': form, 'unitNAME':unitname, 'subpagename':subpagename, 'notesid':notesid })
+
 
 def delete_document(request,documentpk):
 	if 'user_id' not in request.session or request.session['user_id'] != "admin":
