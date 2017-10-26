@@ -2,18 +2,16 @@
   "ExpandedNodes": [
     "",
     "\\capstonenotespool",
-    "\\capstonenotespool\\capstonenotespool",
-    "\\capstonenotespool\\capstonenotespool\\static",
-    "\\capstonenotespool\\capstonenotespool\\static\\ckeditor",
-    "\\capstonenotespool\\capstonenotespool\\static\\ckeditor\\ckeditor",
-    "\\capstonenotespool\\capstonenotespool\\static\\ckeditor\\ckeditor\\plugins",
-    "\\capstonenotespool\\capstonenotespool\\static\\ckeditor\\ckeditor\\plugins\\preview",
-    "\\capstonenotespool\\capstonenotespool\\static\\ckeditor\\galleriffic",
-    "\\capstonenotespool\\capstonenotespool\\static\\css",
     "\\capstonenotespool\\notespool",
+    "\\capstonenotespool\\notespool\\migrations",
+    "\\capstonenotespool\\notespool\\migrations\\__pycache__",
     "\\capstonenotespool\\notespool\\static",
-    "\\capstonenotespool\\notespool\\templates",
-    "\\capstonenotespool\\notespool\\templates\\layout"
+    "\\capstonenotespool\\notespool\\static\\admin",
+    "\\capstonenotespool\\notespool\\static\\admin\\js",
+    "\\capstonenotespool\\notespool\\static\\admin\\js\\vendor",
+    "\\capstonenotespool\\notespool\\static\\admin\\js\\vendor\\jquery",
+    "\\capstonenotespool\\notespool\\static\\admin\\js\\vendor\\xregexp",
+    "\\capstonenotespool\\notespool\\static\\js"
   ],
   "PreviewInSolutionExplorer": false
 }
