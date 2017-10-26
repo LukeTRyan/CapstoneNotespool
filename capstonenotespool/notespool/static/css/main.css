@@ -187,7 +187,7 @@ Secondary Colour (fade):	rgb(247, 172, 98);
 	max-height: 100%%;
 	max-width: 75%;
 	display: block;
-    text-align: -webkit-center;	
+    text-align: center;	
 		
 }
 
@@ -323,7 +323,7 @@ body {
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-  text-align: -webkit-center;
+  text-align: center;
 }
 @media (min-width: 768px) {
   .container {
@@ -350,8 +350,11 @@ body {
   padding-bottom: 50px;
   height: auto;
   margin-top: -20px;
-  text-align: -webkit-center;
   display: flow-root;
+  text-align: -moz-center;
+  text-align: -webkit-center;
+  text-align: -o-center;
+  text-align: -ms-center;
 }
 
 
