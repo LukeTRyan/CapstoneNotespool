@@ -4,7 +4,9 @@
 <br />
 
 <h1>{{unitName}} {{subpageNAME}} </h1>
-
+<a class="btn btn-info" style="float: none;" href="/unit_page/{{unitSLUG}}/">Back</a>
+<br />
+<br />
 {% if subpageNAME  == "Quizzes" %}
     <form action="\create_quiz/{{unitSLUG}}/{{subpageNAME}}/" method="get">
         <input class="btn btn-success btn-lg" type="submit" value="Create Quiz" />
