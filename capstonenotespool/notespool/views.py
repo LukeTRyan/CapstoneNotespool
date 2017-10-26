@@ -1252,3 +1252,28 @@ def subscribed_units(request):
 	student = User.objects.get(username = username)
 
 	return render(request, 'subscribed_units.html', {'student': student, 'subscriptions': subscriptions, 'userp': username })
+
+
+def display_note(request, unitname, subpagename, notesid):
+	if 'user_id' in request.session and request.session['user_id'] is not None:
+		username = request.session['user_id']
+		unit = Unit.objects.get(slug = unitname)
+		unitName = unit.unit_name
+		unitSLUG = unit.slug
+		document = Document.objects.all()
+		quizzes = Exam.objects.all()
+		questions = Question.objects.all()
+		comments = Comment.objects.all()
+	
+		if subpagename != "Quizzes":
+			try:
+				note = StudyNotes.objects.get(notes_id = notesid)
+			except ObjectDoesNotExist:
+				return HttpResponseRedirect('/notespool')
+			return render_to_response('display_note.html', {'note':note,  'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document, 'comments':comments})
+		else:
+			return render_to_response('display_note.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document, 'comments':comments})
+	else:
+		return HttpResponseRedirect('/')
+	return render_to_response('display_note.html', {'userp': username})
+

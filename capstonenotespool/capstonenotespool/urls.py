@@ -68,6 +68,7 @@ urlpatterns = [
 	url(r'^subscribed_units/', views.subscribed_units, name='subscribed_units'),
 	url(r'^subscribe/(?P<unitid>[^/]+)', views.subscribe, name='subscribe'),
 	url(r'^unsubscribe/(?P<unitid>[^/]+)', views.unsubscribe, name='unsubscribe'),
+	url(r'^display_note/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<notesid>[^/]+)', views.display_note, name='display_note'),
 	url(r'^list/$', views.list, name='list'),
     url(r'^captcha/', include('captcha.urls')),
 	url(r'^ckeditor/', include('ckeditor_uploader.urls')),
