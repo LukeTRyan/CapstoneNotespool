@@ -65,6 +65,8 @@ urlpatterns = [
 	url(r'^add_comment/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<notesid>[^/]+)', views.add_comment, name='add_comment'),
  	url(r'^edit_comment/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<notesid>[^/]+)/(?P<commentid>[^/]+)', views.edit_comment, name='edit_comment'),
  	url(r'^remove_comment/(?P<unitname>[^/]+)/(?P<subpagename>[^/]+)/(?P<notesid>[^/]+)/(?P<commentid>[^/]+)', views.remove_comment, name='remove_comment'),
+	url(r'^subscribe/(?P<unitid>[^/]+)', views.subscribe, name='subscribe'),
+	url(r'^unsubscribe/(?P<unitid>[^/]+)', views.unsubscribe, name='unsubscribe'),
 	url(r'^list/$', views.list, name='list'),
     url(r'^captcha/', include('captcha.urls')),
 	url(r'^ckeditor/', include('ckeditor_uploader.urls')),

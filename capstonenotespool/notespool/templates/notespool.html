@@ -6,11 +6,15 @@
     <input class="btn btn-success btn-lg" type="submit" value="Create Unit" />
 </form>
 
-{% for i in units %}    
+{% for i in units %}
     {% if i.approval == True %}
         <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_code}} - {{i.unit_name}} </a></h2>
     {% endif %}
+    {% if userp.student_id != subscriptions.student and i.unit_id != subscriptions.unit_id %}
+        <a href="\subscribe/{{i.unit_id}}/" class="btn btn-default" role="button">Subscribe</a>
+    {% endif %}
 {% endfor %}
+
 
 {% for i in unitsh %}
     {% if i.approval == True %}

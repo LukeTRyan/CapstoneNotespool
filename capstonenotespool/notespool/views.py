@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from .models import Student, Document, Unit, UnitSubpage, Exam, Question, StudyNotes, Comment
+from .models import Student, Document, Unit, UnitSubpage, Exam, Question, StudyNotes, Comment, Subscriptions
 from .forms import LoginForm, RegistrationForm, DeleteAccountForm, EditAccountForm, PasswordResetForm, CreateAccountForm, DocumentForm, CreateUnitForm, EditUnitForm, CreateSubpageForm, CreateQuizForm, EditQuizForm, TakeQuizForm, PostForm, CommentForm
 from django.contrib.auth import authenticate,get_user_model,login,logout
 from django import forms
@@ -279,7 +279,9 @@ def contact(request):
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
+		user = Student.objects.get(username = username)
 		units = Unit.objects.all()
+		subscriptions = Subscriptions.objects.all()
 		query = request.GET.get("q")
 		if query:
 				unitsh = units.filter(
@@ -287,12 +289,12 @@ def notespool(request):
 						Q(unit_id__icontains=query)|
 						Q(unit_code__icontains=query)
 						).distinct()
-				return render_to_response('notespool.html', {'userp': username, 'unitsh':unitsh})
+				return render_to_response('notespool.html', {'userp': user, 'unitsh':unitsh, 'subscriptions': subscriptions})
 		else:
-			return render_to_response('notespool.html', {'userp': username, 'units': units})
+			return render_to_response('notespool.html', {'userp': user, 'units': units, 'subscriptions': subscriptions})
 	else:
 		return HttpResponseRedirect('/')
-	return render_to_response('notespool.html', {'userp': username})
+	return render_to_response('notespool.html', {'userp': user, 'subscriptions': subscriptions})
 
 #main unit page
 def unit_page(request,unitname):
@@ -551,10 +553,16 @@ def delete_text_field(request, unitname, subpagename, notesid):
 	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/')
 
+	username = request.session['user_id']
+
 	if request.method == 'GET':
 		request.session['previous_url'] = request.META.get('HTTP_REFERER')
 
-	username = request.session['user_id']
+	relatedDocuments = Document.objects.filter(studynote = notesid)
+	relatedComments = Comment.objects.filter(studynote = notesid)
+
+	relatedDocuments.delete()
+	relatedComments.delete()
 	textField.delete()
 	return HttpResponseRedirect(request.session['previous_url'])
 
@@ -724,12 +732,19 @@ def delete_unit(request,unitid):
 	units = Unit.objects.all()
 	
 	deleteUnit = Unit.objects.get(unit_id = unitid)
-	UnitTextFields = StudyNotes.objects.filter(unit = deleteUnit.unit_name)
-	deleteUnit.delete()
+	UnitTextFields = StudyNotes.objects.filter(unit = deleteUnit.slug)
+
+	relatedDocuments = Document.objects.filter(unit = deleteUnit.slug)
+	relatedComments = Comment.objects.filter(unit = deleteUnit.slug)
+
+	relatedDocuments.delete()
+	relatedComments.delete()
 	UnitTextFields.delete()
+	deleteUnit.delete()
 
 	subpages = UnitSubpage.objects.all()
 	UnitSubpage.objects.filter(unit = deleteUnit.unit_name).delete()
+
 	return render_to_response('view_units.html', {'userp': username, 'units': units})
 
 def delete_subpage(request,subpageid):
@@ -1152,7 +1167,7 @@ def remove_comment(request, unitname, subpagename, notesid, commentid):
 	createdBy = commentInstance.created_by
 
 	if 'user_id' not in request.session:
-		return HttpResponseRedirect('/notespool')
+		return HttpResponseRedirect('/')
 	elif request.session['user_id'] != createdBy and request.session['user_id'] != "admin":
 		return HttpResponseRedirect('/notespool')
 
@@ -1163,3 +1178,55 @@ def remove_comment(request, unitname, subpagename, notesid, commentid):
 	username = request.session['user_id']
 	commentInstance.delete()
 	return HttpResponseRedirect(request.session['previous_url'])
+
+def subscribe(request, unitid):
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	username = request.session['user_id']
+	subscriptions = Subscriptions.objects.all()
+	subscribingStudent = Student.objects.get(username = username)
+	subscribingUnit = Unit.objects.get(unit_id = unitid)
+
+	try: 
+		subscriptionObject = Subscriptions.objects.get(student = subscribingStudent.student_id, unit_id = subscribingUnit.unit_id)
+		Subscribed = True
+	except ObjectDoesNotExist:
+		Subscribed = False
+
+	if Subscribed == False:
+		subscribingStudent.units_enrolled = subscribingStudent.units_enrolled + 1
+		subscribingStudent.save()
+
+		newSubscription = Subscriptions()
+		newSubscription.unit_id = subscribingUnit.unit_id
+		newSubscription.student = subscribingStudent.student_id
+		newSubscription.subscription_date = datetime.datetime.now()
+		newSubscription.save()
+
+	else:
+		return HttpResponseRedirect('/')
+
+	return HttpResponseRedirect('/notespool')
+
+def unsubscribe(request, unitid):
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	username = request.session['user_id']
+	
+	unsubscribingUnit = Unit.objects.get(unit_id = unitid)
+	unsubscribingStudent = Student.objects.get(username = username)
+	unsubscribingStudent.units_enrolled = unsubscribingStudent.units_enrolled - 1
+	unsubscribingStudent.save()
+
+	try:
+		subscriptionObject = Subscriptions.objects.get(student = unsubscribingStudent.student_id, unit_id = unsubscribingUnit.unit_id)
+		subscriptionObject.delete()
+	except ObjectDoesNotExist:
+		return HttpResponseRedirect('/notespool')
+
+	return HttpResponseRedirect('/notespool')

@@ -130,8 +130,6 @@
                                   {% endif %}
                             {% endif %}
                         {% endfor %}
-                        <br />
-                        <br />
                         {% if userp == i.created_by or userp == "admin" %}
                             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
                             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
@@ -208,7 +206,6 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            <br />
             {% if userp == i.created_by or userp == "admin" %}
             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
