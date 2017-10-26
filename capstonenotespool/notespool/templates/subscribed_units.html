@@ -1,0 +1,51 @@
+{% extends 'layout/layout.html' %}
+{% block title %}Subscribed Units{% endblock %}
+{% block content %}
+ 
+ 
+    <style>
+         table {
+             border-collapse: collapse;
+             width: 100%;
+             font-size: 75%;
+            
+        }
+
+          th, td {
+             text-align: left;
+             padding: 8px;
+            
+        }
+
+          tr:nth-child(odd) {
+             background-color: #f2f2f2
+        }
+
+          th {
+             background-color: #53A86C;
+             color: white;
+        }
+
+    </style>
+      <table style="width:600px">
+        <tr>
+            <th style="width:30px"> Unit </th>
+        </tr>
+        <tr>
+            <td>
+                {% for i in subscriptions %}
+                    {% if i.student == student.id %}  
+                        <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_name}}</a></h2>
+                        <a href="\unsubscribe/{{i.unit_id}}/" class="btn btn-default" role="button">Unsubscribe</a>
+                    {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        
+    </table>
+        
+    
+
+
+ 
+ {% endblock %}

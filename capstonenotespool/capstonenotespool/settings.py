@@ -145,6 +145,13 @@ DATABASES = {
 
 ACCOUNT_ACTIVATION_DAYS = 7
 
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'extraPlugins': 'codesnippet',
+    },
+}
+
 
 
 # Password validation
