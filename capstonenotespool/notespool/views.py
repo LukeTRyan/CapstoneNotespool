@@ -196,7 +196,7 @@ def send_email(toaddr,id):
 
 #sends verification email to the user to reset the account 
 def send_reset_email(toaddr,id):
-	text = "Hi!\nHow are you?\nHere is the link to reset your password:\nhttp://127.0.0.1:8000/activatereset/?id=%s" %(id)
+	text = "Hi!\nHow are you?\nHere is the link to reset your password:\nhttps://capstonenotespool.herokuapp.com/activation/?id=%s" %(id)
 	part1 = MIMEText(text, 'plain')
 	msg = MIMEMultipart('alternative')
 	msg.attach(part1)
