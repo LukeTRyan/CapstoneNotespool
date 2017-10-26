@@ -278,10 +278,11 @@ def contact(request):
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
-		user = User.objects.get(username = username)
+		print(username)
+		sent_user = User.objects.get(username = username)
 		units = Unit.objects.all()
 		try:
-			specific = Subscriptions.objects.filter(student = user.id)
+			specific = Subscriptions.objects.filter(student = sent_user.id)
 		except ObjectDoesNotExist:
 			print("none")
 
@@ -293,12 +294,12 @@ def notespool(request):
 						Q(unit_id__icontains=query)|
 						Q(unit_code__icontains=query)
 						).distinct()
-				return render_to_response('notespool.html', {'userp': user, 'unitsh':unitsh, 'subscriptions': subscriptions})
+				return render_to_response('notespool.html', {'userp': username, 'sentUser': sent_user, 'unitsh':unitsh, 'subscriptions': subscriptions})
 		else:
-			return render_to_response('notespool.html', {'userp': user, 'units': units, 'subscriptions': subscriptions})
+			return render_to_response('notespool.html', {'userp': username, 'sentUser': sent_user, 'units': units, 'subscriptions': subscriptions})
 	else:
 		return HttpResponseRedirect('/')
-	return render_to_response('notespool.html', {'userp': user, 'subscriptions': subscriptions})
+	return render_to_response('notespool.html', {'userp': username, 'sentUser': sent_user, 'subscriptions': subscriptions})
 
 #main unit page
 def unit_page(request,unitname):
@@ -1201,6 +1202,7 @@ def subscribe(request, unitid):
 	if Subscribed == False:
 		newSubscription = Subscriptions()
 		newSubscription.unit_id = subscribingUnit.unit_id
+		newSubscription.unit_name = subscribingUnit.unit_name
 		newSubscription.student = subscribingStudent.id
 		newSubscription.subscription_date = datetime.datetime.now()
 		newSubscription.save()
@@ -1220,14 +1222,27 @@ def unsubscribe(request, unitid):
 	username = request.session['user_id']
 	
 	unsubscribingUnit = Unit.objects.get(unit_id = unitid)
-	unsubscribingStudent = Student.objects.get(username = username)
-	unsubscribingStudent.units_enrolled = unsubscribingStudent.units_enrolled - 1
+	unsubscribingStudent = User.objects.get(username = username)
 	unsubscribingStudent.save()
 
 	try:
-		subscriptionObject = Subscriptions.objects.get(student = unsubscribingStudent.student_id, unit_id = unsubscribingUnit.unit_id)
+		subscriptionObject = Subscriptions.objects.get(student = unsubscribingStudent.id, unit_id = unsubscribingUnit.unit_id)
 		subscriptionObject.delete()
 	except ObjectDoesNotExist:
 		return HttpResponseRedirect('/notespool')
 
-	return HttpResponseRedirect('/notespool')
+	return HttpResponseRedirect(request.session['previous_url'])
+
+def subscribed_units(request):
+	if 'user_id' not in request.session:
+		return HttpResponseRedirect('/')
+
+	if request.method == 'GET':
+		request.session['previous_url'] = request.META.get('HTTP_REFERER')
+
+	username = request.session['user_id']
+
+	subscriptions = Subscriptions.objects.all()
+	student = User.objects.get(username = username)
+
+	return render(request, 'subscribed_units.html', {'student': student, 'subscriptions': subscriptions, 'userp': username })
