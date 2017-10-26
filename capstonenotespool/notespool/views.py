@@ -267,7 +267,6 @@ def faq(request):
 		return render_to_response('faq.html', {'userp': username})
 	return render_to_response('faq.html')	
 	
-   
 #Site owners contact information
 def contact(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
@@ -279,8 +278,13 @@ def contact(request):
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
-		user = Student.objects.get(username = username)
+		user = User.objects.get(username = username)
 		units = Unit.objects.all()
+		try:
+			specific = Subscriptions.objects.filter(student = user.id)
+		except ObjectDoesNotExist:
+			print("none")
+
 		subscriptions = Subscriptions.objects.all()
 		query = request.GET.get("q")
 		if query:
@@ -1185,22 +1189,19 @@ def subscribe(request, unitid):
 
 	username = request.session['user_id']
 	subscriptions = Subscriptions.objects.all()
-	subscribingStudent = Student.objects.get(username = username)
+	subscribingStudent = User.objects.get(username = username)
 	subscribingUnit = Unit.objects.get(unit_id = unitid)
 
 	try: 
-		subscriptionObject = Subscriptions.objects.get(student = subscribingStudent.student_id, unit_id = subscribingUnit.unit_id)
+		subscriptionObject = Subscriptions.objects.get(student = subscribingStudent.id, unit_id = subscribingUnit.unit_id)
 		Subscribed = True
 	except ObjectDoesNotExist:
 		Subscribed = False
 
 	if Subscribed == False:
-		subscribingStudent.units_enrolled = subscribingStudent.units_enrolled + 1
-		subscribingStudent.save()
-
 		newSubscription = Subscriptions()
 		newSubscription.unit_id = subscribingUnit.unit_id
-		newSubscription.student = subscribingStudent.student_id
+		newSubscription.student = subscribingStudent.id
 		newSubscription.subscription_date = datetime.datetime.now()
 		newSubscription.save()
 

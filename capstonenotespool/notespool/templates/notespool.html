@@ -10,7 +10,7 @@
     {% if i.approval == True %}
         <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_code}} - {{i.unit_name}} </a></h2>
     {% endif %}
-    {% if userp.student_id != subscriptions.student and i.unit_id != subscriptions.unit_id %}
+    {% if userp.id != subscriptions.student and i.unit_id != subscriptions.unit_id %}
         <a href="\subscribe/{{i.unit_id}}/" class="btn btn-default" role="button">Subscribe</a>
     {% endif %}
 {% endfor %}
