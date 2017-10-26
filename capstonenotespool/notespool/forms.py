@@ -83,7 +83,7 @@ class EditQuizForm(forms.Form):
 
 class PostForm(forms.Form):
 	title = forms.CharField(max_length=100)
-	content = forms.CharField(widget=CKEditorWidget())
+	content = forms.CharField(required=True, widget=CKEditorWidget())
 
 class MultiWidgetBasic(forms.widgets.MultiWidget):
     def __init__(self, attrs=None):

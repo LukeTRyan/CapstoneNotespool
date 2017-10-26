@@ -308,9 +308,11 @@ def unit_page(request,unitname):
 		unit = Unit.objects.get(slug = unitname)
 		unitName = unit.unit_name
 		unitSLUG = unit.slug
+		exams = Exam.objects.all()
+		notes = StudyNotes.objects.all()
 
 		subpages = UnitSubpage.objects.filter(unit = unitName)
-		return render_to_response('unit_page.html', {'userp': username, 'unitName':unitName, 'subpages':subpages, 'unitSLUG':unitSLUG})
+		return render_to_response('unit_page.html', {'userp': username, 'exams':exams, 'unitName':unitName, 'subpages':subpages, 'unitSLUG':unitSLUG, 'notes': notes})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('unit_page.html', {'userp': username})
@@ -547,7 +549,7 @@ def create_text_field(request, unitname, subpagename):
 						newContent.save()
 						return HttpResponseRedirect(request.session['previous_url'])
 				else:
-					return HttpResponseRedirect('/')
+					return HttpResponseRedirect(request.session['previous_url'])
 
 
 	return render_to_response('text_field.html', {'userp':username, 'form':form, 'unit':unit, 'subpagename': subpagename })
@@ -699,7 +701,8 @@ def create_unit(request):
 			
 
 			request.session['redirect'] = "Unit_created"
-			return HttpResponseRedirect('/notespool')
+			message = "Unit Created. Awaiting approval from administration"
+			return render(request, 'index.html', {'userp':username, 'message':message})
 	else:
 		return render(request, 'create_unit.html', {'userp':username, 'form':form}) 
 

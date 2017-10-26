@@ -74,7 +74,7 @@ class UnitSubpage(models.Model):
 class Subscriptions(models.Model):
 	unit_id = models.IntegerField(null=True)
 	unit_name = models.CharField(max_length = 50, null=True)
-	slug = models.SlugField(unique=True, null=True)
+	slug = models.SlugField(null=True)
 	student = models.IntegerField(null=True)
 	subscription_date = models.DateField(default=datetime.datetime.now)
 
