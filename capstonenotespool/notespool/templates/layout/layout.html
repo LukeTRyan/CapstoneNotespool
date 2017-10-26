@@ -20,7 +20,7 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="/"><img src="" style="width:20px">Notespool</a>
+					<a class="navbar-brand" href="/"><img src="/static/images/logo.png" style="display: inline-block; width:50px; margin-top: -10px;"><span class="logo-name">QUT Notespool</span></a>
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
@@ -35,7 +35,6 @@
 							<ul class="dropdown-menu">
 								<li><a href="/logout">Log out</a></li>
 								<li><a href="/subscribed_units">My Units</a></li>
-								<li><a href="/calendar">Assessment Calendar</a></li>
                                 {% if userp != "admin" %}
                                     <li><a href="/account">Delete Account</a></li>
                                     <li><a href="/edit_profile">Edit Profile</a></li>
@@ -93,19 +92,18 @@
 		<footer>
 			<ul>
 				<h4>Navigation</h4>
+				<li><a href="/subscribed_units">My Units</a></li>
 				<li><a href="/aboutus">About Us</a></li>
 				<li><a href="/contact">Contact Us</a></li>
 				<li><a href="/faq">Frequently Asked Questions</a></li>
                 <li><a href="http://www.123contactform.com/form-3093459/Contact-Lead-Form">Report Content</a></li>
 
-				<li>Search for Units</li>
 
 			  </ul>
 			  <ul>
-				<h4>Account</h4>
-				<li>My Quizzes</li>
-				<li>My Units</li>
-
+				<h4>Important Info</h4>
+				<li><a href="/useragreement">User Agreement</li>
+				<li><a href="/privacypolicy">Privacy Policy</li>
 			  </ul>
 			  <ul>
 				<h4> Contact</h4>
