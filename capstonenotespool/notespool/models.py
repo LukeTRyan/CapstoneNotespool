@@ -5,8 +5,6 @@ from django.db.models.signals import pre_save
 from ckeditor.fields import RichTextField
 
 
-
-
 #database model for admin
 class Admin(models.Model):
 	admin_id = models.IntegerField(unique=True, primary_key=True)
@@ -72,6 +70,13 @@ class UnitSubpage(models.Model):
 	approval = models.NullBooleanField(default=False)
 	images = models.ImageField(null=True)
 	quiz = models.CharField(max_length=100, null=True)
+
+class Subscriptions(models.Model):
+	unit_id = models.IntegerField(null=True)
+	unit_name = models.CharField(max_length = 50, null=True)
+	slug = models.SlugField(unique=True, null=True)
+	student = models.IntegerField(null=True)
+	subscription_date = models.DateField(default=datetime.datetime.now)
 
 
 class Comment(models.Model):
