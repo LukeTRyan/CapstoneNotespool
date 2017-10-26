@@ -124,7 +124,7 @@
                     <td><p>{{ i.content|safe|linebreaks }}</p>
                         {% for j in document %}
                             {% if j.studynote == i.notes_id %}
-                                <h4><a href="{{ j.docfile.url }}">{{ j.name }}</a>
+                                <h4><a href="{{ j.docfile.url }}" target="_blank">{{ j.name }}</a>
                                 {% if userp == i.created_by or userp == "admin" %}
                                     <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
                                   {% endif %}
@@ -202,7 +202,7 @@
             <p>{{ i.content|safe|linebreaks }}</p>
             {% for j in document %}
                 {% if j.studynote == i.notes_id %}
-                    <h4><a href="{{ j.docfile.url }}">{{ j.name }}</a>
+                    <h4><a href="{{ j.docfile.url }}" target="_blank">{{ j.name }}</a>
                     {% if j.created_by == i.created_by or userp == "admin" %}
                         <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
                     {% endif %}
@@ -281,7 +281,7 @@
             <p>{{ i.content|safe|linebreaks }}</p>
             {% for j in document %}
             {% if j.studynote == i.notes_id %}
-                <h4><a href="{{ j.docfile.url }}">{{ j.name }}</a>
+                <h4><a href="{{ j.docfile.url }}"target="_blank">{{ j.name }}</a>
                     {% if j.created_by == i.created_by or userp == "admin" %}
                         <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
                     {% endif %}
