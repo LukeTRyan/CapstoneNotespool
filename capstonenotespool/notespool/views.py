@@ -308,8 +308,9 @@ def unit_page(request,unitname):
 		unit = Unit.objects.get(slug = unitname)
 		unitName = unit.unit_name
 		unitSLUG = unit.slug
-		exams = Exam.objects.all()
-		notes = StudyNotes.objects.all()
+		notes = StudyNotes.objects.filter(created_on__range=["2017-10-01", datetime.datetime.now()])
+		exams = Exam.objects.filter(created_on__range=["2017-10-01", datetime.datetime.now()])
+		
 
 		subpages = UnitSubpage.objects.filter(unit = unitName)
 		return render_to_response('unit_page.html', {'userp': username, 'exams':exams, 'unitName':unitName, 'subpages':subpages, 'unitSLUG':unitSLUG, 'notes': notes})
