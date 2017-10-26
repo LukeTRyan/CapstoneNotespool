@@ -15,16 +15,16 @@
     {% endif %}
 {% endfor %}
 
-
-{% for i in unitsh %}
-    {% if i.approval == True %}
-        <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_code}} - {{i.unit_name}} </a></h2>
-        {% if sentUser.id != subscriptions.student and i.unit_id != subscriptions.unit_id %}
-            <a href="\subscribe/{{i.unit_id}}/" class="btn btn-default" role="button">Subscribe</a>
+{% if unitsh is not None  %}
+    {% for i in unitsh %}
+        {% if i.approval == True %}
+            <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_code}} - {{i.unit_name}} </a></h2>
+            {% if sentUser.id != subscriptions.student and i.unit_id != subscriptions.unit_id %}
+                <a href="\subscribe/{{i.unit_id}}/" class="btn btn-default" role="button">Subscribe</a>
+            {% endif %}
         {% endif %}
-    {% endif %}
-{% empty %}
-    <h3>No Results Found</h3>
-{% endfor %}
-
+    {% empty %}
+        <h3>No Results Found</h3>
+    {% endfor %}
+{% endif %}
 {% endblock %}

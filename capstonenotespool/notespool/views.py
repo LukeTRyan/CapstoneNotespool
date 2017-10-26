@@ -78,11 +78,6 @@ password='Uberhaxor123'
 
 #home
 def index(request):
-	if 'redirect' in request.session and request.session['redirect'] == "Login":
-		message = "Logged in successfully"
-		username = request.session['user_id']
-		request.session['redirect'] = None
-		return render(request, "index.html", {'userp': username, 'message': message})
 	if 'user_id' in request.session and request.session['user_id'] is not None:
                 username = request.session['user_id']
                 return render_to_response('index.html', {'userp': username})
@@ -108,7 +103,7 @@ def loginuser(request):
 					login(request,user)
 					request.session['user_id'] = username
 					request.session['redirect'] = "Login"
-					return HttpResponseRedirect('/')
+					return HttpResponseRedirect('/notespool')
 				else:
 					message = "Error"
 					return render(request, "registration_form.html", {'form': form, 'message': message})
@@ -277,6 +272,7 @@ def contact(request):
 #Notespool homepage
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
+		request.session['redirect'] = None
 		username = request.session['user_id']
 		sent_user = User.objects.get(username = username)
 		units = Unit.objects.all()
