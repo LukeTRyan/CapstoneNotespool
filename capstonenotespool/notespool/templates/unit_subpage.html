@@ -17,6 +17,7 @@
                 border-collapse: collapse;
                 width: 100%;
                 font-size: 75%;
+				border: none;
             }
 
             th, td {
@@ -28,16 +29,24 @@
                 background-color: #f2f2f2
             }
 
-            th {
-                background-color: #4CAF50;
-                color: white;
-            }
+        th {
+            background-color: white!important;
+                color: #165e9c!important;
+				border: none;
+				padding-top: 10px;
+				padding-bottom: 15px;
+				border-bottom: solid;
+				border-width: 1px;
+				border-bottom-color:#165e9c1a;
+				
+        }
         </style>
  
         {% for i in quizzes %}
             {% if i.unit == unitName %}
                 <tr>
-                    <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id }}/"> {{i.name }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+                    <th style="background-color: white; color: #165e9c;"> <b><a style="font-size: 20px;" href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id }}/"> {{i.name }}</a></b> <span style="float: right;"<b>Created by {{i.created_by}} on {{i.created_on}}</b> <br>Date modified {{i.date_modified}}</span></th>
+					
                 </tr>
             {% endif %}
         {% endfor %}
@@ -55,31 +64,45 @@
 
     <table style="width:800px" border="1">
     <style>
-        table {
+      table {
             border-collapse: collapse;
             width: 100%;
             font-size: 75%;
+			border: none;
         }
 
         th, td {
             text-align: left;
             padding: 8px;
+			padding-top: 0px;
         }
 
         tr:nth-child(odd) {
-            background-color: #f2f2f2
+
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: white!important;
+                color: #165e9c!important;
+				border: none;
+				padding-top: 10px;
+				padding-bottom: 15px;
+				border-bottom: solid;
+				border-width: 1px;
+				border-bottom-color:#165e9c1a;
+				
         }
+		
+		tr {
+			margin-bottom: 5px;
+		}
     </style>
 
         {% for i in notes %}
             {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
                 <tr>
-                    <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+                    <th> <span style="font-size: 20px;"><b><a style="color:165e9c;"href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></span></b> 
+					<span style="float: right;"<b>Created by {{i.created_by}} on {{i.created_on}}</b> <br>Date modified {{i.date_modified}}</span></th>
                 </tr>    
             {% endif %}
         {% endfor %}
@@ -99,31 +122,45 @@
 
     <table style="width:800px" border="1">
     <style>
-        table {
+      table {
             border-collapse: collapse;
             width: 100%;
             font-size: 75%;
+			border: none;
         }
 
         th, td {
             text-align: left;
             padding: 8px;
+			padding-top: 0px;
         }
 
         tr:nth-child(odd) {
-            background-color: #f2f2f2
+
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: white!important;
+                color: #165e9c!important;
+				border: none;
+				padding-top: 10px;
+				padding-bottom: 15px;
+				border-bottom: solid;
+				border-width: 1px;
+				border-bottom-color:#165e9c1a;
+				
         }
+		
+		tr {
+			margin-bottom: 5px;
+		}
     </style>
 
         {% for i in notes %}
             {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
             <tr>
-                <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+                <th> <span style="font-size: 20px;"><b><a style="color:165e9c;"href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></span></b> 
+				<span style="float: right;"<b>Created by {{i.created_by}} on {{i.created_on}}</b> <br>Date modified {{i.date_modified}}</span></th>
             </tr>
             {% endif %}
         {% endfor %}
@@ -145,27 +182,41 @@
             border-collapse: collapse;
             width: 100%;
             font-size: 75%;
+			border: none;
         }
 
         th, td {
             text-align: left;
             padding: 8px;
+			padding-top: 0px;
         }
 
         tr:nth-child(odd) {
-            background-color: #f2f2f2
+            background-color: #red!important;
         }
 
         th {
-            background-color: #4CAF50;
-            color: white;
+            background-color: white!important;
+                color: #165e9c!important;
+				border: none;
+				padding-top: 10px;
+				padding-bottom: 15px;
+				border-bottom: solid;
+				border-width: 1px;
+				border-bottom-color:#165e9c1a;
+				
         }
+		
+		tr {
+			margin-bottom: 5px;
+		}
     </style>
 
     {% for i in notes %}
         {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
             <tr>
-                <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+                <th> <span style="font-size: 20px;"><b><a style="color:165e9c;"href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></span></b> 
+				<span style="float: right;"<b>Created by {{i.created_by}} on {{i.created_on}}</b> <br>Date modified {{i.date_modified}}</span></th>
             </tr>
         {% endif %}
     {% endfor %}
