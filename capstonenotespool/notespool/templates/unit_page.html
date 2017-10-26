@@ -13,7 +13,7 @@
 		<div style="padding: 10px; height: 300px;">
         {% for i in notes %}
             {% if i.unit == unitSLUG and i.subpage == "Assessment" %}
-		        <li style="list-style-type:none;"><a href ="">{{i.type}}</a></li>
+		        <li style="list-style-type:none;"><a href="/display_note/{{unitSLUG}}/{{i.subpage}}/{{i.notes_id }}/"> {{i.type }}</a></li>
             {% endif %}
         {% endfor %}
 	</div>
@@ -31,7 +31,7 @@
 		<div style="padding: 10px; height: 300px;">
         {% for i in notes %}
             {% if i.unit == unitSLUG and i.subpage == "Lectures" %}
-                <li style="list-style-type:none;"><a href="">{{i.type}}</a></li>
+                <li style="list-style-type:none;"><a href="/display_note/{{unitSLUG}}/{{i.subpage}}/{{i.notes_id }}/"> {{i.type }}</a></li>
             {% endif %}
         {% endfor %}
 	 </div>
@@ -47,7 +47,7 @@
 		<div style="padding: 10px; height: 300px;">
         {% for i in notes %}
             {% if i.unit == unitSLUG and i.subpage == "Tutorials" %}
-                <li style="list-style-type:none;"><a href="">{{i.type}}</a></li>
+                <li style="list-style-type:none;"><a href="/display_note/{{unitSLUG}}/{{i.subpage}}/{{i.notes_id }}/"> {{i.type }}</a></li>
             {% endif %}
         {% endfor %}
 	</div>
@@ -58,12 +58,13 @@
 	</div>
 </div>
 
+
 <div class="unit-content">
 <div class="unit-header"><h4> <a style="color:#FFF;"href = "\unit_subpage/{{ unitSLUG }}/Quizzes">Quizzes</a></h4></div>
 	<div style="padding: 10px; height: 300px;">
         {% for i in exams %}
-            {% if i.unit == unitName %}
-                <li style="list-style-type:none;"><a href="">{{i.name}}</a></li>
+            {% if i.unit == unitName and forloop.counter < 10 %}
+                <li style="list-style-type:none;"><a href="/display_note/{{unitSLUG}}/Quizzes/{{i.exam_id}}/"> {{i.name }}</a></li>
             {% endif %}
         {% endfor %}
 	</div>
