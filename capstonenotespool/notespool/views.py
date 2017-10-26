@@ -1261,6 +1261,8 @@ def display_note(request, unitname, subpagename, notesid):
 		questions = Question.objects.all()
 		comments = Comment.objects.all() 
 	
+		print (request.session['user_id'])
+	
 		if subpagename != "Quizzes":
 			try:
 				note = StudyNotes.objects.get(notes_id = notesid)

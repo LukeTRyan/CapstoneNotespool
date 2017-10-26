@@ -70,7 +70,7 @@
         {% endif %}
         <tr>
             <td>
-                {% if userp == i.created_by or userp == "admin" %}
+                {% if userp == quiz.created_by or userp == "admin" %}
                 <a href="\delete_quiz/{{ quiz.unit }}/{{quiz.exam_id}}" class="btn btn-default"> Delete Quiz </a>
                 <a href="\edit_quiz/{{unitSLUG}}/{{subpageNAME}}/{{quiz.exam_id}}" class="btn btn-default">Edit Quiz</a>
                 <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{quiz.exam_id}}" class="btn btn-default">Take Quiz</a>
@@ -132,7 +132,7 @@
             {% endif %}
             {% endif %}
             {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
+            {% if userp == note.created_by or userp == "admin" %}
             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-primary" role="button">Edit</a>
             <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-danger" role="button">Delete</a>
@@ -210,7 +210,7 @@
             {% endif %}
             {% endif %}
             {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
+            {% if userp == note.created_by or userp == "admin" %}
             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-primary" role="button">Edit</a>
             <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-danger" role="button">Delete</a>
@@ -286,7 +286,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
+            {% if userp == note.created_by or userp == "admin" %}
                 <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
                 <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-primary" role="button">Edit</a>
                 <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-danger" role="button">Delete</a>
