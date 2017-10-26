@@ -37,47 +37,7 @@
         {% for i in quizzes %}
             {% if i.unit == unitName %}
                 <tr>
-                    <th style="background-color: #53A86C; color: white;"> {{ i.name }} </th>
-                </tr>
-                {% if userp == "admin" %}
-                <tr>
-                    <td> created by: <br> {{ i.created_by }} </td>
-                </tr>
-                <tr>
-                    <td> ID: <br> {{ i.exam_id }} </td>
-                </tr>
-                <tr>
-                    <td> Unit: <br> {{ i.unit }} </td>
-                </tr>
-                <tr>
-                    <td> Created on: <br> {{ i.created_on }} </td>
-                </tr>
-                <tr>
-                    <td> date modified: <br> {{ i.date_modified }} </td>
-                </tr>
-                 <tr>
-                    <td> Choices: <br> {{ i.choices }} </td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td> Unit: <br> {{ i.unit }} </td>
-                </tr>
-                <tr>
-                    <td> created by: <br> {{ i.created_by }} </td>
-                </tr>
-                <tr>
-                    <td> Created on: <br> {{ i.created_on }} </td>
-                </tr>
-                {% endif %}
-                <tr>
-                    <td>
-                    {% if userp == i.created_by or userp == "admin" %}
-                        <a href="\delete_quiz/{{ i.unit }}/{{i.exam_id}}" class="btn btn-default"> Delete Quiz </a>
-                        <a href="\edit_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id}}" class="btn btn-default">Edit Quiz</a>
-                        <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id}}" class="btn btn-default">Take Quiz</a>
-                    {% else %}
-                        <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id}}" class="btn btn-default">Take Quiz</a> </td>
-                    {% endif %}
+                    <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id }}/"> {{i.name }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
                 </tr>
             {% endif %}
         {% endfor %}
@@ -91,7 +51,7 @@
         <form action="\create_text_field/{{unitSLUG}}/{{subpageNAME}}/" method="get">
             <input class="btn btn-success btn-lg" type="submit" value="Add Tutorial" />
         </form>
-<br />
+        <br />
 
     <table style="width:800px" border="1">
     <style>
@@ -119,45 +79,14 @@
         {% for i in notes %}
             {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
                 <tr>
-                    <th style="background-color: #165e9c; color: white;"> <h3>{{ i.type }}</h3> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
-                </tr>
-                <tr>
-                    <td><p>{{ i.content|safe|linebreaks }}</p>
-                        {% for j in document %}
-                            {% if j.studynote == i.notes_id %}
-                                <h4><a href="{{ j.docfile.url }}" target="_blank">{{ j.name }}</a>
-                                {% if userp == i.created_by or userp == "admin" %}
-                                    <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
-                                  {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                        {% if userp == i.created_by or userp == "admin" %}
-                            <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
-                            <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
-                            <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
-                            <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
-                        {% else %}
-                            <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
-                        {% endif %}
-                    </td> 
-                </tr>
-
-        {% for k in comments %}
-            {% if k.studynote == i.notes_id %}
-                <tr>
-                    <td><h4>{{k.created_by}}: {{k.content}} </h4>{{k.created_on}}
-                    {% if userp == k.created_by or userp == "admin" %}
-                        <a href="\edit_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}/" class="btn-sm btn-primary" role="button">Edit</a>
-                        <a href="\remove_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}" class="btn-sm btn-danger" role="button">Delete</a>
-                    {% endif %}
-                    </td>
-                </tr>
-            {% endif %}
-        {% endfor %}
-             
+                    <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+                </tr>    
             {% endif %}
         {% endfor %}
 </table>
+
+
+
 {% endif %}
 
 
@@ -191,51 +120,15 @@
         }
     </style>
 
-    {% for i in notes %}
-    {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
-    <tr>
-        <th style="background-color: #165e9c; color: white;"> <h3>{{ i.type }}</h3> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
-    </tr>
-    <tr>
-        <td>
-            <p>{{ i.content|safe|linebreaks }}</p>
-            {% for j in document %}
-                {% if j.studynote == i.notes_id %}
-                    <h4><a href="{{ j.docfile.url }}" target="_blank">{{ j.name }}</a>
-                    {% if j.created_by == i.created_by or userp == "admin" %}
-                        <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
-            <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
-            <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
-            <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
-            <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
-            {% else %}
-            <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
+        {% for i in notes %}
+            {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
+            <tr>
+                <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+            </tr>
             {% endif %}
-        </td>
-    </tr>
-
-        {% for k in comments %}
-            {% if k.studynote == i.notes_id %}
-                <tr>
-                    <td>
-                    <h4>{{k.created_by}}: {{k.content}} </h4>{{k.created_on}}
-                    {% if userp == k.created_by or userp == "admin" %}
-                    <a href="\edit_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}/" class="btn-sm btn-primary" role="button">Edit</a>
-                    <a href="\remove_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}" class="btn-sm btn-danger" role="button">Delete</a>
-            {% endif %}
-            </td>
-        </tr>
-
-        {% endif %}
         {% endfor %}
-
-    {% endif %}
-    {% endfor %}
 </table>
+
 {% endif %}
 
 
@@ -270,48 +163,13 @@
     </style>
 
     {% for i in notes %}
-    {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
-    <tr>
-        <th style="background-color: #165e9c; color: white;"> <h3>{{ i.type }}</h3> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
-    </tr>
-    <tr>
-        <td>
-            <p>{{ i.content|safe|linebreaks }}</p>
-            {% for j in document %}
-            {% if j.studynote == i.notes_id %}
-                <h4><a href="{{ j.docfile.url }}"target="_blank">{{ j.name }}</a>
-                    {% if j.created_by == i.created_by or userp == "admin" %}
-                        <a href="\delete_document/{{ j.pk }}" class="btn btn-default"> Delete </a></h4>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
-                <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
-                <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-primary" role="button">Edit</a>
-                <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-danger" role="button">Delete</a>
-                <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
-            {% else %}
-                <a href="\add_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}" class="btn btn-default" role="button">Comment</a>
-            {% endif %}
-        </td>
-    </tr>
-
-    {% for k in comments %}
-        {% if k.studynote == i.notes_id %}
-        <tr>
-            <td>
-            <h4>{{k.created_by}}: {{k.content}} </h4>{{k.created_on}}
-            {% if userp == k.created_by or userp == "admin" %}
-            <a href="\edit_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}/" class="btn-sm btn-primary" role="button">Edit</a>
-            <a href="\remove_comment/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id}}/{{k.comment_id}}" class="btn-sm btn-danger" role="button">Delete</a>
-            {% endif %}
-            </td>
-        </tr>
+        {% if i.unit == unitSLUG and i.subpage == subpageNAME %}
+            <tr>
+                <th style="background-color: #165e9c; color: white;"> <h2><a href="/display_note/{{unitSLUG}}/{{subpageNAME}}/{{i.notes_id }}/"> {{i.type }}</a></h2> <h4>Created by {{i.created_by}} on {{i.created_on}}</h4><h5>Date modified {{i.date_modified}}</h5></th>
+            </tr>
         {% endif %}
     {% endfor %}
 
-    {% endif %}
-    {% endfor %}
 </table>
 {% endif %}
 
