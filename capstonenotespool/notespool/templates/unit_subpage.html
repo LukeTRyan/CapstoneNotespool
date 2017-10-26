@@ -58,7 +58,7 @@
                  <tr>
                     <td> Choices: <br> {{ i.choices }} </td>
                 </tr>
-                {% endif %}
+                {% else %}
                 <tr>
                     <td> Unit: <br> {{ i.unit }} </td>
                 </tr>
@@ -68,6 +68,7 @@
                 <tr>
                     <td> Created on: <br> {{ i.created_on }} </td>
                 </tr>
+                {% endif %}
                 <tr>
                     <td>
                     {% if userp == i.created_by or userp == "admin" %}

@@ -357,12 +357,14 @@ def create_quiz(request,unitname,subpagename):
 				except ObjectDoesNotExist:
 					latest_id = 0
 
+				examinationID = latest_id + 1
+
 				newquiz = Exam(exam_id = latest_id + 1, name = quiz_name, unit = unit.unit_name, created_by = username, slug = quiz_name)
 				newquiz.save()
 				return HttpResponseRedirect(request.session['previous_url'])
 	else:
 		return HttpResponseRedirect('/login')
-	return render_to_response('create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
+	return render(request, 'create_quiz.html', {'userp': username, 'form':form, 'unit':unit, 'subpagename':subpagename})
 
 #edit quiz function
 def edit_quiz(request,unitname,subpagename,examid):
@@ -1207,9 +1209,9 @@ def subscribe(request, unitid):
 		newSubscription.student = subscribingStudent.id
 		newSubscription.subscription_date = datetime.datetime.now()
 		newSubscription.save()
-
+		return HttpResponseRedirect('/subscribed_units')
 	else:
-		return HttpResponseRedirect('/')
+		return HttpResponseRedirect('/subscribed_units')
 
 	return HttpResponseRedirect('/notespool')
 
