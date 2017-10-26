@@ -35,8 +35,7 @@
             <td>
                 {% for i in subscriptions %}
                     {% if i.student == student.id %}  
-                        {{i.unit_id}}
-                        {{i.unit_name}}
+                        <h2><a href="\unit_page/{{ i.slug }}/"> {{i.unit_name}}</a></h2>
                         <a href="\unsubscribe/{{i.unit_id}}/" class="btn btn-default" role="button">Unsubscribe</a>
                     {% endif %}
                 {% endfor %}

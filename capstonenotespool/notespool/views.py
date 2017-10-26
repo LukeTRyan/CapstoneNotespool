@@ -1203,6 +1203,7 @@ def subscribe(request, unitid):
 		newSubscription = Subscriptions()
 		newSubscription.unit_id = subscribingUnit.unit_id
 		newSubscription.unit_name = subscribingUnit.unit_name
+		newSubscription.slug = subscribingUnit.slug
 		newSubscription.student = subscribingStudent.id
 		newSubscription.subscription_date = datetime.datetime.now()
 		newSubscription.save()
