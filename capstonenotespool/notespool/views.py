@@ -278,14 +278,9 @@ def contact(request):
 def notespool(request):
 	if 'user_id' in request.session and request.session['user_id'] is not None:
 		username = request.session['user_id']
-		print(username)
 		sent_user = User.objects.get(username = username)
 		units = Unit.objects.all()
-		try:
-			specific = Subscriptions.objects.filter(student = sent_user.id)
-		except ObjectDoesNotExist:
-			print("none")
-
+		
 		subscriptions = Subscriptions.objects.all()
 		query = request.GET.get("q")
 		if query:
@@ -1264,7 +1259,7 @@ def display_note(request, unitname, subpagename, notesid):
 		document = Document.objects.all()
 		quizzes = Exam.objects.all()
 		questions = Question.objects.all()
-		comments = Comment.objects.all()
+		comments = Comment.objects.all() 
 	
 		if subpagename != "Quizzes":
 			try:
@@ -1273,7 +1268,11 @@ def display_note(request, unitname, subpagename, notesid):
 				return HttpResponseRedirect('/notespool')
 			return render_to_response('display_note.html', {'note':note,  'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document, 'comments':comments})
 		else:
-			return render_to_response('display_note.html', {'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document, 'comments':comments})
+			try:
+				quiz = Exam.objects.get(exam_id = notesid)
+			except ObjectDoesNotExist:
+				return HttpResponseRedirect('/notespool')
+			return render_to_response('display_note.html', {'quiz': quiz, 'userp': username, 'unitName':unitName, 'subpageNAME':subpagename, 'unitSLUG':unitSLUG, 'quizzes':quizzes, 'document':document, 'comments':comments})
 	else:
 		return HttpResponseRedirect('/')
 	return render_to_response('display_note.html', {'userp': username})
