@@ -34,54 +34,52 @@
         }
     </style>
 
-    {% for i in quizzes %}
-    {% if i.unit == unitName %}
-    <tr>
-        <th style="background-color: #53A86C; color: white;"> {{ i.name }} </th>
-    </tr>
-    {% if userp == "admin" %}
-    <tr>
-        <td> created by: <br> {{ i.created_by }} </td>
-    </tr>
-    <tr>
-        <td> ID: <br> {{ i.exam_id }} </td>
-    </tr>
-    <tr>
-        <td> Unit: <br> {{ i.unit }} </td>
-    </tr>
-    <tr>
-        <td> Created on: <br> {{ i.created_on }} </td>
-    </tr>
-    <tr>
-        <td> date modified: <br> {{ i.date_modified }} </td>
-    </tr>
-    <tr>
-        <td> Choices: <br> {{ i.choices }} </td>
-    </tr>
-    {% else %}
-    <tr>
-        <td> Unit: <br> {{ i.unit }} </td>
-    </tr>
-    <tr>
-        <td> created by: <br> {{ i.created_by }} </td>
-    </tr>
-    <tr>
-        <td> Created on: <br> {{ i.created_on }} </td>
-    </tr>
-    {% endif %}
-    <tr>
-        <td>
-            {% if userp == i.created_by or userp == "admin" %}
-            <a href="\delete_quiz/{{ i.unit }}/{{i.exam_id}}" class="btn btn-default"> Delete Quiz </a>
-            <a href="\edit_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id}}" class="btn btn-default">Edit Quiz</a>
-            <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id}}" class="btn btn-default">Take Quiz</a>
-            {% else %}
-            <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{i.exam_id}}" class="btn btn-default">Take Quiz</a>
-        </td>
+       
+        <tr>
+            <th style="background-color: #53A86C; color: white;"> {{ quiz.name }} </th>
+        </tr>
+        {% if userp == "admin" %}
+        <tr>
+            <td> created by: <br> {{ quiz.created_by }} </td>
+        </tr>
+        <tr>
+            <td> ID: <br> {{ quiz.exam_id }} </td>
+        </tr>
+        <tr>
+            <td> Unit: <br> {{ quiz.unit }} </td>
+        </tr>
+        <tr>
+            <td> Created on: <br> {{ quiz.created_on }} </td>
+        </tr>
+        <tr>
+            <td> date modified: <br> {{ quiz.date_modified }} </td>
+        </tr>
+        <tr>
+            <td> Choices: <br> {{ quiz.choices }} </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td> Unit: <br> {{ quiz.unit }} </td>
+        </tr>
+        <tr>
+            <td> created by: <br> {{ quiz.created_by }} </td>
+        </tr>
+        <tr>
+            <td> Created on: <br> {{ quiz.created_on }} </td>
+        </tr>
         {% endif %}
-    </tr>
-    {% endif %}
-    {% endfor %}
+        <tr>
+            <td>
+                {% if userp == quiz.created_by or userp == "admin" %}
+                <a href="\delete_quiz/{{ quiz.unit }}/{{quiz.exam_id}}" class="btn btn-default"> Delete Quiz </a>
+                <a href="\edit_quiz/{{unitSLUG}}/{{subpageNAME}}/{{quiz.exam_id}}" class="btn btn-default">Edit Quiz</a>
+                <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{quiz.exam_id}}" class="btn btn-default">Take Quiz</a>
+                {% else %}
+                <a href="\take_quiz/{{unitSLUG}}/{{subpageNAME}}/{{quiz.exam_id}}" class="btn btn-default">Take Quiz</a>
+            </td>
+            {% endif %}
+        </tr>
+    
 </table>
 <br />
 {% endif %}
@@ -134,7 +132,7 @@
             {% endif %}
             {% endif %}
             {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
+            {% if userp == note.created_by or userp == "admin" %}
             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-primary" role="button">Edit</a>
             <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-danger" role="button">Delete</a>
@@ -212,7 +210,7 @@
             {% endif %}
             {% endif %}
             {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
+            {% if userp == note.created_by or userp == "admin" %}
             <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
             <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-primary" role="button">Edit</a>
             <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-danger" role="button">Delete</a>
@@ -288,7 +286,7 @@
                     {% endif %}
                 {% endif %}
             {% endfor %}
-            {% if userp == i.created_by or userp == "admin" %}
+            {% if userp == note.created_by or userp == "admin" %}
                 <a href="\upload_document/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-success" role="button">Upload Document</a>
                 <a href="\edit_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-primary" role="button">Edit</a>
                 <a href="\delete_text_field/{{unitSLUG}}/{{subpageNAME}}/{{note.notes_id}}" class="btn btn-danger" role="button">Delete</a>
